@@ -2,8 +2,8 @@
  * Date instance methods
  *
  * @author Ken Snyder (ken d snyder at gmail dot com)
- * @date 2010-07-01
- * @version 2.1 (http://kendsnyder.com/sandbox/date/)
+ * @date 2010-10-21
+ * @version 3.0 (http://kendsnyder.com/sandbox/date/)
  * @license Creative Commons Attribution License 3.0 (http://creativecommons.org/licenses/by/3.0/)
  */
 // begin by creating a scope for utility variables
@@ -811,23 +811,39 @@
 			var now = Date.current();
 			var months = Date.ABBR_MONTHNAMES;
 			var i;
+			// interval name
 			if (match[2]) {
 				return now.add(multiplier, match[2]);
 			}
+			// month name
 			else if (match[3]) {
-				var month = match[3].toLowerCase();
+				var month = match[3].toLowerCase(), diff;
 				for (i = 0; i < months.length; i++) {
 					if (month == months[i].toLowerCase()) {
-						return now.add(multiplier * (now.getMonth() + i), 'month');
+						if (i == now.getMonth()) {
+							diff = 12;
+						}
+						else if (multiplier == 1) {
+							diff = now.getMonth() + i;
+							if (diff > 11) {
+								diff -= 11;
+							}
+						}
+						else {
+							diff = now.getMonth() + i - 12;
+						}
+						return now.add(diff, 'month');
 					}
 				}
 			}
+			// weekday name
 			else if (match[4]) {
 				var weekday = match[4].toLowerCase();
 				var days = Date.ABBR_DAYNAMES;
 				for (i = 0; i < days.length; i++) {
 					if (weekday == days[i].toLowerCase()) {
-						return now.add(multiplier * (now.getDay() - i + 7), 'day');
+						diff = now.getDay() - i + 7;
+						return now.add(multiplier * (diff == 0 ? 7 : diff), 'day');
 					}
 				}
 			}
@@ -851,10 +867,7 @@
 		}]
 	];
 
-	// create ProtoLove if not exists
-	global.ProtoLove = global.ProtoLove || {};
-	// export $D
-	global.ProtoLove.$D = Date.create;
+	// add to global if not exists
 	global.$D = global.$D || Date.create;
 
 	// IE Named-Function-Expression Bug

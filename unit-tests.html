@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Date.js Unit Tests</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<script type="text/javascript" src="qunit/qunit.js"></script>
+	<script type="text/javascript" src="src/Date.js"></script>
+	<link type="text/css" rel="stylesheet" href="qunit/qunit.css" media="all" />
+</head>
+<body>
+
+<div id="unit-output" style="width:750px">
+	<h1 id="qunit-header">Date.js Unit Tests</h1>
+	<h2 id="qunit-banner"></h2>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"><li></li></ol>
+</div>
+
+<script type="text/javascript">
+	with (QUnit) {
+
+		test('Date.create() - numeric arguments', function() {
+			var d, pd;
+			// 0 arguments
+			d = new Date();
+			d.setMilliseconds(0);
+			d.setHours(0, 0, 0);
+			pd = $D();
+			pd.setMilliseconds(0);
+			pd.setHours(0, 0, 0);
+			equal(pd+'', d+'', '0 arguments');
+
+			// 2 arguments
+			d = new Date(2008, 11, 1);
+			d.setMilliseconds(0);
+			d.setHours(0, 0, 0);
+			pd = $D(2008, 11);
+			pd.setMilliseconds(0);
+			pd.setHours(0, 0, 0);
+			equal(pd+'', d+'', '3 arguments');
+
+			// 3 arguments
+			d = new Date(2008, 11, 13);
+			d.setMilliseconds(0);
+			d.setHours(0, 0, 0);
+			pd = $D(2008, 11, 13);
+			pd.setMilliseconds(0);
+			pd.setHours(0, 0, 0);
+			equal(pd+'', d+'', '3 arguments');
+
+			// 4 arguments
+			d = new Date(2008, 11, 13, 6);
+			d.setMilliseconds(0);
+			d.setSeconds(0);
+			d.setMinutes(0);
+			pd = $D(2008, 11, 13, 6);
+			pd.setMilliseconds(0);
+			d.setSeconds(0);
+			d.setMinutes(0);
+			equal(pd+'', d+'', '4 arguments');
+
+			// 5 arguments
+			d = new Date(2008, 11, 13, 6, 55);
+			d.setMilliseconds(0);
+			d.setSeconds(0);
+			pd = $D(2008, 11, 13, 6, 55);
+			pd.setMilliseconds(0);
+			d.setSeconds(0);
+			equal(pd+'', d+'', '5 arguments');
+
+			// 6 arguments
+			d = new Date(2008, 11, 13, 6, 55, 1);
+			d.setMilliseconds(0);
+			pd = $D(2008, 11, 13, 6, 55, 1);
+			pd.setMilliseconds(0);
+			equal(pd+'', d+'', '6 arguments');
+
+			// 7 arguments
+			d = new Date(2008, 11, 13, 6, 55, 1, 800);
+			pd = $D(2008, 11, 13, 6, 55, 1, 800);
+			equal(pd+'', d+'', '7 arguments');
+
+			// 1 argument
+			d = new Date();
+			pd = $D();
+			strictEqual($D(d), d, 'passing Date object');
+			equal($D(1234567890)+'', new Date(1234567890)+'', 'passing number (ms past epoch)');
+			equal($D('Dec 1, 2006')+'', new Date(2006, 11, 1)+'', 'string');
+		});
+
+		test('Date.create() - string date', function() {
+			equal($D(' \r\n\t ')+'', new Date()+'', 'parsing whitespace string');
+			equal($D('2006-08-01')+'', new Date(2006, 7, 1)+'', 'parsing `2006-08-01`');
+			equal($D('2006-08-01 20:15')+'', new Date(2006, 7, 1, 20, 15)+'', 'parsing `2006-08-01 20:15`');
+			equal($D('2006-08-01 20:15:59')+'', new Date(2006, 7, 1, 20, 15, 59)+'', 'parsing `2006-08-01 20:15:59`');
+			equal($D('12-01-2006')+'', new Date(2006, 11, 1)+'', 'parsing `12-01-2006`');
+			equal($D('12-1-2006')+'', new Date(2006, 11, 1)+'', 'parsing `12-1-2006`');
+			equal($D('8-Dec-2006')+'', new Date(2006, 11, 8)+'', 'parsing `8-Dec-2006`');
+			equal($D('08-Dec-2006')+'', new Date(2006, 11, 8)+'', 'parsing `08-Dec-2006`');
+			equal($D('12-December-2006')+'', new Date(2006, 11, 12)+'', 'parsing `12-December-2006`');
+			equal($D('8-Dec-2006 20:15:59')+'', new Date(2006, 11, 8, 20, 15, 59)+'', 'parsing `8-Dec-2006 20:15:59`');
+			equal($D('8-Dec-2006 8:15pm')+'', new Date(2006, 11, 8, 20, 15)+'', 'parsing `8-Dec-2006 8:15pm`');
+			equal($D('10/28/2007')+'', new Date(2007, 9, 28)+'', 'parsing `10/28/2007`');
+			equal($D('Oct 28, 2007')+'', new Date(2007, 9, 28)+'', 'parsing `Oct 28, 2007`');
+			equal($D('28 Oct 2007')+'', new Date(2007, 9, 28)+'', 'parsing `28 Oct 2007`');
+			equal($D('10-28-2007 20:15')+'', new Date(2007, 9, 28, 20, 15, 0)+'', 'parsing `10-28-2007 20:15`');
+			equal($D('10-28-2007 8:15:00pm')+'', new Date(2007, 9, 28, 20, 15, 0)+'', 'parsing `10-28-2007 8:15:00pm`');
+			equal($D('10-28-2007 8:15pm')+'', new Date(2007, 9, 28, 20, 15, 0)+'', 'parsing `10-28-2007 8:15pm`');
+			equal($D('10-28-2007 8pm')+'', new Date(2007, 9, 28, 20, 0, 0)+'', 'parsing `10-28-2007 8pm`');
+			var today = new Date();
+			today.setMilliseconds(0);
+			today.setHours(20, 15, 0);
+			equal($D('8:15:00pm')+'', today+'', 'parsing `8:15:00pm`');
+			equal($D('8:15pm')+'', today+'', 'parsing `8:15pm`');
+			today.setHours(20, 0, 0);
+			equal($D('8pm')+'', today+'', 'parsing `8pm`');
+		});
+
+		test('Date.create() - string expression', function() {
+			// control the date that will be used internally for current date
+			var oldCurrent = Date.current;
+			Date.current = function() {
+				return new Date(2010,6,19);
+			};
+
+			equal($D('1 month from 10-28-2007')+'', new Date(2007, 10, 28)+'', 'parsing `1 month from 10-28-2007`');
+			equal($D('2 days after 10-28-2007')+'', new Date(2007, 9, 30)+'', 'parsing `2 days after 10-28-2007`');
+			equal($D('5 days before 10-28-2007')+'', new Date(2007, 9, 23)+'', 'parsing `5 days before 10-28-2007`');
+			equal($D('5 days from today')+'', new Date(2010, 6, 24)+'', 'parsing `5 days from today`');
+			equal($D('3 seconds before now')+'', new Date(2010, 6, 18, 23, 59, 57)+'', 'parsing `3 seconds before now`');
+
+			equal($D('yesterday')+'', new Date(2010,6,18)+'', 'recognize "yesterday"');
+			equal($D('today')+'', new Date(2010,6,19)+'', 'recognize "today"');
+			equal($D('now')+'', new Date(2010,6,19)+'', 'recognize "now"');
+			equal($D('tomorrow')+'', new Date(2010,6,20)+'', 'recognize "tomorrow"');
+
+			equal($D('5 days ago')+'', new Date(2010,6,14)+'', 'recognize "5 days ago"');
+			equal($D('2 hour ago')+'', new Date(2010,6,18,22)+'', 'recognize "2 hour ago"');
+			equal($D('in 2 days')+'', new Date(2010,6,21)+'', 'recognize "in 2 days"');
+			equal($D('23 minutes ago')+'', new Date(2010,6,18,23,37)+'', 'recognize "23 minutes ago"');
+
+			equal($D('january 5')+'', new Date(2010,0,5)+'', 'recognize "january 5"');
+			equal($D('jan 5')+'', new Date(2010,0,5)+'', 'recognize "jan 5"');
+			equal($D('january 5th')+'', new Date(2010,0,5)+'', 'recognize "january 5th"');
+			equal($D('january the 5th')+'', new Date(2010,0,5)+'', 'recognize "january the 5th"');
+
+			equal($D('4 hours from now')+'', new Date(2010,6,19,4)+'', 'recognize "4 hours from now"');
+			equal($D('next month')+'', new Date(2010,7,19)+'', 'recognize "next month"');
+			equal($D('last week')+'', new Date(2010,6,12)+'', 'recognize "last week"');
+			equal($D('last tuesday')+'', new Date(2010,6,13)+'', 'recognize "last tuesday"');
+			equal($D('next monday')+'', new Date(2010,6,26)+'', 'recognize "next monday"');
+			equal($D('last monday')+'', new Date(2010,6,12)+'', 'recognize "last monday"');
+			
+			Date.current = function() {
+				return new Date(2010,2,19);
+			};			
+			
+			equal($D('this june')+'', new Date(2010,5,19)+'', 'recognize "this june"');
+			equal($D('next june')+'', new Date(2010,5,19)+'', 'recognize "next june"');
+			equal($D('next january')+'', new Date(2011,0,19)+'', 'recognize "next january"');
+			equal($D('this march')+'', new Date(2011,2,19)+'', 'recognize "this march"');
+			equal($D('last march')+'', new Date(2009,2,19)+'', 'recognize "last march"');
+
+			Date.current = oldCurrent;
+		});
+
+		test('Date.create() - invalid strings return NaN', function() {
+			equal($D('bubba')+'', "NaN", '`bubba`');
+			equal($D('25 9')+'', "NaN", '`25 9`');
+			Date.create.debug = 1;
+			equal($D('1')+'', "NaN", '`1`');
+		});
+
+		test('Date#strftime()', function() {
+			equal($D(2006,8,9).strftime('%Y'), '2006', 'Format code "%Y" returns 4-digit year');
+			equal($D(2006,8,9).strftime('%y'), '06', 'Format code "%y" returns 2-digit year');
+
+			equal($D(2006,8,9).strftime('%m'), '09', 'Format code "%m" returns 2-digit month');
+			equal($D(2006,8,9).strftime('%#m'), 9, 'Format code "%#m" returns month integer');
+			equal($D(2006,8,9).strftime('%B'), 'September', 'Format code "%B" returns full month name');
+			equal($D(2006,8,9).strftime('%b'), 'Sep', 'Format code "%b" returns abbreviated month name');
+			equal($D(2006,8,9).strftime('%d'), '09', 'Format code "%d" returns 2-digit day');
+			equal($D(2006,8,9).strftime('%#d'), 9, 'Format code "%#d" returns day integer');
+			equal($D(2006,8,9).strftime('%e'), 9, 'Format code "%e" returns day integer');
+
+			equal($D(2006,8,9).strftime('%A'), 'Saturday', 'Format code "%A" returns full weekday name');
+			equal($D(2006,8,9).strftime('%a'), 'Sat', 'Format code "%a" returns abbreviated day name');
+			equal($D(2006,8,9).strftime('%w'), 6, 'Format code "%w" returns day of week integer');
+			equal($D(2006,8,3).strftime('%o'), 'rd', 'Format code "%o" returns ordinal string');
+
+			equal($D(2006,8,3,15).strftime('%H'), '15', 'Format code "%H" returns 2-digit hour (24-hour clock)');
+			equal($D(2006,8,3,9).strftime('%#H'), 9, 'Format code "%#H" returns hour integer (24-hour clock)');
+			equal($D(2006,8,3,15).strftime('%I'), '03', 'Format code "%I" returns 2-digit hour (12-hour clock)');
+			equal($D(2006,8,3,15).strftime('%#I'), 3, 'Format code "%#I" returns hour integer (12-hour clock)');
+			equal($D(2006,8,3,0,3).strftime('%M'), '03', 'Format code "%M" returns 2-digit minute');
+			equal($D(2006,8,3,0,3).strftime('%#M'), 3, 'Format code "%#M" returns minute integer');
+			equal($D(2006,8,3,2).strftime('%p'), 'AM', 'Format code "%p" returns AM/PM');
+			equal($D(2006,8,3,2).strftime('%P'), 'am', 'Format code "%P" returns am/pm');
+
+			equal($D(2006,8,3,0,0,9).strftime('%S'), '09', 'Format code "%S" returns 2-digit second');
+			equal($D(2006,8,3,0,0,9).strftime('%#S'), 9, 'Format code "%#S" returns second integer');
+			var u = new Date();
+			equal($D(u).strftime('%s'), Math.round(u.getTime() / 1000, 0), 'Format code "%s" returns a unix timestamp');
+		});
+
+		test('Date#formatPhp()', function() {
+			equal($D(2006,8,9).formatPhp('Y'), '2006', 'Format code "Y" returns 4-digit year');
+			equal($D(2006,8,9).formatPhp('y'), '06', 'Format code "y" returns 2-digit year');
+
+			equal($D(2006,8,9).formatPhp('m'), '09', 'Format code "m" returns 2-digit month');
+			equal($D(2006,8,9).formatPhp('n'), 9, 'Format code "n" returns month integer');
+			equal($D(2006,8,9).formatPhp('F'), 'September', 'Format code "F" returns full month name');
+			equal($D(2006,8,9).formatPhp('M'), 'Sep', 'Format code "M" returns abbreviated month name');
+			equal($D(2006,8,9).formatPhp('d'), '09', 'Format code "dd" returns 2-digit day');
+			equal($D(2006,8,9).formatPhp('j'), 9, 'Format code "j" returns day integer');
+
+			equal($D(2006,8,9).formatPhp('l'), 'Saturday', 'Format code "l" (lowercase "L") returns full day name');
+			equal($D(2006,8,9).formatPhp('D'), 'Sat', 'Format code "D" returns abbreviated weekday name');
+			equal($D(2006,8,9).formatPhp('w'), 6, 'Format code "w" returns day of week integer');
+			equal($D(2006,8,3).formatPhp('S'), 'rd', 'Format code "S" returns ordinal string');
+
+			equal($D(2006,8,3,15).formatPhp('H'), '15', 'Format code "H" returns 2-digit hour (24-hour clock)');
+			equal($D(2006,8,3,9).formatPhp('h'), 9, 'Format code "h" returns hour integer (24-hour clock)');
+			equal($D(2006,8,3,15).formatPhp('G'), '15', 'Format code "G" returns 2-digit hour (12-hour clock)');
+			equal($D(2006,8,3,15).formatPhp('g'), 3, 'Format code "g" returns hour integer (12-hour clock)');
+			equal($D(2006,8,3,0,3).formatPhp('i'), '03', 'Format code "i" returns 2-digit minute');
+			equal($D(2006,8,3,2).formatPhp('A'), 'AM', 'Format code "A" returns AM/PM');
+			equal($D(2006,8,3,2).formatPhp('a'), 'am', 'Format code "a" returns am/pm');
+
+			equal($D(2006,8,3,0,0,9).formatPhp('s'), '09', 'Format code "s" returns 2-digit second');
+			var u = new Date();
+			equal($D(u).formatPhp('U'), Math.round(u.getTime() / 1000, 0), 'Format code "U" returns a unix timestamp');
+		});
+
+		test('Date#formatSql()', function() {
+			equal($D(2006,8,9).formatSql('yyyy'), '2006', 'Format code "yyyy" returns 4-digit year');
+			equal($D(2006,8,9).formatSql('yy'), '06', 'Format code "yy" returns 2-digit year');
+
+			equal($D(2006,8,9).formatSql('mm'), '09', 'Format code "mm" returns 2-digit month');
+			equal($D(2006,8,9).formatSql('m'), 9, 'Format code "m" returns month integer');
+			equal($D(2006,8,9).formatSql('mmmm'), 'September', 'Format code "mmmm" returns full month name');
+			equal($D(2006,8,9).formatSql('mmm'), 'Sep', 'Format code "mmm" returns abbreviated month name');
+			equal($D(2006,8,9).formatSql('dd'), '09', 'Format code "dd" returns 2-digit day');
+			equal($D(2006,8,9).formatSql('d'), 9, 'Format code "d" returns day integer');
+
+			equal($D(2006,8,9).formatSql('dddd'), 'Saturday', 'Format code "dddd" returns full weekday name');
+			equal($D(2006,8,9).formatSql('ddd'), 'Sat', 'Format code "ddd" returns abbreviated day name');
+
+			equal($D(2006,8,3,15).formatSql('hh24'), '15', 'Format code "hh24" returns 2-digit hour (24-hour clock)');
+			equal($D(2006,8,3,9).formatSql('h24'), 9, 'Format code "h24" returns hour integer (24-hour clock)');
+			equal($D(2006,8,3,15).formatSql('hh12'), '03', 'Format code "hh12" returns 2-digit hour (12-hour clock)');
+			equal($D(2006,8,3,15).formatSql('h12'), 3, 'Format code "h12" returns hour integer (12-hour clock)');
+			equal($D(2006,8,3,0,3).formatSql('mi'), '03', 'Format code "mi" returns 2-digit minute');
+			equal($D(2006,8,3,2).formatSql('am'), 'AM', 'Format code "am" returns AM/PM');
+			equal($D(2006,8,3,2).formatSql('pm'), 'AM', 'Format code "pm" returns AM/PM');
+			equal($D(2006,8,9).formatSql('w'), 6, 'Format code "w" returns day of week integer');
+
+			equal($D(2006,8,3,0,0,9).formatSql('ss'), '09', 'Format code "ss" returns 2-digit second');
+		});
+
+		test('Date#add()', function() {
+			// be careful not to cross daylight savings time changeovers
+			equal($D(Date.parse('Oct 27, 2011'))+'', $D('Oct 27, 2007').add(4, 'year')+'', 'adding "years"');
+			equal($D(Date.parse('Oct 27, 2011'))+'', $D('Oct 27, 2007').add(4, 'years')+'', 'adding "year"');
+			equal($D(Date.parse('Dec 28, 2007'))+'', $D('Nov 28, 2007').add(1, 'months')+'', 'adding 1 "months"');
+			equal($D(Date.parse('Dec 27, 2007'))+'', $D('Nov 27, 2007').add(1, 'month')+'', 'adding 1 "month"');
+			equal($D(Date.parse('Feb 11, 2008'))+'', $D('Nov 11, 2007').add(3, 'month')+'', 'adding months that cause year wrapping');
+			equal($D(Date.parse('Dec 11, 2007'))+'', $D('Feb 11, 2008').add(-2, 'month')+'', 'subtracting months that cause year wrapping');
+			equal($D(Date.parse('Jan 12, 2010'))+'', $D('Dec 12, 2007').add(25, 'months')+'', 'adding more than 12 months');
+			equal($D(Date.parse('Oct 28, 2007'))+'', $D('Oct 26, 2007').add(2, 'days')+'', 'adding "days"');
+			equal($D(Date.parse('Oct 27, 2007'))+'', $D('Oct 26, 2007').add(1, 'day')+'', 'adding "day"');
+			equal($D(Date.parse('Oct 27, 2007 20:00'))+'', $D('Oct 27, 2007 16:00').add(4, 'hours')+'', 'adding "hours"');
+			equal($D(Date.parse('Oct 27, 2007 20:30'))+'', $D('Oct 27, 2007 19:30:00').add(1, 'hour')+'', 'adding "hour"');
+			equal($D(Date.parse('Oct 27, 2007 19:31'))+'', $D('Oct 27, 2007 19:30:00').add(60, 'seconds')+'', 'adding "seconds"');
+			equal($D(Date.parse('Oct 27, 2007 19:31'))+'', $D('Oct 27, 2007 19:30:00').add(60, 'second')+'', ' adding "second"');
+			equal($D(Date.parse('Oct 27, 2007 19:31'))+'', $D('Oct 27, 2007 19:30:00').add(60000, 'milliseconds')+'', 'adding "milliseconds"');
+			equal($D(Date.parse('Oct 27, 2007 19:31'))+'', $D('Oct 27, 2007 19:30:00').add(60000, 'millisecond')+'', 'adding "millisecond"');
+		});
+
+		test('Date#diff()', function() {
+			equal($D('10/29/2007').diff('2007-10-31'), -2, 'comparing days');
+			equal($D('10/31/2007').diff('2007-10-29', 'hours'), 48, 'comparing hours');
+			equal($D('10/29/2007 23:25').diff('2007-10-29 23:00', 'minutes'), 25, 'comparing minutes');
+			equal($D('10/29/2007 23:00:18').diff($D('2007-10-29 23:00:00'), 'seconds'), 18, 'comparing seconds');
+			equal($D('10/29/2007 23:00:18').diff('2007-10-29 23:00:00', 'milliseconds'), 18000, 'comparing milliseconds');
+			equal($D('10/29/2008 23:00:18').diff('2006-10-29 23:00:00', 'year'), 2, 'comparing years');
+			equal($D('12/29/2008 23:00:18').diff('2006-10-29 23:00:00', 'year'), 2, 'comparing years with rounding');
+			equal($D('12-31-2008').diff('2008-10-29', 'month'), 2, 'comparing months');
+			equal($D('2008-10-29').diff('12-31-2008', 'month'), -2, 'comparing months (negative)');
+			equal($D('12-26-2008').diff('2008-10-31', 'month'), 1, 'comparing months with rounding');
+			equal($D('10/29/2007 23:25:30').diff($D('2007-10-29 23:00:00'), 'minute', true), 25.5, 'comparing minutes with decimal');
+			equal($D('10/29/2007 23:30').diff('2007-10-29 23:00', 'hour', true), 0.5, 'comparing hours with decimal');
+		});
+
+		test('Date#diffText', function() {
+			// control the date that will be used internally for current date
+			var oldCurrent = Date.current;
+			Date.current = function() {
+				return new Date(2010,6,19);
+			};
+
+			equal($D(2010,6,20).diffText(), 'tomorrow', '1 day');
+
+			Date.current = oldCurrent;
+		});
+
+		test('comparison operators', function() {
+			equal($D('Dec 16 2006').getTime() == $D('2006-12-16').getTime(), true, 'comparing dates with ==');
+			equal($D('12-16-2006').getTime() == $D('2006-12-17').getTime(), false, 'comparing dates with ==');
+
+			equal($D('12-16-2006') < $D('2006-12-17'), true, 'comparing dates with <');
+			equal($D('12-16-2006') > $D('2006-12-17'), false, 'comparing dates with >');
+		});
+
+	}
+</script>
+
+</body>
+</html>

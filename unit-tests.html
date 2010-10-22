@@ -166,7 +166,7 @@
 
 		test('Date.create() - invalid strings return NaN', function() {
 			equal($D('bubba')+'', "NaN", '`bubba`');
-			equal($D('25 9')+'', "NaN", '`25 9`');
+			equal($D('25 13')+'', "NaN", '`25 13`');
 			Date.create.debug = 1;
 			equal($D('1')+'', "NaN", '`1`');
 		});

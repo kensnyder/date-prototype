@@ -807,36 +807,27 @@
 		// this/next/last january, next thurs
 		[/(this|next|last)\s+(?:(year|month|week|day|hour|minute|second)|(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)|(sun|mon|tue|wed|thu|fri|sat))/i,
 		function patternNext(match) {
+			// $1 = this/next/last
 			var multiplier = match[1].toLowerCase() == 'last' ? -1 : 1;
 			var now = Date.current();
 			var months = Date.ABBR_MONTHNAMES;
 			var i;
-			// interval name
+			// $2 = interval name
 			if (match[2]) {
 				return now.add(multiplier, match[2]);
 			}
-			// month name
+			// $3 = month name
 			else if (match[3]) {
 				var month = match[3].toLowerCase(), diff;
 				for (i = 0; i < months.length; i++) {
 					if (month == months[i].toLowerCase()) {
-						if (i == now.getMonth()) {
-							diff = 12;
-						}
-						else if (multiplier == 1) {
-							diff = now.getMonth() + i;
-							if (diff > 11) {
-								diff -= 11;
-							}
-						}
-						else {
-							diff = now.getMonth() + i - 12;
-						}
-						return now.add(diff, 'month');
+						diff = 12 - (now.getMonth() - i);
+						diff = diff > 12 ? diff - 12 : diff;
+						return now.add(multiplier * diff, 'month');
 					}
 				}
 			}
-			// weekday name
+			// $4 = weekday name
 			else if (match[4]) {
 				var weekday = match[4].toLowerCase();
 				var days = Date.ABBR_DAYNAMES;

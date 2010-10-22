@@ -2,7 +2,7 @@
  * Date instance methods
  *
  * @author Ken Snyder (ken d snyder at gmail dot com)
- * @date 2010-10-21
+ * @date October 2010
  * @version 3.0 (http://kendsnyder.com/sandbox/date/)
  * @license Creative Commons Attribution License 3.0 (http://creativecommons.org/licenses/by/3.0/)
  */

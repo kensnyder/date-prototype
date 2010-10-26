@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>JavaScript Date Instance Methods</title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <script src="src/Date.js" type="text/javascript"></script>  
+  <link rel="stylesheet" href="css/general.css" type="text/css" />
+</head>
+<body>
+<h1>JavaScript Date Instance Methods (v3.0 October 2010)</h1>
+
+<a name="contents"></a>
+<h2>Contents</h2>
+<ol>
+	<li><a href="#intro">Introduction</a></li>
+	<li><a href="#demonstration">Demo</a></li>
+	<li><a href="#src">Download</a></li>
+	<li><a href="#examples">Examples</a></li>
+	<li><a href="#ref">Method Reference</a></li>
+	<li><a href="#parse">Parsable Formats</a></li>
+	<li><a href="#codes">Format Codes</a></li>
+	<li><a href="#custom">Customization</a></li>
+	<li><a href="unit-tests.html">Unit Test</a></li>
+</ol>
+
+<a name="intro"></a>
+<p class="back"><a href="#contents">contents ^</a></p>
+<h3>Introduction</h3>
+
+<p>This script provides JavaScript Date instance methods for parsing, formatting, and calculating dates. 
+	It leverages the existing functionality of the native Date.parse method
+	and uses a concise and configurable algorithm for interpreting format codes.</p>
+
+<p><strong>Features include:</strong></p>
+<ol>
+	<li>Parse various formats with ability to register custom format parsing.</li>
+	<li>Format dates using the well-known percent-letter formatting options with the ability to register custom formating.</li>
+	<li>Add and subtract years, months, days, hours, minutes or seconds.</li>
+	<li>Calculate differences between dates in the given unit.</li>
+	<li>Methods are available on all Date Objects.</li>
+</ol>
+
+<a name="demonstration"></a>
+<p class="back"><a href="#contents">contents ^</a></p>
+<h3>Demo</h3>
+
+<div>
+	<form name="demo" action="">
+		<p>
+			$D(&quot;<input type="text" name="fdate" value="2008-03-18 15:33:21" size="20" onblur="formatDate();" />&quot;).strftime(&quot;<input type="text" name="fformat" value="%#m-%d-%Y" size="17" onblur="formatDate();" />&quot;)
+			= <span class="result" id="fresult"></span>
+		</p>
+		<p>
+			$D(&quot;<input type="text" name="adate" value="2008-03-18 3:33:21PM" size="20" onblur="addDate();" />&quot;).add(<input type="text" name="aadd" value="-5" size="4" onblur="addDate();" />, &quot;<select name="aunit" onchange="addDate();">
+				<option value="seconds">seconds</option>
+				<option value="minutes">minutes</option>
+				<option value="hours">hours</option>
+				<option value="days" selected="selected">days</option>
+				<option value="weeks">weeks</option>
+				<option value="months">months</option>
+				<option value="years">years</option>
+			</select>&quot;).strftime(&quot;%Y-%m-%d %H:%M:%S&quot;) 
+			= <span class="result" id="aresult"></span>
+		</p>
+		<p>
+			$D(&quot;<input type="text" name="ddate1" value="2008-03-18 8pm" size="20" onblur="diffDate();" />&quot;).diff(&quot;<input type="text" name="ddate2" value="2008-03-17 2pm" size="20" onblur="diffDate();" />&quot;, &quot;<select name="dunit" onchange="diffDate();">
+				<option value="seconds">seconds</option>
+				<option value="minutes">minutes</option>
+				<option value="hours">hours</option>
+				<option value="days" selected="selected">days</option>
+				<option value="weeks">weeks</option>
+				<option value="months">months</option>
+				<option value="years">years</option>
+			</select>&quot;, <select name="dround" onchange="diffDate()"><option value="0" selected="selected">false</option><option value="1">true</option></select>)
+			= <span class="result" id="dresult"></span>
+		</p>
+	</form>
+</div>
+
+
+<script type="text/javascript" language="javascript" charset="utf-8">
+var demo = document.forms.demo;
+function formatDate() {
+	var date = $D(demo.fdate.value);
+	document.getElementById('fresult').innerHTML = date instanceof Date ? date.strftime(demo.fformat.value) : '(unrecognized)';
+}
+function addDate() {
+	var date = $D(demo.adate.value);
+	var amount = demo.aadd.value;
+	var unit = demo.aunit.options[demo.aunit.selectedIndex].value;
+	document.getElementById('aresult').innerHTML = date instanceof Date ? date.add(amount, unit).strftime('%Y-%m-%d %H:%M:%S') : '(unrecognized)';
+}
+function diffDate() {
+	var date1 = $D(demo.ddate1.value);
+	var date2 = $D(demo.ddate2.value);
+	var unit = demo.dunit.options[demo.dunit.selectedIndex].value;
+	var round = Number(demo.dround.options[demo.dround.selectedIndex].value);
+	document.getElementById('dresult').innerHTML = date1 instanceof Date && date2 instanceof Date ? date1.diff(date2, unit, round) : '(unrecognized)';
+}
+formatDate();
+addDate();
+diffDate();
+</script>
+
+
+
+<a name="src"></a>
+<p class="back"><a href="#contents">contents ^</a></p>
+<h3>Download</h3>
+
+<ul>
+	<li><a href="src/Date.js" target="blank">Date.js (source)</a></li>
+	<li><a href="date.js" target="blank">Date.min.js (minified)</a></li>
+</ul>
+
+<a name="examples"></a>
+<p class="back"><a href="#contents">contents ^</a></p>
+<h3>Examples</h3>
+
+<pre>
+$D('2006-09-20').strftime('%m/%d/%Y'); // "09/20/2006"
+$D('Sep 20 2006').add(3).strftime('%Y-%m-%d'); // "2006-09-23"
+$D('09/20/2006').add(4, 'years').strftime('%Y-%m-%d'); // "2010-09-20"
+$D('09/20/2006 20:15:00').add(4, 'hours').format('%Y-%m-%d %H:%M:%S'); // "2006-09-21 00:15:00"
+$D('2006-09-20').format('m/d/Y'); // "09/20/2006"
+$D('2006.09.28').diff('20 Sep, 2006', 'days'); // 8
+</pre>
+
+
+<a name="ref"></a>
+<p class="back"><a href="#contents">contents ^</a></p>
+<h3>Full Reference</h3>
+
+<table cellspacing="1">
+	<tr><th colspan="2" class="section">New Date Instance Methods</th></tr>	
+	<tr><th>Method</th><th>Description</th></tr>
+	<tr><td>Date#add(iAmount[, sUnit='day']) -&gt; Date</td><td>Alters the date by adding an amount expressed in the given unit.</td></tr>
+	<tr><td>Date#strftime(sFormat) -&gt; String</td><td>Returns the date expressed in a string according to the given format.</td></tr>
+	<tr><td>Date#diff(date[, sUnit='day'][, bAllowDecimal=false]) -&gt; Number</td><td>Returns the amount difference between the given date in the given format. Round toward zero unless <em>bAllowDecimal</em> is true.</td></tr>
+	<tr><td>Date#diffText() -&gt; String</td><td>Returns a string with a conversational date string such as "5 days ago".</td></tr>
+	<tr><td>Date#clone() -&gt; Date</td><td>Returns a date object with the same value.</td></tr>
+	<tr><td>Date#succ([sUnit='day']) -&gt; Date</td><td>Returns a copy of the date incremented by one day (or any other unit).</td></tr>
+	<tr><td>Date#getShortYear() -&gt; Number</td><td>Returns number of years past the century (one or two digit year).</td></tr>
+	<tr><td>Date#getMonthNumber() -&gt; Number</td><td>Returns the number of the month 1-12.</td></tr>
+	<tr><td>Date#getMonthName() -&gt; String</td><td>Returns the name of the month as defined in Date.MONTHNAMES.</td></tr>
+	<tr><td>Date#getAbbrMonthName() -&gt; String</td><td>Returns the abreviated name of the month as defined in Date.ABBR_MONTHNAMES.</td></tr>
+	<tr><td>Date#getDayName() -&gt; String</td><td>Returns the name of the day of the week as defined in Date.DAYNAMES.</td></tr>
+	<tr><td>Date#getAbbrDayName() -&gt; String</td><td>Returns the abbreviated name of the day of the week as defined in Date.ABBR_DAYNAMES.</td></tr>
+	<tr><td>Date#getDayOrdinal() -&gt; String</td><td>Returns the ordinal suffix for the day of the month as defined in Date.ORDINALNAMES.</td></tr>
+	<tr><td>Date#getHours12() -&gt; String</td><td>Returns hours in 12-hour format.</td></tr>
+	<tr><td>Date#getAmPm() -&gt; String</td><td>Returns AM or PM for the date.</td></tr>
+	<tr><td>Date#getUnix() -&gt; Number</td><td>Returns the number of seconds past 1970-01-01-00:00:00.</td></tr>
+	<tr><td>Date#getGmtOffset() -&gt; String</td><td>Returns the minutes and seconds offset from GMT.</td></tr>
+	<tr><td>Date#getTimezoneName() -&gt; String</td><td>Returns the browser-reported name of the timezone.</td></tr>
+	<tr><td>Date#toYmdInt() -&gt; Number</td><td>Returns an integer in the format YYYYMMDD (useful for quickly sorting by date)</td></tr>
+	
+	<tr><th colspan="2" class="section">New Date Static Properties</th></tr>	
+	<tr><th>Property</th><th>Description</th></tr>
+	<tr><td>Date.create(date) -&gt; Date</td><td><em>date</em> can be a <a href="#parse">parsable</a> string, a unix timestamp or a Date object.</td></tr>
+	<tr><td>Date.MONTHNAMES</td><td>An array of the month names</td></tr>
+	<tr><td>Date.ABBR_MONTHNAMES</td><td>An array of the abbreviated month names</td></tr>
+	<tr><td>Date.DAYNAMES</td><td>An array of the names of the days of the week</td></tr>
+	<tr><td>Date.ABBR_DAYNAMES</td><td>An array of the abbreviated names of the days of the week</td></tr>
+	<tr><td>Date.ORDINALNAMES</td><td>An array of the ordinal suffixes for digits 0-9</td></tr>
+	<tr><td>Date.ISO</td><td>A shortcut for ISO-8601 date format (%Y-%m-%dT%H:%M:%S.%s%G)</td></tr>
+	<tr><td>Date.SQL</td><td>A shortcut for SQL date format (%Y-%m-%d %H:%M:%S)</td></tr>
+	<tr><td>Date.SCRIPT_LOAD</td><td>A date object representing when the script was loaded</td></tr>
+	<tr><td>Date.daysInMonth(iYear, iMonth) -&gt; Number</td><td>Given a four digit year and a month 1-12, how many days are in that month</td></tr>
+	<tr><td>Date.autoFormat(sInput, sFormatStr) -&gt; HTMLElement</td><td>Given an element id or object, make an input auto-format input into a date on blur</td></tr>
+	<tr><td>Date.addFormat(sName, oRules) -&gt; Object</td><td>Add a set of format codes and a method called sName to accept the rules (see <a href="#custom">customization</a>)</td></tr>
+	<tr><td>Date.current() -&gt; Date</td><td>Return a Date object representing the date at that moment</td></tr>	
+	<tr><td>Date.create.patterns</td><td>An object with pairs defining parsers for custom formats (see <a href="#custom">customization</a>)</td></tr>
+	<tr><th colspan="2" class="section">Native Date Instance Methods (from <a href="http://www.w3schools.com/jsref/jsref_obj_date.asp">w3schools.com</a>)</th></tr>	
+	<tr><th>Method</th><th>Description</th></tr>
+	<tr><td>Date#getDate() -&gt; Number</td><td>Returns the day of the month from a Date object (from 1-31)</td></tr>
+	<tr><td>Date#getDay() -&gt; Number</td><td>Returns the day of the week from a Date object (from 0-6)</td></tr>
+	<tr><td>Date#getMonth() -&gt; Number</td><td>Returns the month from a Date object (from 0-11)</td></tr>
+	<tr><td>Date#getFullYear() -&gt; Number</td><td>Returns the year, as a four-digit number, from a Date object</td></tr>
+	<tr><td>Date#getYear() -&gt; Number</td><td>Returns the year, as a two-digit or a four-digit number, from a Date object. Use Date#getFullYear instead !!</td></tr>
+	<tr><td>Date#getHours() -&gt; Number</td><td>Returns the hour of a Date object (from 0-23)</td></tr>
+	<tr><td>Date#getMinutes() -&gt; Number</td><td>Returns the minutes of a Date object (from 0-59)</td></tr>
+	<tr><td>Date#getSeconds() -&gt; Number</td><td>Returns the seconds of a Date object (from 0-59)</td></tr>
+	<tr><td>Date#getMilliseconds() -&gt; Number</td><td>Returns the milliseconds of a Date object (from 0-999)</td></tr>
+	<tr><td>Date#getTime() -&gt; Number</td><td>Returns the number of milliseconds since midnight Jan 1, 1970</td></tr>
+	<tr><td>Date#getTimezoneOffset() -&gt; Number</td><td>Returns the difference in minutes between local time and Greenwich Mean Time (GMT)</td></tr>
+	<tr><td>Date#getUTCDate() -&gt; Number</td><td>Returns the day of the month from a Date object according to universal time (from 1-31)</td></tr>
+	<tr><td>Date#getUTCDay() -&gt; Number</td><td>Returns the day of the week from a Date object according to universal time (from 0-6)</td></tr>
+	<tr><td>Date#getUTCMonth() -&gt; Number</td><td>Returns the month from a Date object according to universal time (from 0-11)</td></tr>
+	<tr><td>Date#getUTCFullYear() -&gt; Number</td><td>Returns the four-digit year from a Date object according to universal time</td></tr>
+	<tr><td>Date#getUTCHours() -&gt; Number</td><td>Returns the hour of a Date object according to universal time (from 0-23)</td></tr>
+	<tr><td>Date#getUTCMinutes() -&gt; Number</td><td>Returns the minutes of a Date object according to universal time (from 0-59)</td></tr>
+	<tr><td>Date#getUTCSeconds() -&gt; Number</td><td>Returns the seconds of a Date object according to universal time (from 0-59)</td></tr>
+	<tr><td>Date#getUTCMilliseconds() -&gt; Number</td><td>Returns the milliseconds of a Date object according to universal time (from 0-999)</td></tr>
+	<tr><td>Date#setDate(iDayOfMonth) -&gt; Number</td><td>Sets the day of the month in a Date object (from 1-31)</td></tr>
+	<tr><td>Date#setMonth(iMonth) -&gt; Number</td><td>Sets the month in a Date object (from 0-11)</td></tr>
+	<tr><td>Date#setFullYear(iYear) -&gt; Number</td><td>Sets the year in a Date object (four digits)</td></tr>
+	<tr><td>Date#setYear(sYear) -&gt; Number</td><td>Sets the year in the Date object (two or four digits). Use Date#setFullYear instead !!</td></tr>
+	<tr><td>Date#setHours(iHour[, iMinute][, iSecond][, iMillisecond]) -&gt; Number</td><td>Sets the hour in a Date object (from 0-23)</td></tr>
+	<tr><td>Date#setMinutes(iMinute[, iSecond][, iMillisecond]) -&gt; Number</td><td>Set the minutes in a Date object (from 0-59)</td></tr>
+	<tr><td>Date#setSeconds(iSecond[, iMillisecond]) -&gt; Number</td><td>Sets the seconds in a Date object (from 0-59)</td></tr>
+	<tr><td>Date#setMilliseconds(iMillisecond) -&gt; Number</td><td>Sets the milliseconds in a Date object (from 0-999)</td></tr>
+	<tr><td>Date#setTime(iMillisecond) -&gt; Number</td><td>Calculates a date and time by adding or subtracting a specified number of milliseconds to/from midnight January 1, 1970</td></tr>
+	<tr><td>Date#toISOString() -&gt; String</td><td>ES5. Date converted to UTC time and formatted as ISO-8601 string (%Y-%m-%dT%H:%M:%S.%N%G)</td></tr>
+	<tr><td>Date#setUTCDate(iDay) -&gt; Number</td><td>Sets the day of the month in a Date object according to universal time (from 1-31)</td></tr>
+	<tr><td>Date#setUTCMonth(iMonth) -&gt; Number</td><td>Sets the month in a Date object according to universal time (from 0-11)</td></tr>
+	<tr><td>Date#setUTCFullYear(iYear) -&gt; Number</td><td>Sets the year in a Date object according to universal time (four digits)</td></tr>
+	<tr><td>Date#setUTCHours(iHour[, iMinute][, iSecond][, iMillisecond]) -&gt; Number</td><td>Sets the hour in a Date object according to universal time (from 0-23)</td></tr>
+	<tr><td>Date#setUTCMinutes(iMinute[, iSecond][, iMillisecond]) -&gt; Number</td><td>Set the minutes in a Date object according to universal time (from 0-59)</td></tr>
+	<tr><td>Date#setUTCSeconds(iSecond[, iMillisecond]) -&gt; Number</td><td>Set the seconds in a Date object according to universal time (from 0-59)</td></tr>
+	<tr><td>Date#setUTCMilliseconds(iMillisecond) -&gt; Number</td><td>Sets the milliseconds in a Date object according to universal time (from 0-999)</td></tr>
+	<tr><td>Date#toString() -&gt; String</td><td>Converts a Date object to a string</td></tr>
+	<tr><td>Date#toGMTString() -&gt; String</td><td>Converts a Date object, according to Greenwich time, to a string. Use Date#toUTCString instead !!</td></tr>
+	<tr><td>Date#toUTCString() -&gt; String</td><td>Converts a Date object, according to universal time, to a string</td></tr>
+	<tr><td>Date#toLocaleString() -&gt; String</td><td>Converts a Date object, according to local time, to a string</td></tr>
+	<tr><td>Date#valueOf() -&gt; Number</td><td>Returns the number of milliseconds since midnight Jan 1, 1970 (same as Date#getTime)</td></tr>	
+	<tr><td colspan="2"><em>Note: the Number returned by native Date setters is the number of milliseconds since midnight Jan 1, 1970.</em></td></tr>	
+	<tr><th colspan="2" class="section">Native Date Static Methods (from <a href="http://www.w3schools.com/jsref/jsref_obj_date.asp">w3schools.com</a>)</th></tr>	
+	<tr><td>Date.parse(sDate) -&gt; Number</td><td>Takes a date string and returns the number of milliseconds since midnight of January 1, 1970</td></tr>  
+	<tr><td>Date.UTC(iDate) -&gt; Number</td><td>Takes a date and returns the number of milliseconds since midnight of January 1, 1970 according to universal time</td></tr>  
+</table>
+
+
+<a name="parsable"></a>
+<p class="back"><a href="#contents">contents ^</a></p>
+<h3>Parsable Formats</h3>
+
+<ul>
+	<li>Oct 29, 2007</li>
+	<li>October 29, 2007</li>
+	<li>10/29/2007</li>
+	<li>29 Oct 2007</li>
+	<li>29 October 2007</li>
+	<li>10-29-2007</li>
+	<li>2007-10-29</li>
+	<li>29.10.2007</li>
+	<li><em>date</em> 02:30:59</li>
+	<li><em>date</em> 02:30</li>
+	<li><em>date</em> 2:30:59am</li>
+	<li><em>date</em> 2:30am</li>
+	<li><em>date</em> 2am</li>
+	<li>2:30:59am</li>
+	<li>2:30am</li>
+	<li>2am</li>
+</ul>
+<p>Note: all formats are case insensitive.</p>
+
+<a name="codes"></a>
+<p class="back"><a href="#contents">contents ^</a></p>
+<h3>Format Codes</h3>
+
+<table cellspacing="1">
+	<tr><th>#strftime()</th><th>#formatPhp()</th><th>#formatSql()*</th><th>Example</th><th>Meaning</th></tr>
+	<tr><td colspan="5" class="minihead">Year</td></tr>
+	<tr><td>%Y</td><td>Y</td><td>yyyy</td><td>2008</td><td>Four-digit year</td></tr>
+	<tr><td>%y</td><td>y</td><td>yy</td><td>08</td><td>Two-digit year</td></tr>
+	<tr><td colspan="5" class="minihead">Month</td></tr>
+	<tr><td>%m</td><td>m</td><td>mm</td><td>09</td><td>Two-digit month</td></tr>
+	<tr><td>%#m</td><td>n</td><td>m</td><td>9</td><td>One or two-digit month</td></tr>
+	<tr><td>%B</td><td>F</td><td>mmmm</td><td>September</td><td>Full month name</td></tr>
+	<tr><td>%b</td><td>M</td><td>mmm</td><td>Sep</td><td>Abbreviated month name</td></tr>
+	<tr><td colspan="5" class="minihead">Day</td></tr>
+	<tr><td>%d</td><td>d</td><td>dd</td><td>05</td><td>Two-digit day of month</td></tr>
+	<tr><td>%#d</td><td>j</td><td>d</td><td>5</td><td>One or two-digit day of month</td></tr>
+	<tr><td>%e</td><td> </td><td> </td><td>5</td><td>One or two-digit day of month</td></tr>
+	<tr><td>%A</td><td>l</td><td>dddd</td><td>Sunday</td><td>Full name of the day of the week</td></tr>
+	<tr><td>%a</td><td>D</td><td>ddd</td><td>Sun</td><td>Abbreviated name of the day of the week</td></tr>
+	<tr><td>%w</td><td>w</td><td>w</td><td>0</td><td>Number of the day of the week (0 = Sunday, 6 = Saturday)</td></tr>
+	<tr><td>%o</td><td>D</td><td> </td><td>th</td><td>The ordinal suffix string following the day of the month</td></tr>
+	<tr><td colspan="5" class="minihead">Hour</td></tr>
+	<tr><td>%H</td><td>H</td><td>hh24</td><td>23</td><td>Hours in 24-hour format (two digits)</td></tr>
+	<tr><td>%#H</td><td>G</td><td>h24</td><td>3</td><td>Hours in 24-hour integer format (one or two digits)</td></tr>
+	<tr><td>%I</td><td>h</td><td>hh <em>or</em> hh12</td><td>11</td><td>Hours in 12-hour format (two digits)</td></tr>
+	<tr><td>%#I</td><td>g</td><td>h12</td><td>3</td><td>Hours in 12-hour integer format (one or two digits)</td></tr>
+	<tr><td>%p</td><td>A</td><td>am <em>or</em> pm</td><td>PM</td><td>AM or PM</td></tr>
+	<tr><td></td><td>a</td><td></td><td>pm</td><td>am or pm</td></tr>
+	<tr><td colspan="5" class="minihead">Minute</td></tr>
+	<tr><td>%M</td><td>i</td><td>mi</td><td>09</td><td>Minutes (two digits)</td></tr>
+	<tr><td>%#M</td><td> </td><td> </td><td>9</td><td>Minutes (one or two digits)</td></tr>
+	<tr><td colspan="5" class="minihead">Second</td></tr>
+	<tr><td>%S</td><td>s</td><td>ss</td><td>02</td><td>Seconds (two digits)</td></tr>
+	<tr><td>%#S</td><td> </td><td> </td><td>2</td><td>Seconds (one or two digits)</td></tr>
+	<tr><td>%s</td><td>U</td><td> </td><td>1206567625723</td><td>Unix timestamp (Seconds past 1970-01-01 00:00:00)</td></tr>
+	<tr><td colspan="5" class="minihead">Millisecond</td></tr>
+	<tr><td>%N</td><td> </td><td> </td><td>008</td><td>Milliseconds (three digits)</td></tr>
+	<tr><td>%#N</td><td> </td><td> </td><td>8</td><td>Milliseconds (one to three digits)</td></tr>
+	<tr><td colspan="5" class="minihead">Timezone</td></tr>
+	<tr><td>%O</td><td>Z</td><td> </td><td>360</td><td>difference in minutes between local time and GMT</td></tr>
+	<tr><td>%Z</td><td>E</td><td> </td><td>Mountain Standard Time</td><td>Name of timezone as reported by browser</td></tr>	
+	<tr><td>%G</td><td>P</td><td> </td><td>-06:00</td><td>Hours and minutes between GMT</td></tr>
+	<tr><td colspan="5" class="minihead">Shortcuts</td></tr>
+	<tr><td>%F</td><td> </td><td> </td><td>2008-03-26</td><td>%Y-%m-%d</td></tr>
+	<tr><td>%T</td><td> </td><td> </td><td>05:06:30</td><td>%H:%M:%S</td></tr>
+	<tr><td>%X</td><td> </td><td> </td><td>05:06:30</td><td>%H:%M:%S</td></tr>
+	<tr><td>%x</td><td> </td><td> </td><td>03/26/08</td><td>%m/%d/%y</td></tr>
+	<tr><td>%D</td><td> </td><td> </td><td>03/26/08</td><td>%m/%d/%y</td></tr>
+	<tr><td>%#c</td><td> </td><td> </td><td>Wed Mar 26 15:31:00 2008</td><td>%a %b %e %H:%M:%S %Y</td></tr>
+	<tr><td>%v</td><td> </td><td> </td><td>3-Sep-2008</td><td>%e-%b-%Y</td></tr>
+	<tr><td>%R</td><td> </td><td> </td><td>15:31</td><td>%H:%M</td></tr>
+	<tr><td>%r</td><td> </td><td> </td><td>3:31:00 PM</td><td>%I:%M:%S %p</td></tr>
+	<tr><td> </td><td>c</td><td> </td><td>2008-03-26T15:31:00-07:00</td><td>Y-m-d\TH:i:sP (iso 8601)</td></tr>
+	<tr><td> </td><td>r</td><td> </td><td>Sat, 23 Oct 2010 14:46:03 -0600</td><td>D, j M Y H:i:s O (rfc 2822 - Internet Message Format)</td></tr>
+	<tr><td colspan="5" class="minihead">Characters</td></tr>
+	<tr><td>%n</td><td> </td><td> </td><td>\n</td><td>Newline</td></tr>
+	<tr><td>%t</td><td> </td><td> </td><td>\t</td><td>Tab</td></tr>
+	<tr><td>%%</td><td> </td><td> </td><td>%</td><td>Percent Symbol</td></tr>
+</table>
+
+<p>*<em>Note: formatSql() codes may be uppercase or lowercase.</em></p>
+
+<a name="custom"></a>
+<p class="back"><a href="#contents">contents ^</a></p>
+<h3>Customization</h3>
+
+<p>This library allows you to customize month/day names, parsing patterns and format characters.</p>
+
+<h4>Month/day names</h4>
+<p>Simply set the static members of the Date object.</p>
+<pre>Date.MONTHNAMES = 'Enero Febrero Marzo Abril Mayo Junio Julio Agosto Septiembre Octubre Noviembre Diciembre'.split(' '),
+Date.DAYNAMES   = 'Domingo Lunes Martes Miércoles Jueves Viernes Sábado'.split(' '),
+</pre>
+
+<h4>Parsing patterns</h4>
+<p>Add new pattern strings or functions to the array defined in Data.create.patterns.  See source for more examples.</p>
+<pre>// World time => Parsable US-style time
+Date.create.patterns.unshift([/(3[01]|[0-2]\d)\s*\.\s*(1[0-2]|0\d)\s*\.\s*([1-9]\d{3})/, '$2/$1/$3']);
+// 5 months ago
+Date.create.patterns.push(function (str) {
+  var match = str.match(/(\d+)\s+(year|month|week|day|hour|minute|second)s?\s+ago/i);
+  if (match) return new Date().add(-1 * match[1], match[2]);
+});
+</pre>
+
+<h4>Format characters</h4>
+<p>Add new characters and character patterns and a method to call them.  Here is a snippet from the source.</p>
+<pre>Date.addFormat('formatPhp', {
+//
+// 2-part regex matcher for format codes
+//
+// first match must be the character before the code (to account for escaping)
+// second match must be the format code character(s)
+//
+matcher: /(\\)?([a-z])/i,
+defaultFormat: 'Y-m-d H:i:s',
+codes: {
+	// year
+	Y: 'FullYear',
+	// ...
+	O: 'UTCOffsetNumber'
+},
+//
+// shortcuts that will be translated into their longer version
+//
+// be sure that format shortcuts do not refer to themselves: this will cause an infinite loop
+//
+shortcuts: {
+	// iso
+	c: 'Y-m-d\\TH:i:sP',
+	// rfc 2822
+	r: 'D, j M Y H:i:s O'
+}
+});</pre>
+
+</body>
+</html>

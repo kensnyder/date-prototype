@@ -303,7 +303,7 @@
 		//
 		// @return string
 		//
-		getUTCOffsetDigits: function getUTCOffsetDigits() {
+		getUTCOffsetNumber: function getUTCOffsetNumber() {
 			return this.getUTCOffset().replace(':','');
 		},
 		//
@@ -498,6 +498,7 @@
 			Date.prototype[name] = function(formatStr) {
 				return this._applyFormat(formatStr, rules);
 			};
+			return Date;
 		},
 		current: function current() {
 			// instantiate a date (allows unit testing and mocks)
@@ -674,6 +675,7 @@
 			// hours
 			hh24: 'Hours.2',
 			h24: 'Hours',
+			hh: 'Hours12.2',
 			hh12: 'Hours12.2',
 			h12: 'Hours12',
 			am: 'AmPm',
@@ -882,6 +884,7 @@
 		getUnix = null,
 		getUTCOffset = null,
 		setUTCOffset = null,
+		getUTCOffsetNumber = null,
 		getTimezoneName = null,
 		toYmdInt = null,
 		clone = null,

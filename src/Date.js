@@ -383,6 +383,12 @@
 
 			}
 			return seconds > 0 ? 'in ' + rawText : rawText + ' ago';
+		},
+		daysInMonth: function daysInMonth() {
+			return Date.daysInMonth(this.getFullYear(), this.getMonth());
+		},
+		isLeapYear: function isLeapYear() {
+			return Date.daysInMonth(this.getFullYear(), 1) == 29 ? 1 : 0;
 		}
 	};
 	extend(Date.prototype, instanceMethods);
@@ -606,11 +612,13 @@
 			// year
 			Y: 'FullYear',
 			y: 'ShortYear.2',
+			L: 'isLeapYear',
 			// month
 			m: 'MonthNumber.2',
 			n: 'MonthNumber',
 			F: 'MonthName',
 			M: 'AbbrMonthName',
+			t: 'daysInMonth',
 			// day
 			d: 'Date.2',
 			j: 'Date',
@@ -632,7 +640,7 @@
 			U: 'Unix',
 			// timezone
 			Z: 'TimezoneOffset',
-			E: 'TimezoneName',
+			e: 'TimezoneName',
 			P: 'UTCOffset',
 			O: 'UTCOffsetNumber'
 		},
@@ -889,6 +897,7 @@
 		toYmdInt = null,
 		clone = null,
 		diffText = null,
+		isLeapYear = null,
 		toISOString = null,
 		create = null,
 		daysInMonth = null,

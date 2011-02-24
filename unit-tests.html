@@ -260,21 +260,23 @@
 
 		test('Date#add()', function() {
 			// be careful not to cross daylight savings time changeovers
-			equal($D(Date.parse('Oct 27, 2011'))+'', $D('Oct 27, 2007').add(4, 'year')+'', 'adding "years"');
-			equal($D(Date.parse('Oct 27, 2011'))+'', $D('Oct 27, 2007').add(4, 'years')+'', 'adding "year"');
-			equal($D(Date.parse('Dec 28, 2007'))+'', $D('Nov 28, 2007').add(1, 'months')+'', 'adding 1 "months"');
-			equal($D(Date.parse('Dec 27, 2007'))+'', $D('Nov 27, 2007').add(1, 'month')+'', 'adding 1 "month"');
-			equal($D(Date.parse('Feb 11, 2008'))+'', $D('Nov 11, 2007').add(3, 'month')+'', 'adding months that cause year wrapping');
-			equal($D(Date.parse('Dec 11, 2007'))+'', $D('Feb 11, 2008').add(-2, 'month')+'', 'subtracting months that cause year wrapping');
-			equal($D(Date.parse('Jan 12, 2010'))+'', $D('Dec 12, 2007').add(25, 'months')+'', 'adding more than 12 months');
-			equal($D(Date.parse('Oct 28, 2007'))+'', $D('Oct 26, 2007').add(2, 'days')+'', 'adding "days"');
-			equal($D(Date.parse('Oct 27, 2007'))+'', $D('Oct 26, 2007').add(1, 'day')+'', 'adding "day"');
-			equal($D(Date.parse('Oct 27, 2007 20:00'))+'', $D('Oct 27, 2007 16:00').add(4, 'hours')+'', 'adding "hours"');
-			equal($D(Date.parse('Oct 27, 2007 20:30'))+'', $D('Oct 27, 2007 19:30:00').add(1, 'hour')+'', 'adding "hour"');
-			equal($D(Date.parse('Oct 27, 2007 19:31'))+'', $D('Oct 27, 2007 19:30:00').add(60, 'seconds')+'', 'adding "seconds"');
-			equal($D(Date.parse('Oct 27, 2007 19:31'))+'', $D('Oct 27, 2007 19:30:00').add(60, 'second')+'', ' adding "second"');
-			equal($D(Date.parse('Oct 27, 2007 19:31'))+'', $D('Oct 27, 2007 19:30:00').add(60000, 'milliseconds')+'', 'adding "milliseconds"');
-			equal($D(Date.parse('Oct 27, 2007 19:31'))+'', $D('Oct 27, 2007 19:30:00').add(60000, 'millisecond')+'', 'adding "millisecond"');
+			equal($D('Oct 27, 2007').add(4, 'year')+'', $D(Date.parse('Oct 27, 2011'))+'', 'adding "years"');
+			equal($D('Oct 27, 2007').add(4, 'years')+'', $D(Date.parse('Oct 27, 2011'))+'', 'adding "year"');
+			equal($D('Nov 28, 2007').add(1, 'months')+'', $D(Date.parse('Dec 28, 2007'))+'', 'adding 1 "months"');
+			equal($D('Nov 27, 2007').add(1, 'month')+'', $D(Date.parse('Dec 27, 2007'))+'', 'adding 1 "month"');
+			equal($D('Nov 11, 2007').add(3, 'month')+'', $D(Date.parse('Feb 11, 2008'))+'', 'adding months that cause year wrapping');
+			equal($D('Feb 11, 2008').add(-2, 'month')+'', $D(Date.parse('Dec 11, 2007'))+'', 'subtracting months that cause year wrapping');
+			equal($D('Dec 12, 2007').add(25, 'months')+'', $D(Date.parse('Jan 12, 2010'))+'', 'adding more than 12 months');
+			equal($D('Oct 26, 2007').add(2, 'days')+'', $D(Date.parse('Oct 28, 2007'))+'', 'adding "days"');
+			equal($D('Oct 26, 2007').add(1, 'day')+'', $D(Date.parse('Oct 27, 2007'))+'', 'adding "day"');
+			equal($D('Oct 27, 2007 16:00').add(4, 'hours')+'', $D(Date.parse('Oct 27, 2007 20:00'))+'', 'adding "hours"');
+			equal($D('Oct 27, 2007 19:30:00').add(1, 'hour')+'', $D(Date.parse('Oct 27, 2007 20:30'))+'', 'adding "hour"');
+			equal($D('Oct 27, 2007 19:30:00').add(60, 'seconds')+'', $D(Date.parse('Oct 27, 2007 19:31'))+'', 'adding "seconds"');
+			equal($D('Oct 27, 2007 19:30:00').add(60, 'second')+'', $D(Date.parse('Oct 27, 2007 19:31'))+'', ' adding "second"');
+			equal($D('Oct 27, 2007 19:30:00').add(60000, 'milliseconds')+'', $D(Date.parse('Oct 27, 2007 19:31'))+'', 'adding "milliseconds"');
+			equal($D('Oct 27, 2007 19:30:00').add(60000, 'millisecond')+'', $D(Date.parse('Oct 27, 2007 19:31'))+'', 'adding "millisecond"');
+			equal($D('May 31, 2007 19:31').add(1, 'month')+'', $D(Date.parse('Jun 30, 2007 19:31'))+'', 'months that have more days than the original month (addition)');
+			equal($D('May 31, 2007 19:31').add(-1, 'month')+'', $D(Date.parse('Apr 30, 2007 19:31'))+'', 'months that have more days than the original month (subtraction)');
 		});
 
 		test('Date#diff()', function() {

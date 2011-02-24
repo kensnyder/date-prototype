@@ -43,6 +43,7 @@
 		month: {
 			// add a number of months
 			add: function addMonth(d, number) {
+				var prevDay = d.getDate();
 				// add any years needed (increments of 12)
 				multipliers.year.add(d, Math[number > 0 ? 'floor' : 'ceil'](number / 12));
 				// ensure that we properly wrap betwen December and January
@@ -55,6 +56,12 @@
 					d.setYear(d.getFullYear() - 1);
 				}
 				d.setMonth(prevMonth);
+				if (d.getDate() != prevDay) {
+					// new month has fewer days in the month than previous/next month
+					// so JavaScript will wrap over to next month
+					d.add(-1, 'month');
+					d.setDate(d.daysInMonth());
+				}
 			},
 			// get the number of months between two Date objects (decimal to the nearest day)
 			diff: function diffMonth(d1, d2) {
@@ -385,7 +392,7 @@
 			return seconds > 0 ? 'in ' + rawText : rawText + ' ago';
 		},
 		daysInMonth: function daysInMonth() {
-			return Date.daysInMonth(this.getFullYear(), this.getMonth());
+			return Date.daysInMonth(this.getFullYear(), this.getMonth()+1);
 		},
 		isLeapYear: function isLeapYear() {
 			return Date.daysInMonth(this.getFullYear(), 1) == 29 ? 1 : 0;
@@ -478,7 +485,7 @@
 		//
 		// @param object newNames
 		//
-		daysInMonth: function daysInMonth(year, month) {
+		daysInMonth: function daysInMonthGeneric(year, month) {
 			if (month == 2) {
 				return new Date(year, 1, 29).getDate() == 29 ? 29 : 28;
 			}
@@ -901,6 +908,7 @@
 		toISOString = null,
 		create = null,
 		daysInMonth = null,
+		daysInMonthGeneric = null,
 		autoFormat = null,
 		addFormat = null,
 		current = null,

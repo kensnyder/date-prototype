@@ -2,12 +2,12 @@
  * Date instance methods
  *
  * @author Ken Snyder (ken d snyder at gmail dot com)
- * @date October 2010
- * @version 3.0 (http://kendsnyder.com/sandbox/date/)
+ * @date February 2011
+ * @version 3.1 (http://kendsnyder.com/sandbox/date/)
  * @license Creative Commons Attribution License 3.0 (http://creativecommons.org/licenses/by/3.0/)
  */
 // begin by creating a scope for utility variables
-(function (global) {
+(function(global) {
 	//
 	// pre-calculate the number of milliseconds in a day
 	//
@@ -42,7 +42,7 @@
 		week: 7 * day,
 		month: {
 			// add a number of months
-			add: function addMonth(d, number) {
+			add: function(d, number) {
 				var prevDay = d.getDate();
 				// add any years needed (increments of 12)
 				multipliers.year.add(d, Math[number > 0 ? 'floor' : 'ceil'](number / 12));
@@ -64,7 +64,7 @@
 				}
 			},
 			// get the number of months between two Date objects (decimal to the nearest day)
-			diff: function diffMonth(d1, d2) {
+			diff: function(d1, d2) {
 				// get the number of years
 				var diffYears = d1.getFullYear() - d2.getFullYear();
 				// get the number of remaining months
@@ -77,11 +77,11 @@
 		},
 		year: {
 			// add a number of years
-			add: function addYear(d, number) {
+			add: function(d, number) {
 				d.setYear(d.getFullYear() + Math[number > 0 ? 'floor' : 'ceil'](number));
 			},
 			// get the number of years between two Date objects (decimal to the nearest day)
-			diff: function diffYear(d1, d2) {
+			diff: function(d1, d2) {
 				return multipliers.month.diff(d1, d2) / 12;
 			}
 		}
@@ -109,7 +109,7 @@
 		// units: year | month | day | week | hour | minute | second | millisecond
 		// @return object Date
 		//
-		succ: function succ(unit) {
+		succ: function(unit) {
 			return this.clone().add(1, unit);
 		},
 		//
@@ -119,7 +119,7 @@
 		// @param string unit
 		// @return object Date (chainable)
 		//
-		add: function add(number, unit) {
+		add: function(number, unit) {
 			var factor = multipliers[unit] || multipliers.day;
 			if (typeof factor == 'number') {
 				this.setTime(this.getTime() + (factor * number));
@@ -136,7 +136,7 @@
 		// @param boolean allowDecimal
 		// @return integer/float
 		//
-		diff: function diff(dateObj, unit, allowDecimal) {
+		diff: function(dateObj, unit, allowDecimal) {
 			// ensure we have a Date object
 			dateObj = Date.create(dateObj);
 			if (dateObj === null) return null;
@@ -153,7 +153,7 @@
 			return (allowDecimal ? unitDiff : Math[unitDiff > 0 ? 'floor' : 'ceil'](unitDiff));
 		},
 
-		_applyFormat: function _applyFormat(formatStr, formatting) {
+		_applyFormat: function(formatStr, formatting) {
 			// default the format string to year-month-day
 			var source = formatStr || formatting.defaultFormat, result = '', match;
 			// replace each format code
@@ -171,7 +171,7 @@
 		//
 		// take a date instance and a format code and return the formatted value
 		//
-		_applyFormatChar: function _applyFormatChar(code, formatting) {
+		_applyFormatChar: function(code, formatting) {
 			if (formatting.shortcuts[code]) {
 				// process any shortcuts recursively
 				return this._applyFormat(formatting.shortcuts[code], formatting);
@@ -188,7 +188,7 @@
 				return nbr;
 			}
 		},
-		format: function format(formatStr) {
+		format: function(formatStr) {
 			formatStr = formatStr || Date.formatting.strftime.defaultFormat;
 			if (formatStr.indexOf('%') > -1) {
 				return this.strftime(formatStr);
@@ -200,7 +200,7 @@
 		//
 		// @return integer
 		//
-		getShortYear: function getShortYear() {
+		getShortYear: function() {
 			return this.getYear() % 100;
 		},
 		//
@@ -208,7 +208,7 @@
 		//
 		// @return integer
 		//
-		getMonthNumber: function getMonthNumber() {
+		getMonthNumber: function() {
 			return this.getMonth() + 1;
 		},
 		//
@@ -216,7 +216,7 @@
 		//
 		// @return string
 		//
-		getMonthName: function getMonthName() {
+		getMonthName: function() {
 			return Date.MONTHNAMES[this.getMonth()];
 		},
 		//
@@ -224,7 +224,7 @@
 		//
 		// @return string
 		//
-		getAbbrMonthName: function getAbbrMonthName() {
+		getAbbrMonthName: function() {
 			return Date.ABBR_MONTHNAMES[this.getMonth()];
 		},
 		//
@@ -232,7 +232,7 @@
 		//
 		// @return string
 		//
-		getDayName: function getDayName() {
+		getDayName: function() {
 			return Date.DAYNAMES[this.getDay()];
 		},
 		//
@@ -240,7 +240,7 @@
 		//
 		// @return string
 		//
-		getAbbrDayName: function getAbbrDayName() {
+		getAbbrDayName: function() {
 			return Date.ABBR_DAYNAMES[this.getDay()];
 		},
 		//
@@ -248,7 +248,7 @@
 		//
 		// @return string
 		//
-		getDayOrdinal: function getDayOrdinal() {
+		getDayOrdinal: function() {
 			return Date.ORDINALNAMES[this.getDate() % 10];
 		},
 		//
@@ -256,7 +256,7 @@
 		//
 		// @return integer
 		//
-		getHours12: function getHours12() {
+		getHours12: function() {
 			var hours = this.getHours();
 			return hours > 12 ? hours - 12 : (hours == 0 ? 12 : hours);
 		},
@@ -265,7 +265,7 @@
 		//
 		// @return string
 		//
-		getAmPm: function getAmPm() {
+		getAmPm: function() {
 			return this.getHours() >= 12 ? 'PM' : 'AM';
 		},
 		//
@@ -273,7 +273,7 @@
 		//
 		// @return string
 		//
-		getAmPmLower: function getAmPmLower() {
+		getAmPmLower: function() {
 			return this.getHours() >= 12 ? 'pm' : 'am';
 		},
 		//
@@ -281,7 +281,7 @@
 		//
 		// @return integer
 		//
-		getUnix: function getUnix() {
+		getUnix: function() {
 			return Math.round(this.getTime() / 1000, 0);
 		},
 		//
@@ -289,7 +289,7 @@
 		//
 		// @return string
 		//
-		getUTCOffset: function getUTCOffset() {
+		getUTCOffset: function() {
 			// divide the minutes offset by 60
 			var hours = this.getTimezoneOffset() / 60;
 			// decide if we are ahead of or behind GMT
@@ -299,7 +299,7 @@
 			// add the +/- to the padded number of hours to : to the padded minutes
 			return prefix + zeroPad(Math.floor(hours), 2) + ':' + zeroPad((hours % 1) * 60, 2);
 		},
-		setUTCOffset: function setUTCOffset(seconds) {
+		setUTCOffset: function(seconds) {
 			var curr = this.getTimezoneOffset();
 			var utcNow = this.getTime() + (curr * 60000);
 			this.setTime(utcNow - (seconds * 60000));
@@ -310,7 +310,7 @@
 		//
 		// @return string
 		//
-		getUTCOffsetNumber: function getUTCOffsetNumber() {
+		getUTCOffsetNumber: function() {
 			return this.getUTCOffset().replace(':','');
 		},
 		//
@@ -318,7 +318,7 @@
 		//
 		// @return string
 		//
-		getTimezoneName: function getTimezoneName() {
+		getTimezoneName: function() {
 			var match = /(?:\((.+)\)$| ([A-Z]{3}) )/.exec(this.toString());
 			return match[1] || match[2] || 'GMT' + this.getUTCOffset();
 		},
@@ -327,7 +327,7 @@
 		//
 		// @return int
 		//
-		toYmdInt: function toYmdInt() {
+		toYmdInt: function() {
 			return (this.getFullYear() * 10000) + (this.getMonthNumber() * 100) + this.getDate();
 		},
 		//
@@ -335,10 +335,10 @@
 		//
 		// @return object
 		//
-		clone: function clone() {
+		clone: function() {
 			return new Date(this.getTime());
 		},
-		diffText: function diffText() {
+		diffText: function() {
 			var seconds = this.diff(Date.current(), 'seconds');
 			var diff = Math.abs(seconds);
 			var rawText;
@@ -391,17 +391,17 @@
 			}
 			return seconds > 0 ? 'in ' + rawText : rawText + ' ago';
 		},
-		daysInMonth: function daysInMonth() {
+		daysInMonth: function() {
 			return Date.daysInMonth(this.getFullYear(), this.getMonth()+1);
 		},
-		isLeapYear: function isLeapYear() {
+		isLeapYear: function() {
 			return Date.daysInMonth(this.getFullYear(), 1) == 29 ? 1 : 0;
 		}
 	};
 	extend(Date.prototype, instanceMethods);
 	// ES5 Shim
 	if (!Date.prototype.toISOString) {
-		Date.prototype.toISOString = function toISOString() {
+		Date.prototype.toISOString = function() {
 			return this.setUTCOffset(0).strftime(Date.ISO);
 		};
 	}
@@ -415,7 +415,7 @@
 		// @param string/object/integer date
 		// @return object Date
 		//
-		create: function create(date) {
+		create: function(date) {
 			// 0 arguments or date is undefined
 			if (typeof date == 'undefined') {
 				return Date.current();
@@ -485,13 +485,13 @@
 		//
 		// @param object newNames
 		//
-		daysInMonth: function daysInMonthGeneric(year, month) {
+		daysInMonth: function(year, month) {
 			if (month == 2) {
 				return new Date(year, 1, 29).getDate() == 29 ? 29 : 28;
 			}
 			return [undefined,31,undefined,31,30,31,30,31,31,30,31,30,31][month];
 		},
-		autoFormat: function autoFormat(input, formatStr) {
+		autoFormat: function(input, formatStr) {
 			input = typeof input == 'string' ? document.getElementById(input) : input;
 			function correct() {
 				input.value = Date.create(input.value).format(formatStr);
@@ -507,13 +507,13 @@
 			}
 			return input;
 		},
-		addFormat: function addFormat(name, rules) {
+		addFormat: function(name, rules) {
 			Date.prototype[name] = function(formatStr) {
 				return this._applyFormat(formatStr, rules);
 			};
 			return Date;
 		},
-		current: function current() {
+		current: function() {
 			// instantiate a date (allows unit testing and mocks)
 			return new Date;
 		}
@@ -521,7 +521,7 @@
 	extend(Date, staticMethods);
 	// ES5 Shim
 	if (!('now' in Date)) {
-		Date.now = function now() {
+		Date.now = function() {
 			return Date.current().setUTCOffset(0).getTime();
 		};
 	}
@@ -733,7 +733,7 @@
 		// 24-hour time
 		[/^(?:(.+)\s+)?([01]\d|2[0-3])(?:\s*\:\s*([0-5]\d))(?:\s*\:\s*([0-5]\d))?\s*$/i,
 		//                         ^opt. date  ^hour          ^minute              ^opt. second
-		function pattern24Hour(match) {
+		function(match) {
 			var d;
 			if (match[1]) {
 				d = Date.create(match[1]);
@@ -751,7 +751,7 @@
 		// 12-hour time
 		[/^(?:(.+)\s+)?([1-9]|1[012])(?:\s*\:\s*(\d\d))?(?:\s*\:\s*(\d\d))?\s*(am|pm)\s*$/i,
 		//                         ^opt. date  ^hour         ^opt. minute       ^opt. second          ^am or pm
-		function pattern12Hour(match) {
+		function(match) {
 			var d;
 			if (match[1]) {
 				d = Date.create(match[1]);
@@ -770,7 +770,7 @@
 
 		// 2 weeks after today, 3 months after 3-5-2008
 		[/(\d+)\s+(year|month|week|day|hour|minute|second)s?\s+(before|from|after)\s+(.+)/i,
-		function patternAfter(match) {
+		function(match) {
 			var fromDate = Date.create(match[4]);
 			if (fromDate instanceof Date) {
 				return fromDate.add((match[3].toLowerCase() == 'before' ? -1 : 1) * match[1], match[2]);
@@ -795,19 +795,19 @@
 
 		// 5 months ago
 		[/(\d+)\s+(year|month|week|day|hour|minute|second)s?\s+ago/i,
-		function patternAgo(match) {
+		function(match) {
 			return Date.current().add(-1 * match[1], match[2]);
 		}],
 
 		// in 2 hours/weeks/etc.
 		[/in\s+(\d+)\s+(year|month|week|day|hour|minute|second)s?/i,
-		function patternAfter(match) {
+		function(match) {
 			return Date.current().add(match[1], match[2]);
 		}],
 
 		// today, tomorrow, yesterday
 		[/^(tod|now|tom|yes)/i,
-		function patternToday(match) {
+		function(match) {
 			var now = Date.current();
 			switch (match[1].toLowerCase()) {
 				case 'tod':
@@ -823,7 +823,7 @@
 		// this/next/last january, next thurs
 		// this/next/last january, next thurs
 		[/(this|next|last)\s+(?:(year|month|week|day|hour|minute|second)|(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)|(sun|mon|tue|wed|thu|fri|sat))/i,
-		function patternNext(match) {
+		function(match) {
 			// $1 = this/next/last
 			var multiplier = match[1].toLowerCase() == 'last' ? -1 : 1;
 			var now = Date.current();
@@ -859,7 +859,7 @@
 
 		// January 4th, July the 4th
 		[/^(?:(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\s+)(?:the\s+)?(\d+)(?:st|nd|rd|th)?$/i,
-		function patternNth(match) {
+		function(match) {
 			var d = Date.current();
 			if (match[1]) {
 				var i = Date.ABBR_MONTHNAMES.length;
@@ -877,48 +877,5 @@
 
 	// add to global if not exists
 	global.$D = global.$D || Date.create;
-
-	// IE Named-Function-Expression Bug
-	var addMonth = null,
-		diffmonth = null,
-		addYear = null,
-		diffYear = null,
-		add = null,
-		diff = null,
-		_applyFormat = null,
-		_applyFormatChar = null,
-		format = null,
-		getShortYear = null,
-		getMonthName = null,
-		getMonthNumber = null,
-		getAbbrMonthName = null,
-		getDayOrdinal = null,
-		getHours12 = null,
-		getAmPm = null,
-		getAmPmLower = null,
-		getUnix = null,
-		getUTCOffset = null,
-		setUTCOffset = null,
-		getUTCOffsetNumber = null,
-		getTimezoneName = null,
-		toYmdInt = null,
-		clone = null,
-		diffText = null,
-		isLeapYear = null,
-		toISOString = null,
-		create = null,
-		daysInMonth = null,
-		daysInMonthGeneric = null,
-		autoFormat = null,
-		addFormat = null,
-		current = null,
-		now = null,
-		pattern24Hour = null,
-		pattern12Hour = null,
-		patternAgo = null,
-		patternAfter = null,
-		patternToday = null,
-		patternNext = null,
-		patternNth = null;
 
 })(this);

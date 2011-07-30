@@ -1,9 +1,9 @@
 /**
  * Date instance methods
  *
- * @author Ken Snyder (ken d snyder at gmail dot com)
+ * @author Ken Snyder (kendsnyder at gmail dot com)
  * @date February 2011
- * @version 3.1 (http://kendsnyder.com/sandbox/date/)
+ * @version 3.1.1 (http://kendsnyder.com/sandbox/date/)
  * @license Creative Commons Attribution License 3.0 (http://creativecommons.org/licenses/by/3.0/)
  */
 // begin by creating a scope for utility variables
@@ -137,6 +137,7 @@
 		// @return integer/float
 		//
 		diff: function(dateObj, unit, allowDecimal) {
+			var unitDiff;
 			// ensure we have a Date object
 			dateObj = Date.create(dateObj);
 			if (dateObj === null) return null;
@@ -144,10 +145,10 @@
 			var factor = multipliers[unit] || multipliers.day;
 			if (typeof factor == 'number') {
 				// multiply
-				var unitDiff = (this.getTime() - dateObj.getTime()) / factor;
+				unitDiff = (this.getTime() - dateObj.getTime()) / factor;
 			} else {
 				// run function
-				var unitDiff = factor.diff(this, dateObj);
+				unitDiff = factor.diff(this, dateObj);
 			}
 			// if decimals are not allowed, round toward zero
 			return (allowDecimal ? unitDiff : Math[unitDiff > 0 ? 'floor' : 'ceil'](unitDiff));
@@ -158,7 +159,7 @@
 			var source = formatStr || formatting.defaultFormat, result = '', match;
 			// replace each format code
 			while (source.length > 0) {
-				if (match = source.match(formatting.matcher)) {
+				if ((match = source.match(formatting.matcher))) {
 					result += source.slice(0, match.index);
 					result += (match[1] || '') + this._applyFormatChar(match[2], formatting);
 					source = source.slice(match.index + match[0].length);
@@ -432,7 +433,7 @@
 						return new Date(date);
 					}
 
-					var date = String(date).replace(/^\s*(.*)\s*$/, '$1');
+					date = String(date).replace(/^\s*(.*)\s*$/, '$1');
 					if (date === '') {
 						return Date.current();
 					}
@@ -732,7 +733,7 @@
 	Date.create.patterns = [
 		// 24-hour time
 		[/^(?:(.+)\s+)?([01]\d|2[0-3])(?:\s*\:\s*([0-5]\d))(?:\s*\:\s*([0-5]\d))?\s*$/i,
-		//                         ^opt. date  ^hour          ^minute              ^opt. second
+		//  ^opt. date  ^hour          ^minute              ^opt. second
 		function(match) {
 			var d;
 			if (match[1]) {
@@ -749,8 +750,8 @@
 		}],
 
 		// 12-hour time
-		[/^(?:(.+)\s+)?([1-9]|1[012])(?:\s*\:\s*(\d\d))?(?:\s*\:\s*(\d\d))?\s*(am|pm)\s*$/i,
-		//                         ^opt. date  ^hour         ^opt. minute       ^opt. second          ^am or pm
+		[/^(?:(.+)\s+)?(0?[1-9]|1[012])(?:\s*\:\s*(\d\d))?(?:\s*\:\s*(\d\d))?\s*(am|pm)\s*$/i,
+		//  ^opt. date  ^hour         ^opt. minute       ^opt. second          ^am or pm
 		function(match) {
 			var d;
 			if (match[1]) {
@@ -855,6 +856,7 @@
 					}
 				}
 			}
+			return false;
 		}],
 
 		// January 4th, July the 4th

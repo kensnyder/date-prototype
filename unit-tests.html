@@ -100,6 +100,7 @@
 			equal($D('12-December-2006')+'', new Date(2006, 11, 12)+'', 'parsing `12-December-2006`');
 			equal($D('8-Dec-2006 20:15:59')+'', new Date(2006, 11, 8, 20, 15, 59)+'', 'parsing `8-Dec-2006 20:15:59`');
 			equal($D('8-Dec-2006 8:15pm')+'', new Date(2006, 11, 8, 20, 15)+'', 'parsing `8-Dec-2006 8:15pm`');
+			equal($D('8-Dec-2006 08:15pm')+'', new Date(2006, 11, 8, 20, 15)+'', 'parsing `8-Dec-2006 08:15pm`');
 			equal($D('10/28/2007')+'', new Date(2007, 9, 28)+'', 'parsing `10/28/2007`');
 			equal($D('Oct 28, 2007')+'', new Date(2007, 9, 28)+'', 'parsing `Oct 28, 2007`');
 			equal($D('28 Oct 2007')+'', new Date(2007, 9, 28)+'', 'parsing `28 Oct 2007`');

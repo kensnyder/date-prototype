@@ -7,12 +7,11 @@
   <link rel="stylesheet" href="css/general.css" type="text/css" />
 </head>
 <body>
-<h1>JavaScript Date Instance Methods (v3.1.1 July 2011)</h1>
+<h1>JavaScript Date Instance Methods (v3.2 July 2011)</h1>
 
 <p><em>Looking for <a href="http://sandbox.kendsnyder.com/date2">version 2?</a></em></p>
 
-<a name="contents"></a>
-<h2>Contents</h2>
+<h2 id="contents">Contents</h2>
 <ol>
 	<li><a href="#intro">Introduction</a></li>
 	<li><a href="#demonstration">Demo</a></li>
@@ -21,13 +20,12 @@
 	<li><a href="#ref">Method Reference</a></li>
 	<li><a href="#parse">Parsable Formats</a></li>
 	<li><a href="#codes">Format Codes</a></li>
-	<li><a href="#custom">Customization</a></li>
-	<li><a href="unit-tests.html">Unit Test</a></li>
+	<li><a href="#custom">Customization and I18n</a></li>
+	<li><a href="unit-tests.html">Unit Tests</a></li>
 </ol>
 
-<a name="intro"></a>
 <p class="back"><a href="#contents">contents ^</a></p>
-<h3>Introduction</h3>
+<h3 id="intro">Introduction</h3>
 
 <p>This script provides JavaScript Date instance methods for parsing, formatting, and calculating dates. 
 	It leverages the existing functionality of the native Date.parse method
@@ -42,9 +40,8 @@
 	<li>Methods are available on all Date Objects.</li>
 </ol>
 
-<a name="demonstration"></a>
 <p class="back"><a href="#contents">contents ^</a></p>
-<h3>Demo</h3>
+<h3 id="demonstration">Demo</h3>
 
 <div>
 	<form name="demo" action="">
@@ -106,18 +103,16 @@ diffDate();
 
 
 
-<a name="src"></a>
 <p class="back"><a href="#contents">contents ^</a></p>
-<h3>Download</h3>
+<h3 id="src">Download</h3>
 
 <ul>
 	<li><a href="src/Date.js" target="blank">Date.js (source)</a></li>
 	<li><a href="Date.min.js" target="blank">Date.min.js (minified)</a></li>
 </ul>
 
-<a name="examples"></a>
 <p class="back"><a href="#contents">contents ^</a></p>
-<h3>Examples</h3>
+<h3 id="examples">Examples</h3>
 
 <pre>
 $D('2006-09-20').strftime('%m/%d/%Y'); // "09/20/2006"
@@ -129,9 +124,8 @@ $D('2006.09.28').diff('20 Sep, 2006', 'days'); // 8
 </pre>
 
 
-<a name="ref"></a>
 <p class="back"><a href="#contents">contents ^</a></p>
-<h3>Full Reference</h3>
+<h3 id="ref">Full Reference</h3>
 
 <table cellspacing="1">
 	<tr><th colspan="2" class="section">New Date Instance Methods</th></tr>	
@@ -218,23 +212,30 @@ $D('2006.09.28').diff('20 Sep, 2006', 'days'); // 8
 	<tr><td colspan="2"><em>Note: the Number returned by native Date setters is the number of milliseconds since midnight Jan 1, 1970.</em></td></tr>	
 	<tr><th colspan="2" class="section">Native Date Static Methods (from <a href="http://www.w3schools.com/jsref/jsref_obj_date.asp">w3schools.com</a>)</th></tr>	
 	<tr><td>Date.parse(sDate) -&gt; Number</td><td>Takes a date string and returns the number of milliseconds since midnight of January 1, 1970</td></tr>  
-	<tr><td>Date.UTC(iDate) -&gt; Number</td><td>Takes a date and returns the number of milliseconds since midnight of January 1, 1970 according to universal time</td></tr>  
+	<tr><td>Date.UTC(year,month,day,hours,minutes,seconds,ms) -&gt; Number</td><td>Takes a date and returns the number of milliseconds since midnight of January 1, 1970 according to universal time</td></tr>  
 </table>
 
 
-<a name="parsable"></a>
 <p class="back"><a href="#contents">contents ^</a></p>
-<h3>Parsable Formats</h3>
+<h3 id="parsable">Parsable Formats</h3>
 
 <ul>
+	<li>5/29/2007</li>
+	<li>05/29/2007</li>
+	<li>5-29-2007</li>
+	<li>05-29-2007</li>
 	<li>Oct 29, 2007</li>
 	<li>October 29, 2007</li>
-	<li>10/29/2007</li>
+	<li>October the 29th</li>
+	<li>October 29th</li>
 	<li>29 Oct 2007</li>
+	<li>29-Oct-2007</li>
 	<li>29 October 2007</li>
-	<li>10-29-2007</li>
+	<li>29-October-2007</li>
 	<li>2007-10-29</li>
 	<li>29.10.2007</li>
+	<li>29/10/2007</li>
+	<li><em>date</em> 02:30:59.005</li>
 	<li><em>date</em> 02:30:59</li>
 	<li><em>date</em> 02:30</li>
 	<li><em>date</em> 2:30:59am</li>
@@ -243,12 +244,23 @@ $D('2006.09.28').diff('20 Sep, 2006', 'days'); // 8
 	<li>2:30:59am</li>
 	<li>2:30am</li>
 	<li>2am</li>
+	<li>@1312132465 <em>(Unix Timestamp)</em></li>
+	<li>2 weeks before <em>date</em></li>
+	<li>2 years after <em>date</em></li>
+	<li>2 days ago</li>
+	<li>in 2 months</li>
+	<li>yesterday</li>
+	<li>today</li>
+	<li>tomorrow</li>
+	<li>last Thursday</li>
+	<li>this Thursday</li>
+	<li>last month</li>
+	<li>now</li>
 </ul>
 <p>Note: all formats are case insensitive.</p>
 
-<a name="codes"></a>
 <p class="back"><a href="#contents">contents ^</a></p>
-<h3>Format Codes</h3>
+<h3 id="cones">Format Codes</h3>
 
 <table cellspacing="1">
 	<tr><th>#strftime()</th><th>#formatPhp()</th><th>#formatSql()*</th><th>Example</th><th>Meaning</th></tr>
@@ -309,29 +321,29 @@ $D('2006.09.28').diff('20 Sep, 2006', 'days'); // 8
 
 <p>*<em>Note: formatSql() codes may be uppercase or lowercase.</em></p>
 
-<a name="custom"></a>
 <p class="back"><a href="#contents">contents ^</a></p>
-<h3>Customization</h3>
+<h3 id="custom">Customization</h3>
 
 <p>This library allows you to customize month/day names, parsing patterns and format characters.</p>
 
-<h4>Month/day names</h4>
+<h4>Parsing patterns</h4>
+<p>Add new pattern strings or functions to the array defined in Data.create.patterns.  See source for more examples.</p>
+<pre>Date.addPattern(['month-year', /^(\d{1,2})-(\d{4})$/, '$1/01/$2']); // match month-year
+Date.addPattern(['hoy', /^hoy$/i, function(match) { return new Date(); }], 'iso_8601'); // match Spanish word for `today`
+</pre>
+<p>Remove a pattern</p>
+<pre>Date.removePattern('us'); // us-style m/d/Y dates no longer recognized
+
+var us = Date.removePattern('us');
+Date.addPattern(us, 'world'); // prefer world-style d/m/Y dates over us-style dates
+</pre>
+
+<h4>Internationalize Month/day names</h4>
 <p>Simply set the static members of the Date object.</p>
 <pre>Date.MONTHNAMES = 'Enero Febrero Marzo Abril Mayo Junio Julio Agosto Septiembre Octubre Noviembre Diciembre'.split(' '),
 Date.DAYNAMES   = 'Domingo Lunes Martes Miércoles Jueves Viernes Sábado'.split(' '),
 </pre>
-
-<h4>Parsing patterns</h4>
-<p>Add new pattern strings or functions to the array defined in Data.create.patterns.  See source for more examples.</p>
-<pre>// World time => Parsable US-style time
-Date.create.patterns.unshift([/(3[01]|[0-2]\d)\s*\.\s*(1[0-2]|0\d)\s*\.\s*([1-9]\d{3})/, '$2/$1/$3']);
-// 5 months ago
-Date.create.patterns.push(function (str) {
-  var match = str.match(/(\d+)\s+(year|month|week|day|hour|minute|second)s?\s+ago/i);
-  if (match) return new Date().add(-1 * match[1], match[2]);
-});
-</pre>
-
+		 
 <h4>Format characters</h4>
 <p>Add new characters and character patterns and a method to call them.  Here is a snippet from the source.</p>
 <pre>Date.addFormat('formatPhp', {
@@ -361,6 +373,17 @@ shortcuts: {
 	r: 'D, j M Y H:i:s O'
 }
 });</pre>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try{
+var pageTracker = _gat._getTracker("UA-5611225-1");
+pageTracker._trackPageview();
+} catch(err) {}
+</script>
 
 </body>
 </html>

@@ -79,6 +79,11 @@
 			d = new Date(2008, 11, 13, 6, 55, 1, 800);
 			pd = $D(2008, 11, 13, 6, 55, 1, 800);
 			equal(pd+'', d+'', '7 arguments');
+			
+			// 8 arguments
+			d = new Date(2008, 11, 13, 6, 55, 1, 800, -1);
+			pd = $D(2008, 11, 13, 6, 55, 1, 800, -1);
+			equal(pd+'', d+'', '8 arguments');			
 
 			// 1 argument
 			d = new Date();
@@ -89,15 +94,28 @@
 		});
 
 		test('Date.create() - string date', function() {
+			var d = new Date();
+			d.setTime(1312132465000);
+			equal($D('@1312132465')+'', d+'', 'parsing `@13121324651` unix timestamp');
+			d.setTime(-1000);
+			equal($D('@-1')+'', d+'', 'parsing `@-1` unix timestamp');
 			equal($D(' \r\n\t ')+'', new Date()+'', 'parsing whitespace string');
 			equal($D('2006-08-01')+'', new Date(2006, 7, 1)+'', 'parsing `2006-08-01`');
 			equal($D('2006-08-01 20:15')+'', new Date(2006, 7, 1, 20, 15)+'', 'parsing `2006-08-01 20:15`');
 			equal($D('2006-08-01 20:15:59')+'', new Date(2006, 7, 1, 20, 15, 59)+'', 'parsing `2006-08-01 20:15:59`');
 			equal($D('12-01-2006')+'', new Date(2006, 11, 1)+'', 'parsing `12-01-2006`');
 			equal($D('12-1-2006')+'', new Date(2006, 11, 1)+'', 'parsing `12-1-2006`');
+			equal($D('13.1.2006')+'', new Date(2006, 0, 13)+'', 'parsing `13.1.2006`');
+			equal($D('13.01.2006')+'', new Date(2006, 0, 13)+'', 'parsing `13.01.2006`');
+			equal($D('13/1/2006')+'', new Date(2006, 0, 13)+'', 'parsing `13/1/2006`');
+			equal($D('13/01/2006')+'', new Date(2006, 0, 13)+'', 'parsing `13/01/2006`');
+			equal($D('13/01.2006')+'', NaN+'', 'parsing `13/01.2006` should be NaN');
 			equal($D('8-Dec-2006')+'', new Date(2006, 11, 8)+'', 'parsing `8-Dec-2006`');
+			equal($D('8 Dec 2006')+'', new Date(2006, 11, 8)+'', 'parsing `8 Dec 2006`');
 			equal($D('08-Dec-2006')+'', new Date(2006, 11, 8)+'', 'parsing `08-Dec-2006`');
 			equal($D('12-December-2006')+'', new Date(2006, 11, 12)+'', 'parsing `12-December-2006`');
+			equal($D('12 December 2006')+'', new Date(2006, 11, 12)+'', 'parsing `12 December 2006`');
+			equal($D('12 December-2006')+'', NaN+'', 'parsing `12 December-2006` should be NaN');
 			equal($D('8-Dec-2006 20:15:59')+'', new Date(2006, 11, 8, 20, 15, 59)+'', 'parsing `8-Dec-2006 20:15:59`');
 			equal($D('8-Dec-2006 8:15pm')+'', new Date(2006, 11, 8, 20, 15)+'', 'parsing `8-Dec-2006 8:15pm`');
 			equal($D('8-Dec-2006 08:15pm')+'', new Date(2006, 11, 8, 20, 15)+'', 'parsing `8-Dec-2006 08:15pm`');
@@ -313,6 +331,18 @@
 
 			equal($D('12-16-2006') < $D('2006-12-17'), true, 'comparing dates with <');
 			equal($D('12-16-2006') > $D('2006-12-17'), false, 'comparing dates with >');
+		});
+		
+		test('customize patterns', function() {
+			notEqual($D('1/3/2006')+'', $D(2006,2,1)+'', 'before removing us pattern');
+			var us = Date.removePattern('us');
+			equal(us[0], 'us', 'got removed us pattern');
+			equal($D('1/3/2006')+'', $D(2006,2,1)+'', 'remove us pattern');
+			Date.addPattern(us, 'world');
+			equal($D('1/3/2006')+'', $D(2006,2,1)+'', 'us pattern added after wold pattern');
+			Date.removePattern('us');
+			Date.addPattern(us);
+			equal(Date.create.patterns[0]+'', us+'', 'us pattern added to beginning');
 		});
 
 	}

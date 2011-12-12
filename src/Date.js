@@ -333,9 +333,9 @@
 			return this;
 		},
 		/**
-		 * Set the offset in minutes and seconds in the form "+0200" or "+02:00"
+		 * Set the time zone offset in minutes and seconds in the form "+0200" or "+02:00"
 		 * 
-		 * @param {Number} seconds  The number of seconds before or past UTC time
+		 * @param {String} str  The GMT Offset
 		 * @return {Date}
 		 */		
 		setUTCOffsetString: function(str) {

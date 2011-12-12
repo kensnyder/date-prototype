@@ -2,11 +2,11 @@
  * Date instance methods
  *
  * @author Ken Snyder (kendsnyder at gmail dot com)
- * @date July 2011
- * @version 3.2 (http://sandbox.kendsnyder.com/date)
+ * @date December 2011
+ * @version 3.3 (http://sandbox.kendsnyder.com/date)
  * @license Creative Commons Attribution License 3.0 (http://creativecommons.org/licenses/by/3.0)
  */
-(function(global) {
+;(function(global) {
 	//
 	// pre-calculate the number of milliseconds in a day
 	//
@@ -330,6 +330,24 @@
 			var curr = this.getTimezoneOffset();
 			var utcNow = this.getTime() + (curr * 60000);
 			this.setTime(utcNow - (seconds * 60000));
+			return this;
+		},
+		/**
+		 * Set the offset in minutes and seconds in the form "+0200" or "+02:00"
+		 * 
+		 * @param {Number} seconds  The number of seconds before or past UTC time
+		 * @return {Date}
+		 */		
+		setUTCOffsetString: function(str) {
+			var hoursMin = str.match(/([+-]?)([01]\d|2[0-3])\:?([0-5]\d)/);
+			if (hoursMin) {
+				var seconds = parseFloat(hoursMin[2]) * 60;
+				seconds += parseFloat(hoursMin[3]);
+				if (hoursMin[1] == '-') {
+					seconds *= -1;
+				}
+				this.setUTCOffset(seconds);
+			}
 			return this;
 		},
 		/**
@@ -901,8 +919,8 @@
 		// 15.03.2010
 		['world', /^(3[01]|[12]\d|0?[1-9])\s*([\.\/])s*(1[0-2]|0?[1-9])\s*\2\s*([1-9]\d{3})$/, '$3/$1/$4'],
 
-		// 15-Mar-2010
-		['chicago', /^(3[01]|[0-2]\d|\d)\s*([ -])\s*(?:(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*)\s*\2\s*([1-9]\d{3})$/i, '$3 $1, $4'],
+		// 15-Mar-2010, 8 Dec 2011, "Thu, 8 Dec 2011"
+		['chicago', /^(?:(?:mon|tue|wed|thu|fri|sat|sun)[a-z]*,\s+)?(3[01]|[0-2]\d|\d)\s*([ -])\s*(?:(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*)\s*\2\s*([1-9]\d{3})$/i, '$3 $1, $4'],
 
 		// March 15, 2010
 		['conversational', /^(?:(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*)\s+(3[01]|[0-2]\d|\d),?\s*([1-9]\d{3})$/i, '$1 $2, $3'],
@@ -914,8 +932,8 @@
 		}],
 		// 24-hour time
 		['24_hour',
-		/^(?:(.+)\s+)?([01]\d|2[0-3])(?:\s*\:\s*([0-5]\d))(?:\s*\:\s*([0-5]\d))?\s*(?:\.(\d+))?$/i,
-		// ^opt. date  ^hour          ^minute              ^optional second         ^optional fraction
+		/^(?:(.+?)(?:\s+|T))?([01]\d|2[0-3])(?:\s*\:\s*([0-5]\d))(?:\s*\:\s*([0-5]\d))?\s*(?:\.(\d+))?(\s*[+-](?:[01]\d|2[0-3])\:?[0-5]\d)?$/i,
+		// ^opt. date        ^hour          ^minute              ^opt. second             ^opt. fraction       ^opt. offset hr.   ^opt. offset min
 		function(match) {
 			var d;
 			if (match[1]) {
@@ -931,13 +949,16 @@
 			if (match[5]) {
 				d.setMilliseconds(match[5]);
 			}
+			if (match[6]) {
+				d.setUTCOffsetString(match[6]);
+			}
 			return d;
 		}],
 
 		// 12-hour time
 		['12_hour',
-		/^(?:(.+)\s+)?(0?[1-9]|1[012])(?:\s*\:\s*(\d\d))?(?:\s*\:\s*(\d\d))?\s*(am|pm)\s*$/i,
-		// ^opt. date  ^hour           ^optional minute   ^optional second      ^am or pm
+		/^(?:(.+)\s+)?(0?[1-9]|1[012])(?:\s*\:\s*([0-5]\d))?(?:\s*\:\s*([0-5]\d))?\s*(am|pm)\s*$/i,
+		// ^opt. date  ^hour           ^optional minute      ^optional second         ^am or pm
 		function(match) {
 			var d;
 			if (match[1]) {

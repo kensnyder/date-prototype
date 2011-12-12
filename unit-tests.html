@@ -103,6 +103,8 @@
 			equal($D('2006-08-01')+'', new Date(2006, 7, 1)+'', 'parsing `2006-08-01`');
 			equal($D('2006-08-01 20:15')+'', new Date(2006, 7, 1, 20, 15)+'', 'parsing `2006-08-01 20:15`');
 			equal($D('2006-08-01 20:15:59')+'', new Date(2006, 7, 1, 20, 15, 59)+'', 'parsing `2006-08-01 20:15:59`');
+			equal($D('2006-08-01 00:15:59')+'', new Date(2006, 7, 1, 0, 15, 59)+'', 'parsing `2006-08-01 00:15:59`');
+			equal($D('2006-08-01T00:15:59+01:00')+'', new Date(2006, 7, 1, 0, 15, 59).setUTCOffsetString('+01:00')+'', 'parsing `2010-03-15T12:34:56+01:00` (full iso 8601)');
 			equal($D('12-01-2006')+'', new Date(2006, 11, 1)+'', 'parsing `12-01-2006`');
 			equal($D('12-1-2006')+'', new Date(2006, 11, 1)+'', 'parsing `12-1-2006`');
 			equal($D('13.1.2006')+'', new Date(2006, 0, 13)+'', 'parsing `13.1.2006`');
@@ -112,10 +114,12 @@
 			equal($D('13/01.2006')+'', NaN+'', 'parsing `13/01.2006` should be NaN');
 			equal($D('8-Dec-2006')+'', new Date(2006, 11, 8)+'', 'parsing `8-Dec-2006`');
 			equal($D('8 Dec 2006')+'', new Date(2006, 11, 8)+'', 'parsing `8 Dec 2006`');
+			equal($D('Thu, 8 Dec 2011')+'', new Date(2011, 11, 8)+'', 'parsing `Thu, 8 Dec 2006`');
 			equal($D('08-Dec-2006')+'', new Date(2006, 11, 8)+'', 'parsing `08-Dec-2006`');
 			equal($D('12-December-2006')+'', new Date(2006, 11, 12)+'', 'parsing `12-December-2006`');
 			equal($D('12 December 2006')+'', new Date(2006, 11, 12)+'', 'parsing `12 December 2006`');
 			equal($D('12 December-2006')+'', NaN+'', 'parsing `12 December-2006` should be NaN');
+			equal($D('Thu, 21 Dec 2000 16:01:07 +0200')+'', new Date(2000, 11, 21, 16, 1, 7).setUTCOffsetString('+0200')+'', 'parsing `Thu, 21 Dec 2000 16:01:07 +0200` (rfc 2822)');
 			equal($D('8-Dec-2006 20:15:59')+'', new Date(2006, 11, 8, 20, 15, 59)+'', 'parsing `8-Dec-2006 20:15:59`');
 			equal($D('8-Dec-2006 8:15pm')+'', new Date(2006, 11, 8, 20, 15)+'', 'parsing `8-Dec-2006 8:15pm`');
 			equal($D('8-Dec-2006 08:15pm')+'', new Date(2006, 11, 8, 20, 15)+'', 'parsing `8-Dec-2006 08:15pm`');

@@ -2,8 +2,8 @@
  * Date instance methods
  *
  * @author Ken Snyder (kendsnyder at gmail dot com)
- * @date December 2011
- * @version 3.3 (http://sandbox.kendsnyder.com/date)
+ * @date April 2012
+ * @version 3.4 (http://sandbox.kendsnyder.com/date)
  * @license Creative Commons Attribution License 3.0 (http://creativecommons.org/licenses/by/3.0)
  */
 ;(function(global) {
@@ -920,10 +920,10 @@
 		['world', /^(3[01]|[12]\d|0?[1-9])\s*([\.\/])s*(1[0-2]|0?[1-9])\s*\2\s*([1-9]\d{3})$/, '$3/$1/$4'],
 
 		// 15-Mar-2010, 8 Dec 2011, "Thu, 8 Dec 2011"
-		['chicago', /^(?:(?:mon|tue|wed|thu|fri|sat|sun)[a-z]*,\s+)?(3[01]|[0-2]\d|\d)\s*([ -])\s*(?:(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*)\s*\2\s*([1-9]\d{3})$/i, '$3 $1, $4'],
+		['chicago', /^(?:(?:mon|tue|wed|thu|fri|sat|sun)[a-z]*,?\s+)?(3[01]|[0-2]\d|\d)\s*([ -])\s*(?:(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*)\s*\2\s*([1-9]\d{3})$/i, '$3 $1, $4'],
 
-		// March 15, 2010
-		['conversational', /^(?:(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*)\s+(3[01]|[0-2]\d|\d),?\s*([1-9]\d{3})$/i, '$1 $2, $3'],
+		// "March 4, 2012", "Mar 4 2012", "Sun Mar 4 2012"
+		['conversational', /^(?:(?:mon|tue|wed|thu|fri|sat|sun)[a-z]*,?\s+)?(?:(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*)\s+(3[01]|[0-2]\d|\d),?\s*([1-9]\d{3})$/i, '$1 $2, $3'],
 
 		['unix',
 		/^@(-?\d+)$/,
@@ -932,8 +932,8 @@
 		}],
 		// 24-hour time
 		['24_hour',
-		/^(?:(.+?)(?:\s+|T))?([01]\d|2[0-3])(?:\s*\:\s*([0-5]\d))(?:\s*\:\s*([0-5]\d))?\s*(?:\.(\d+))?(\s*[+-](?:[01]\d|2[0-3])\:?[0-5]\d)?$/i,
-		// ^opt. date        ^hour          ^minute              ^opt. second             ^opt. fraction       ^opt. offset hr.   ^opt. offset min
+		/^(?:(.+?)(?:\s+|T))?([01]\d|2[0-3])(?:\s*\:\s*([0-5]\d))(?:\s*\:\s*([0-5]\d))?\s*(?:\.(\d+))?(\s*(?:GMT)?[+-](?:[01]\d|2[0-3])\:?[0-5]\d)?(?: \([A-Z]\))?$/i,
+		// ^opt. date        ^hour          ^minute              ^opt. second             ^opt. fraction           ^opt. offset hr.      ^opt. offset min  ^opt. timezone name
 		function(match) {
 			var d;
 			if (match[1]) {
@@ -978,7 +978,7 @@
 
 		// 2 weeks after today, 3 months after 3-5-2008
 		['weeks_months_before_after',
-		/^(\d+)\s+(year|month|week|day|hour|minute|second)s?\s+(before|from|after)\s+(.+)$/i,
+		/^(\d+)\s+(year|month|week|day|hour|minute|second|millisecond)s?\s+(before|from|after)\s+(.+)$/i,
 		function(match) {
 			var fromDate = Date.create(match[4]);
 			if (fromDate instanceof Date) {
@@ -989,17 +989,34 @@
 
 		// 5 months ago
 		['time_ago',
-		/^(\d+)\s+(year|month|week|day|hour|minute|second)s?\s+ago$/i,
+		/^(\d+)\s+(year|month|week|day|hour|minute|second|millisecond)s?\s+ago$/i,
 		function(match) {
 			return Date.current().add(-1 * match[1], match[2]);
 		}],
 
 		// in 2 hours/weeks/etc.
 		['in_time',
-		/^in\s+(\d+)\s+(year|month|week|day|hour|minute|second)s?$/i,
+		/^in\s+(\d+)\s+(year|month|week|day|hour|minute|second|millisecond)s?$/i,
 		function(match) {
 			return Date.current().add(match[1], match[2]);
 		}],
+	
+		// "+2 hours", "-3 years"
+		['plus_minus',
+		/^([+-])\s*(\d+)\s+(year|month|week|day|hour|minute|second|millisecond)s?$/i,
+		function(match) {
+			var mult = match[1] == '-' ? -1 : 1;
+			return Date.current().add(mult * match[2], match[3]);
+		}],
+	
+		// "/Date(1296824894700)/", "/Date(1296824894700-0700)/"
+		['asp_json',
+		/^\/Date\((\d+)(?:([+-])(\d\d)(\d\d))?\)\/$/i,
+		function(match) {
+			var mult = match[2] == '+' ? -1 : 1;
+			var offset = match[3] ? ( (match[3] * 60 * 60) + (match[4] * 60) ) : 0;
+			return new Date( match[1] + (mult * offset) );
+		}],	
 
 		// today, tomorrow, yesterday
 		['today_tomorrow',
@@ -1019,7 +1036,7 @@
 
 		// this/next/last january, next thurs
 		['this_next_last',
-		/^(this|next|last)\s+(?:(year|month|week|day|hour|minute|second)|(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)|(sun|mon|tue|wed|thu|fri|sat))/i,
+		/^(this|next|last)\s+(?:(year|month|week|day|hour|minute|second|millisecond)|(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)|(sun|mon|tue|wed|thu|fri|sat))/i,
 		function(match) {
 			// $1 = this/next/last
 			var multiplier = match[1].toLowerCase() == 'last' ? -1 : 1;

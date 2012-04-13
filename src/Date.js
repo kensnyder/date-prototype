@@ -327,7 +327,7 @@
 		 * @return {Date}
 		 */
 		setUTCOffset: function(seconds) {
-			var curr = this.getTimezoneOffset();
+			var curr = this.getTimezoneOffset() * -1;
 			var utcNow = this.getTime() + (curr * 60000);
 			this.setTime(utcNow - (seconds * 60000));
 			return this;

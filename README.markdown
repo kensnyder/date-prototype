@@ -1,6 +1,7 @@
 This script provides JavaScript Date instance methods for parsing, formatting, and calculating dates. It leverages the existing functionality of the native Date.parse method and uses a concise and configurable algorithm for interpreting format codes.
 
 Features include:
+
  * Parse various formats with ability to register custom format parsing.
  * Format dates using the well-known percent-letter formatting options with the ability to register custom formating.
  * Add and subtract years, months, days, hours, minutes or seconds.
@@ -8,6 +9,7 @@ Features include:
  * Methods are available on all Date Objects.
 
 Examples:
+
  * $D('2006-09-20').strftime('%m/%d/%Y'); // "09/20/2006"
  * $D('Sep 20 2006').add(3).strftime('%Y-%m-%d'); // "2006-09-23"
  * $D('09/20/2006').add(4, 'years').strftime('%Y-%m-%d'); // "2010-09-20"

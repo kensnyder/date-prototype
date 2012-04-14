@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="css/general.css" type="text/css" />
 </head>
 <body>
-<h1>JavaScript Date Instance Methods (v3.3 December 2011)</h1>
+<h1>JavaScript Date Instance Methods (v3.4 April 2012)</h1>
 
 <p><em>Looking for <a href="http://sandbox.kendsnyder.com/date2">version 2?</a></em></p>
 
@@ -80,7 +80,7 @@
 </div>
 
 
-<script type="text/javascript" language="javascript" charset="utf-8">
+<script>
 var demo = document.forms.demo;
 function formatDate() {
 	var date = $D(demo.fdate.value);
@@ -156,7 +156,7 @@ $D('2006.09.28').diff('20 Sep, 2006', 'days'); // 8
 	
 	<tr><th colspan="2" class="section">New Date Static Properties</th></tr>	
 	<tr><th>Property</th><th>Description</th></tr>
-	<tr><td>Date.create(date) -&gt; Date</td><td><em>date</em> can be a <a href="#parse">parsable</a> string, a unix timestamp or a Date object.</td></tr>
+	<tr><td>Date.create(date) -&gt; Date</td><td><code>date</code> can be a <a href="#parse">parsable</a> string, a unix timestamp or a Date object.</td></tr>
 	<tr><td>Date.MONTHNAMES</td><td>An array of the month names</td></tr>
 	<tr><td>Date.ABBR_MONTHNAMES</td><td>An array of the abbreviated month names</td></tr>
 	<tr><td>Date.DAYNAMES</td><td>An array of the names of the days of the week</td></tr>
@@ -214,7 +214,9 @@ $D('2006.09.28').diff('20 Sep, 2006', 'days'); // 8
 	<tr><td>Date#toLocaleString() -&gt; String</td><td>Converts a Date object, according to local time, to a string</td></tr>
 	<tr><td>Date#valueOf() -&gt; Number</td><td>Returns the number of milliseconds since midnight Jan 1, 1970 (same as Date#getTime)</td></tr>	
 	<tr><td colspan="2"><em>Note: the Number returned by native Date setters is the number of milliseconds since midnight Jan 1, 1970.</em></td></tr>	
+	
 	<tr><th colspan="2" class="section">Native Date Static Methods (from <a href="http://www.w3schools.com/jsref/jsref_obj_date.asp">w3schools.com</a>)</th></tr>	
+	<tr><th>Method</th><th>Description</th></tr>
 	<tr><td>Date.parse(sDate) -&gt; Number</td><td>Takes a date string and returns the number of milliseconds since midnight of January 1, 1970</td></tr>  
 	<tr><td>Date.UTC(year,month,day,hours,minutes,seconds,ms) -&gt; Number</td><td>Takes a date and returns the number of milliseconds since midnight of January 1, 1970 according to universal time</td></tr>  
 </table>
@@ -239,30 +241,35 @@ $D('2006.09.28').diff('20 Sep, 2006', 'days'); // 8
 	<li>2007-10-29</li>
 	<li>29.10.2007</li>
 	<li>29/10/2007</li>
-	<li><em>date</em> 02:30:59.005</li>
-	<li><em>date</em> 02:30:59</li>
-	<li><em>date</em> 02:30</li>
-	<li><em>date</em> 2:30:59am</li>
-	<li><em>date</em> 2:30am</li>
-	<li><em>date</em> 2am</li>
+	<li><code>date</code> 02:30:59.005</li>
+	<li><code>date</code> 02:30:59</li>
+	<li><code>date</code> 02:30</li>
+	<li><code>date</code> 2:30:59am</li>
+	<li><code>date</code> 2:30am</li>
+	<li><code>date</code> 2am</li>
 	<li>2:30:59am</li>
 	<li>2:30am</li>
 	<li>2am</li>
 	<li>2010-03-15T12:34:56.005</li>
 	<li>Thu, 21 Dec 2000 16:01:07 +0200 <em>(RFC 2822 format)</em></li>
 	<li>2010-03-15T12:34:56+01:00 <em>(full ISO 8601)</em></li>
+	<li>Sat Apr 14 2012 09:45:25 GMT-0600 (MDT)</li>
 	<li>@1312132465 <em>(Unix Timestamp)</em></li>
-	<li>2 weeks before <em>date</em></li>
-	<li>2 years after <em>date</em></li>
+	<li>/Date(1296824894000)/ <em>(ASP JSON)</em></li>
+	<li>/Date(1296824894000-0700)/ <em>(ASP JSON)</em></li>
+	<li>2 weeks before <code>date</code></li>
+	<li>2 years after <code>date</code></li>
 	<li>2 days ago</li>
 	<li>in 2 months</li>
+	<li>+2 months</li>
+	<li>-2 days</li>
+	<li>now</li>
 	<li>yesterday</li>
 	<li>today</li>
 	<li>tomorrow</li>
 	<li>last Thursday</li>
 	<li>this Thursday</li>
 	<li>last month</li>
-	<li>now</li>
 </ul>
 <p>Note: all formats are case insensitive.</p>
 
@@ -342,7 +349,7 @@ Date.addPattern(['hoy', /^hoy$/i, function(match) { return new Date(); }], 'iso_
 <pre>Date.removePattern('us'); // us-style m/d/Y dates no longer recognized
 
 var us = Date.removePattern('us');
-Date.addPattern(us, 'world'); // prefer world-style d/m/Y dates over us-style dates
+Date.addPattern(us, 'world'); // prefer world-style d/m/Y dates over us-style m/d/Y dates
 </pre>
 
 <h4>Internationalize Month/day names</h4>

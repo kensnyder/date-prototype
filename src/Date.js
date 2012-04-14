@@ -6,7 +6,7 @@
  * @version 3.4 (http://sandbox.kendsnyder.com/date)
  * @license Creative Commons Attribution License 3.0 (http://creativecommons.org/licenses/by/3.0)
  */
-;(function(global) {
+;(function(exports) {
 	//
 	// pre-calculate the number of milliseconds in a day
 	//
@@ -930,9 +930,9 @@
 		function(match) {
 			return Date.create(match[1] * 1000);
 		}],
-		// 24-hour time
+		// 24-hour time (This will help catch Date objects that are casted to a string)
 		['24_hour',
-		/^(?:(.+?)(?:\s+|T))?([01]\d|2[0-3])(?:\s*\:\s*([0-5]\d))(?:\s*\:\s*([0-5]\d))?\s*(?:\.(\d+))?(\s*(?:GMT)?[+-](?:[01]\d|2[0-3])\:?[0-5]\d)?(?: \([A-Z]\))?$/i,
+		/^(?:(.+?)(?:\s+|T))?([01]\d|2[0-3])(?:\s*\:\s*([0-5]\d))(?:\s*\:\s*([0-5]\d))?\s*(?:\.(\d+))?(\s*(?:GMT)?[+-](?:[01]\d|2[0-3])\:?[0-5]\d)?(?: \(.+?\))?$/i,
 		// ^opt. date        ^hour          ^minute              ^opt. second             ^opt. fraction           ^opt. offset hr.      ^opt. offset min  ^opt. timezone name
 		function(match) {
 			var d;
@@ -1009,13 +1009,16 @@
 			return Date.current().add(mult * match[2], match[3]);
 		}],
 	
-		// "/Date(1296824894700)/", "/Date(1296824894700-0700)/"
+		// "/Date(1296824894000)/", "/Date(1296824894000-0700)/"
 		['asp_json',
-		/^\/Date\((\d+)(?:([+-])(\d\d)(\d\d))?\)\/$/i,
+		/^\/Date\((\d+)([+-]\d{4})?\)\/$/i,
 		function(match) {
-			var mult = match[2] == '+' ? -1 : 1;
-			var offset = match[3] ? ( (match[3] * 60 * 60) + (match[4] * 60) ) : 0;
-			return new Date( match[1] + (mult * offset) );
+			var d = new Date;
+			d.setTime(match[1]);
+			if (match[2]) {
+				d.setUTCOffsetString(match[2]);
+			}
+			return d;
 		}],	
 
 		// today, tomorrow, yesterday
@@ -1091,7 +1094,11 @@
 		}]
 	];
 
-	// add $D shortcut to global if not exists
-	global.$D = global.$D || Date.create;
+	// add $D shortcut to window or module.exports
+	exports.$D = Date.create;
 
-})(this);
+})(
+	typeof module != 'undefined' && module.exports ? module.exports : 
+	typeof window != 'undefined' ? window :
+	{}
+);

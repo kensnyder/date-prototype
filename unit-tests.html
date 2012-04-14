@@ -115,21 +115,34 @@
 			equal($D('8-Dec-2006')+'', new Date(2006, 11, 8)+'', 'parsing `8-Dec-2006`');
 			equal($D('8 Dec 2006')+'', new Date(2006, 11, 8)+'', 'parsing `8 Dec 2006`');
 			equal($D('Thu, 8 Dec 2011')+'', new Date(2011, 11, 8)+'', 'parsing `Thu, 8 Dec 2006`');
+			equal($D('Thu 8 Dec 2011')+'', new Date(2011, 11, 8)+'', 'parsing `Thu 8 Dec 2006`');
 			equal($D('08-Dec-2006')+'', new Date(2006, 11, 8)+'', 'parsing `08-Dec-2006`');
 			equal($D('12-December-2006')+'', new Date(2006, 11, 12)+'', 'parsing `12-December-2006`');
 			equal($D('12 December 2006')+'', new Date(2006, 11, 12)+'', 'parsing `12 December 2006`');
 			equal($D('12 December-2006')+'', NaN+'', 'parsing `12 December-2006` should be NaN');
 			equal($D('Thu, 21 Dec 2000 16:01:07 +0200')+'', new Date(2000, 11, 21, 16, 1, 7).setUTCOffsetString('+0200')+'', 'parsing `Thu, 21 Dec 2000 16:01:07 +0200` (rfc 2822)');
+			equal($D('Thu, 21 Dec 2000 16:01:07 GMT+0200')+'', new Date(2000, 11, 21, 16, 1, 7).setUTCOffsetString('+0200')+'', 'parsing `Thu, 21 Dec 2000 16:01:07 GMT+0200`');
+			equal($D('Sat Apr 14 2012 09:45:25 GMT-0600 (MDT)')+'', new Date(2012, 3, 14, 9, 45, 25).setUTCOffsetString('-0600')+'', 'parsing `Sat Apr 14 2012 09:45:25 GMT-0600 (MDT)` (JavaScript String Format)');
 			equal($D('8-Dec-2006 20:15:59')+'', new Date(2006, 11, 8, 20, 15, 59)+'', 'parsing `8-Dec-2006 20:15:59`');
 			equal($D('8-Dec-2006 8:15pm')+'', new Date(2006, 11, 8, 20, 15)+'', 'parsing `8-Dec-2006 8:15pm`');
 			equal($D('8-Dec-2006 08:15pm')+'', new Date(2006, 11, 8, 20, 15)+'', 'parsing `8-Dec-2006 08:15pm`');
 			equal($D('10/28/2007')+'', new Date(2007, 9, 28)+'', 'parsing `10/28/2007`');
 			equal($D('Oct 28, 2007')+'', new Date(2007, 9, 28)+'', 'parsing `Oct 28, 2007`');
+			equal($D('Oct 28 2007')+'', new Date(2007, 9, 28)+'', 'parsing `Oct 28 2007`');
+			equal($D('Sat Apr 14 2012')+'', new Date(2012, 3, 14)+'', 'parsing `Sat Apr 14 2012`');
+			equal($D('Sat, Apr 14 2012')+'', new Date(2012, 3, 14)+'', 'parsing `Sat, Apr 14 2012`');
+			equal($D('Sat Apr 14, 2012')+'', new Date(2012, 3, 14)+'', 'parsing `Sat Apr, 14 2012`');
+			equal($D('Sat, Apr 14, 2012')+'', new Date(2012, 3, 14)+'', 'parsing `Sat, Apr, 14 2012`');
+			equal($D('Saturday, Apr 14, 2012')+'', new Date(2012, 3, 14)+'', 'parsing `Saturday, Apr, 14 2012`');
 			equal($D('28 Oct 2007')+'', new Date(2007, 9, 28)+'', 'parsing `28 Oct 2007`');
 			equal($D('10-28-2007 20:15')+'', new Date(2007, 9, 28, 20, 15, 0)+'', 'parsing `10-28-2007 20:15`');
 			equal($D('10-28-2007 8:15:00pm')+'', new Date(2007, 9, 28, 20, 15, 0)+'', 'parsing `10-28-2007 8:15:00pm`');
 			equal($D('10-28-2007 8:15pm')+'', new Date(2007, 9, 28, 20, 15, 0)+'', 'parsing `10-28-2007 8:15pm`');
 			equal($D('10-28-2007 8pm')+'', new Date(2007, 9, 28, 20, 0, 0)+'', 'parsing `10-28-2007 8pm`');
+			equal($D('/Date(1296824894000)/')+'', new Date(2011, 1, 4, 6, 8, 14)+'', 'parsing `/Date(1296824894000)/`');
+			equal($D('/Date(1296824894000-0700)/')+'', new Date(2011, 1, 4, 6, 8, 14).setUTCOffsetString('-0700')+'', 'parsing `/Date(1296824894000-0700)/`');
+			
+			// parsing times alone
 			var today = new Date();
 			today.setMilliseconds(0);
 			today.setHours(20, 15, 0);
@@ -173,6 +186,10 @@
 			equal($D('last tuesday')+'', new Date(2010,6,13)+'', 'recognize "last tuesday"');
 			equal($D('next monday')+'', new Date(2010,6,26)+'', 'recognize "next monday"');
 			equal($D('last monday')+'', new Date(2010,6,12)+'', 'recognize "last monday"');
+			
+			equal($D('+2 hours')+'', new Date(2010,6,19,2,0,0)+'', 'recognize `+2 hours`');
+			equal($D('-1 day')+'', new Date(2010,6,18)+'', 'recognize `-1 day`');
+			equal($D('+3 weeks')+'', new Date(2010,7,9)+'', 'recognize `+3 weeks`');
 			
 			Date.current = function() {
 				return new Date(2010,2,19);

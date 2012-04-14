@@ -1,12 +1,11 @@
 /**
- * Date instance methods
+ * JavaScript Date instance methods
  *
- * @author Ken Snyder (kendsnyder at gmail dot com)
- * @date April 2012
- * @version 3.4 (http://sandbox.kendsnyder.com/date)
- * @license Creative Commons Attribution License 3.0 (http://creativecommons.org/licenses/by/3.0)
+ * @copyright 2012 Ken Snyder (kendsnyder at gmail dot com)
+ * @version 3.4, April 2012 (http://sandbox.kendsnyder.com/date)
+ * @license MIT http://www.opensource.org/licenses/MIT
  */
-;(function(exports) {
+;(function() {
 	//
 	// pre-calculate the number of milliseconds in a day
 	//
@@ -726,12 +725,12 @@
 			y: 'ShortYear.2',
 			// month
 			m: 'MonthNumber.2',
-		'#m': 'MonthNumber',
+		 '#m': 'MonthNumber',
 			B: 'MonthName',
 			b: 'AbbrMonthName',
 			// day
 			d: 'Date.2',
-		'#d': 'Date',
+		 '#d': 'Date',
 			e: 'Date',
 			A: 'DayName',
 			a: 'AbbrDayName',
@@ -739,21 +738,21 @@
 			o: 'DayOrdinal',
 			// hours
 			H: 'Hours.2',
-		'#H': 'Hours',
+		 '#H': 'Hours',
 			I: 'Hours12.2',
-		'#I': 'Hours12',
+		 '#I': 'Hours12',
 			P: 'AmPmLower',
 			p: 'AmPm',
 			// minutes
 			M: 'Minutes.2',
-		'#M': 'Minutes',
+		 '#M': 'Minutes',
 			// seconds
 			S: 'Seconds.2',
-		'#S': 'Seconds',
+		 '#S': 'Seconds',
 			s: 'Unix',
 			// milliseconds
 			N: 'Milliseconds.3',
-		'#N': 'Milliseconds',
+		 '#N': 'Milliseconds',
 			// timezone
 			O: 'TimezoneOffset',
 			Z: 'TimezoneName',
@@ -774,7 +773,7 @@
 			x: '%m/%d/%y',
 			D: '%m/%d/%y',
 			// local format extended
-		'#c': '%a %b %e %H:%M:%S %Y',
+		 '#c': '%a %b %e %H:%M:%S %Y',
 			// local format short
 			v: '%e-%b-%Y',
 			R: '%H:%M',
@@ -782,7 +781,7 @@
 			// tab and newline
 			t: '\t',
 			n: '\n',
-		'%': '%'
+			'%': '%'
 		}
 	});
 	Date.addFormat('formatPhp', {
@@ -887,7 +886,7 @@
 		shortcuts: {}
 	};
 
-	// add uppercase versions of each code
+	// add uppercase versions of each sql code
 	var keys = 'yyyy yy mm m mmm mmmm dd d ddd dddd w hh24 h24 hh12 h12 am pm mi ss'.split(' '), i = 0, key;
 	while ((key = keys[i++])) {
 		formatSql.codes[key.toUpperCase()] = formatSql.codes[key];
@@ -1095,10 +1094,11 @@
 	];
 
 	// add $D shortcut to window or module.exports
-	exports.$D = Date.create;
+	if (typeof module != 'undefined' && module.exports) {
+		module.exports = Date.create;
+	}
+	else if (typeof window != 'undefined') {
+		window.$D = Date.create;
+	}
 
-})(
-	typeof module != 'undefined' && module.exports ? module.exports : 
-	typeof window != 'undefined' ? window :
-	{}
-);
+})();

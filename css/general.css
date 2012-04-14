@@ -1,23 +1,37 @@
-body, input, select { font-family: Arial, Helvetica, sans-serif; font-size: 12px; }
+body { margin: 0; padding: 0; font: 14px/135% Arial, Helvetica, sans-serif; color: #000; }
+input { font: 17px/135% Calibri, Arial, Helvetica, sans-serif; padding: 3px 8px; margin: 0; box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3) inset; }
+.demo { font: 17px/135% Calibri, Arial, Helvetica, sans-serif; }
+.content { padding: 0 35px 35px 35px; }
+.archive { font-style: italic; color: #444; }
+select { font: 16px/135% Calibri, Arial, Helvetica, sans-serif; margin: 0; }
 #testcss1 { font-size:11px; color: #f00; }
 #testcss2 { font-size:12px; color: #0f0; display: none; }
 #testlog { height: 300px; overflow: auto; font-size: 11px; }
 .result { color: #880000; }
 input { padding: 0 2px; border: 1px solid #ccc; }
 select { padding: 0; border: 1px solid #ccc; }
-input:hover, select:hover { border: 1px dotted red; }
-h2, h3 { padding: 1em 0 0.25em 0; color: #000088; border-bottom: 1px solid #3333cc; }
-a { color: #000000; text-decoration: underline; }
-a:visited { color: #444444; }
-a:hover { color: #000088; }
-table { background-color: #999999; }
-th { text-align: left; background-color: #000088; color: #ffffff; padding: 2px 6px; }
-th.section { text-align: center; background-color: #0000ff; }
-th a, th a:visited, th a:hover { color: #ffffff; }
-td { background-color: #ffffff; padding: 2px 6px; }
-td.minihead { text-align: center; font-style: italic; }
-.back { float: right; font-size: 11px; padding-top: 8px; }
-.back a { text-decoration: none; color: #0000cc; }
-.back a:visited { color: #0000cc; }
-.back a:hover { background-color: #0000cc; color: #ffffff; }
-pre { background-color: #f3f3f3; padding: 2px 6px; margin: 4px 0 0 0; border: 1px dotted #999; font-family: Consolas, "Courier New", monospace; font-size: 11px; }
+input:hover, 
+input:focus, 
+select:hover,
+select:focus { border: 1px dotted red; }
+h1 { font: 24px/125% Exo, "Times New Roman", Times, serif; font-weight: 600; text-shadow: -1px -1px 1px rgba(0,0,0,0.8); margin: 0; padding: 1em 2em; background-color: #005AFF; color: #fff; }
+h2,
+h3 { font: 18px/125% "News Cycle", Tahoma, sans-serif; padding: 1em 0 0.25em 0; color: #0053EB; border-bottom: 1px solid #A5C5FF; }
+a { color: #0053EB; text-decoration: underline; }
+a:visited { color: #4876CB; }
+a:hover { color: #000; }
+table { border-collapse: collapse; }
+th { border: 1px solid #0053EB; text-align: left; background-color: #ccc; padding: 2px 6px; }
+th.section { text-align: center; background-color: #005AFF; color: #fff; }
+th a, 
+th a:visited, 
+th a:hover { color: #ffffff; }
+td { border: 1px solid #0053EB; padding: 2px 6px; }
+tr:nth-child(2n) td { background-color: #f1f1f1; }
+td.minihead { text-align: center; font-style: italic; background-color: #005AFF !important; color: #fff; font-weight: bold; }
+.back a { float: right; font-size: 14px; padding-top: 28px; text-decoration: none !important; }
+.back a:visited { color: #0053EB; }
+pre { background-color: #f3f3f3; padding: 10px 15px; margin: 4px 0 0 0; border: 1px dotted #999; font: 12px/135% Monaco, "Bitstream Vera Sans Mono", Consolas, "Courier New", monospace; }
+code,
+.signature { background-color: #f3f3f3; font: 12px/135% Monaco, "Bitstream Vera Sans Mono", Consolas, "Courier New", monospace; }
+.signature { background-color: transparent; }

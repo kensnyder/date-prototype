@@ -6,6 +6,9 @@
  * @license MIT http://www.opensource.org/licenses/MIT
  */
 ;(function() {
+	
+	"use strict";
+	
 	//
 	// pre-calculate the number of milliseconds in a day
 	//
@@ -609,7 +612,7 @@
 		 */
 		autoFormat: function(input, formatStr) {
 			input = (typeof input == 'string' ? document.getElementById(input) : input);
-			function correct() {
+			var correct = function() {
 				var date = Date.create(input.value);
 				if (date) {
 					input.value = date.format(formatStr);

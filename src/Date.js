@@ -2,7 +2,7 @@
  * JavaScript Date instance methods
  *
  * @copyright 2012 Ken Snyder (kendsnyder at gmail dot com)
- * @version 3.4, April 2012 (http://sandbox.kendsnyder.com/date)
+ * @version 3.4.1, June 2012 (http://sandbox.kendsnyder.com/date)
  * @license MIT http://www.opensource.org/licenses/MIT
  */
 ;(function() {
@@ -949,7 +949,7 @@
 			}
 			d.setHours(parseFloat(match[2]), parseFloat(match[3]), parseFloat(match[4] || 0));
 			if (match[5]) {
-				d.setMilliseconds(match[5]);
+				d.setMilliseconds(+String(match[5]).slice(0,3));
 			}
 			if (match[6]) {
 				d.setUTCOffsetString(match[6]);

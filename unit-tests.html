@@ -105,6 +105,8 @@
 			equal($D('2006-08-01 20:15:59')+'', new Date(2006, 7, 1, 20, 15, 59)+'', 'parsing `2006-08-01 20:15:59`');
 			equal($D('2006-08-01 00:15:59')+'', new Date(2006, 7, 1, 0, 15, 59)+'', 'parsing `2006-08-01 00:15:59`');
 			equal($D('2006-08-01T00:15:59+01:00')+'', new Date(2006, 7, 1, 0, 15, 59).setUTCOffsetString('+01:00')+'', 'parsing `2010-03-15T12:34:56+01:00` (full iso 8601)');
+			equal($D('2010-11-26T12:01:05.179-05:00').getTime(), new Date(2010, 10, 26, 12, 1, 5, 179).setUTCOffsetString('-05:00').getTime(), 'parsing `2010-11-26T12:01:05.179-05:00` (full iso 8601 with milliseconds)');
+			equal($D('2010-11-26T12:01:05.1794748-05:00').getTime(), new Date(2010, 10, 26, 12, 1, 5, 179).setUTCOffsetString('-05:00').getTime(), 'parsing `2010-11-26T12:01:05.1794748-05:00` (full iso 8601 with microseconds)');
 			equal($D('12-01-2006')+'', new Date(2006, 11, 1)+'', 'parsing `12-01-2006`');
 			equal($D('12-1-2006')+'', new Date(2006, 11, 1)+'', 'parsing `12-1-2006`');
 			equal($D('13.1.2006')+'', new Date(2006, 0, 13)+'', 'parsing `13.1.2006`');

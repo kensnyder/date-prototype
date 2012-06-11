@@ -35,6 +35,10 @@
 		}
 	}
 	//
+	//
+	//
+	var scheduled = [];
+	//
 	// set up integers and functions for adding to a date or subtracting two dates
 	//
 	var multipliers = {
@@ -462,6 +466,41 @@
 		 */
 		isLeapYear: function() {
 			return Date.daysInMonth(this.getFullYear(), 1) == 29 ? 1 : 0;
+		},
+		isBefore: function(date, units) {
+			return Math.round(this.diff(date, units || 'milliseconds', true), 0) < 0;
+		},
+		isAfter: function(date, units) {
+			return Math.round(this.diff(date, units || 'milliseconds', true), 0) > 0;
+		},
+		equals: function(date, units) {
+			return Math.round(this.diff(date, units || 'milliseconds', true), 0) == 0;
+		},
+		schedule: function(callback, context) {
+			var inMs = this.diff(Date.current(), 'milliseconds');
+			context = context || this;
+			if (inMs <= 0) {
+				callback.call(context);
+				return this;
+			}
+			var id = setTimeout(function() {
+				callback.call(context);
+			}, inMs);
+			scheduled.push([callback, this.getTime(), id]);
+			return this;
+		},
+		unschedule: function(callback) {
+			var i = 0;
+			var time = this.getTime();
+			while (i--) {
+				// iterate backwards so that if we splice out an item,
+				// we don't have to worry about array indexes changing
+				if (scheduled[i][0] == callback && scheduled[i][1] == time) {
+					clearTimeout(scheduled[i][2]);
+					scheduled = scheduled.splice(i, 1);
+				}
+			}
+			return this;
 		}
 	};
 	extend(Date.prototype, instanceMethods);
@@ -590,7 +629,7 @@
 		/**
 		 * @var {Date}  The date of the script load
 		 */
-		SCRIPT_LOAD: new Date,
+		SCRIPT_LOAD: new Date(),
 		/**
 		 * Return the number of days in the given year and month. January = 1
 		 *
@@ -691,7 +730,7 @@
 		 * @return {Date}
 		 */
 		current: function() {
-			return new Date;
+			return new Date();
 		}
 	};
 	extend(Date, staticMethods);

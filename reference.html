@@ -141,25 +141,30 @@ $D('2006.09.28').diff('20 Sep, 2006', 'days'); // 8</pre>
 		<tr><th colspan="2" class="section">New Date Instance Methods</th></tr>	
 		<tr><th>Method</th><th>Description</th></tr>
 		<tr><td class="signature">Date#add(iAmount[, sUnit='day']) -&gt; Date</td><td>Alters the date by adding an amount expressed in the given unit.</td></tr>
-		<tr><td class="signature">Date#strftime(sFormat) -&gt; String</td><td>Returns the date expressed in a string according to the given format.</td></tr>
+		<tr><td class="signature">Date#clone() -&gt; Date</td><td>Returns a date object with the same value.</td></tr>
 		<tr><td class="signature">Date#diff(date[, sUnit='day'][, bAllowDecimal=false]) -&gt; Number</td><td>Returns the amount difference between the given date in the given format. Round toward zero unless <em>bAllowDecimal</em> is true.</td></tr>
 		<tr><td class="signature">Date#diffText() -&gt; String</td><td>Returns a string with a conversational date string such as "5 days ago".</td></tr>
-		<tr><td class="signature">Date#clone() -&gt; Date</td><td>Returns a date object with the same value.</td></tr>
-		<tr><td class="signature">Date#succ([sUnit='day']) -&gt; Date</td><td>Returns a copy of the date incremented by one day (or any other unit).</td></tr>
-		<tr><td class="signature">Date#getShortYear() -&gt; Number</td><td>Returns number of years past the century (one or two digit year).</td></tr>
-		<tr><td class="signature">Date#getMonthNumber() -&gt; Number</td><td>Returns the number of the month 1-12.</td></tr>
-		<tr><td class="signature">Date#getMonthName() -&gt; String</td><td>Returns the name of the month as defined in Date.MONTHNAMES.</td></tr>
-		<tr><td class="signature">Date#getAbbrMonthName() -&gt; String</td><td>Returns the abreviated name of the month as defined in Date.ABBR_MONTHNAMES.</td></tr>
-		<tr><td class="signature">Date#getDayName() -&gt; String</td><td>Returns the name of the day of the week as defined in Date.DAYNAMES.</td></tr>
+		<tr><td class="signature">Date#equals() -&gt; Boolean</td><td>Date objects cannot be compared with an equals sign. To check for equality you can use diff() or equals(). Also using equals() allows you to pass a unit to which to round to.</td></tr>
 		<tr><td class="signature">Date#getAbbrDayName() -&gt; String</td><td>Returns the abbreviated name of the day of the week as defined in Date.ABBR_DAYNAMES.</td></tr>
-		<tr><td class="signature">Date#getDayOrdinal() -&gt; String</td><td>Returns the ordinal suffix for the day of the month as defined in Date.ORDINALNAMES.</td></tr>
-		<tr><td class="signature">Date#getHours12() -&gt; String</td><td>Returns hours in 12-hour format.</td></tr>
+		<tr><td class="signature">Date#getAbbrMonthName() -&gt; String</td><td>Returns the abreviated name of the month as defined in Date.ABBR_MONTHNAMES.</td></tr>
 		<tr><td class="signature">Date#getAmPm() -&gt; String</td><td>Returns AM or PM for the date.</td></tr>
-		<tr><td class="signature">Date#getUnix() -&gt; Number</td><td>Returns the number of seconds past 1970-01-01-00:00:00.</td></tr>
+		<tr><td class="signature">Date#getDayName() -&gt; String</td><td>Returns the name of the day of the week as defined in Date.DAYNAMES.</td></tr>
+		<tr><td class="signature">Date#getDayOrdinal() -&gt; String</td><td>Returns the ordinal suffix for the day of the month as defined in Date.ORDINALNAMES.</td></tr>
 		<tr><td class="signature">Date#getGmtOffset() -&gt; String</td><td>Returns the minutes and seconds offset from GMT.</td></tr>
+		<tr><td class="signature">Date#getHours12() -&gt; String</td><td>Returns hours in 12-hour format.</td></tr>
+		<tr><td class="signature">Date#getMonthName() -&gt; String</td><td>Returns the name of the month as defined in Date.MONTHNAMES.</td></tr>
+		<tr><td class="signature">Date#getMonthNumber() -&gt; Number</td><td>Returns the number of the month 1-12.</td></tr>
+		<tr><td class="signature">Date#getShortYear() -&gt; Number</td><td>Returns number of years past the century (one or two digit year).</td></tr>
 		<tr><td class="signature">Date#getTimezoneName() -&gt; String</td><td>Returns the browser-reported name of the timezone.</td></tr>
-		<tr><td class="signature">Date#toYmdInt() -&gt; Number</td><td>Returns an integer in the format YYYYMMDD (useful for quickly sorting by date)</td></tr>
+		<tr><td class="signature">Date#getUnix() -&gt; Number</td><td>Returns the number of seconds past 1970-01-01-00:00:00.</td></tr>
+		<tr><td class="signature">Date#isAfter([sUnit='millisecond']) -&gt; Boolean</td><td>You can also compare Date objects with greater-than and less-than signs, but isAfter() allows you to specify the unit you want to round to. It rounds to the nearest unit.</td></tr>
+		<tr><td class="signature">Date#isBefore([sUnit='millisecond']) -&gt; Boolean</td><td>You can also compare Date objects with greater-than and less-than signs, but isBefore() allows you to specify the unit you want to round to. It rounds to the nearest unit.</td></tr>
+		<tr><td class="signature">Date#schedule(callback[, context]) -&gt; Date</td><td>Schedule a function to be executed at this time in the given context. If context is not given, default to the Date object. Use unschedule() to cancel.</td></tr>
 		<tr><td class="signature">Date#setUTCOffsetString(sOffset) -&gt; Date</td><td>Set the UTC offset with a four-digit string such as `+04:00` or `-0700`</td></tr>
+		<tr><td class="signature">Date#strftime(sFormat) -&gt; String</td><td>Returns the date expressed in a string according to the given format.</td></tr>
+		<tr><td class="signature">Date#succ([sUnit='day']) -&gt; Date</td><td>Returns a copy of the date incremented by one day (or any other unit).</td></tr>
+		<tr><td class="signature">Date#toYmdInt() -&gt; Number</td><td>Returns an integer in the format YYYYMMDD (useful for quickly sorting by date)</td></tr>
+		<tr><td class="signature">Date#unschedule(callback) -&gt; Date</td><td>Cancel the scheduled execution of a function registered with schedule().</td></tr>
 
 		<tr><th colspan="2" class="section">New Date Static Properties</th></tr>	
 		<tr><th>Property</th><th>Description</th></tr>
@@ -177,6 +182,7 @@ $D('2006.09.28').diff('20 Sep, 2006', 'days'); // 8</pre>
 		<tr><td class="signature">Date.addFormat(sName, oRules) -&gt; Object</td><td>Add a set of format codes and a method called sName to accept the rules (see <a href="#custom">customization</a>)</td></tr>
 		<tr><td class="signature">Date.current() -&gt; Date</td><td>Return a Date object representing the date at that moment</td></tr>	
 		<tr><td class="signature">Date.create.patterns</td><td>An object with pairs defining parsers for custom formats (see <a href="#custom">customization</a>)</td></tr>
+		
 		<tr><th colspan="2" class="section">Native Date Instance Methods (from <a href="http://www.w3schools.com/jsref/jsref_obj_date.asp">w3schools.com</a>)</th></tr>	
 		<tr><th>Method</th><th>Description</th></tr>
 		<tr><td class="signature">Date#getDate() -&gt; Number</td><td>Returns the day of the month from a Date object (from 1-31)</td></tr>
@@ -220,10 +226,11 @@ $D('2006.09.28').diff('20 Sep, 2006', 'days'); // 8</pre>
 		<tr><td class="signature">Date#toUTCString() -&gt; String</td><td>Converts a Date object, according to universal time, to a string</td></tr>
 		<tr><td class="signature">Date#toLocaleString() -&gt; String</td><td>Converts a Date object, according to local time, to a string</td></tr>
 		<tr><td class="signature">Date#valueOf() -&gt; Number</td><td>Returns the number of milliseconds since midnight Jan 1, 1970 (same as Date#getTime)</td></tr>	
-		<tr><td colspan="2"><em>Note: the Number returned by native Date setters is the number of milliseconds since midnight Jan 1, 1970.</em></td></tr>	
+		<tr><td colspan="2"><em>Note: the Number returned by native Date setters is the new number of milliseconds since midnight Jan 1, 1970.</em></td></tr>	
 
 		<tr><th colspan="2" class="section">Native Date Static Methods (from <a href="http://www.w3schools.com/jsref/jsref_obj_date.asp">w3schools.com</a>)</th></tr>	
 		<tr><th>Method</th><th>Description</th></tr>
+		<tr><td class="signature">Date.now() -&gt; Number</td><td>The number of milliseconds since midnight of January 1, 1970 according to UTC time.</td></tr>  
 		<tr><td class="signature">Date.parse(sDate) -&gt; Number</td><td>Takes a date string and returns the number of milliseconds since midnight of January 1, 1970</td></tr>  
 		<tr><td class="signature">Date.UTC(year,month,day,hours,minutes,seconds,ms) -&gt; Number</td><td>Takes a date and returns the number of milliseconds since midnight of January 1, 1970 according to universal time</td></tr>  
 	</table>

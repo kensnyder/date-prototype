@@ -477,28 +477,38 @@
 			return Math.round(this.diff(date, units || 'milliseconds', true), 0) == 0;
 		},
 		schedule: function(callback, context) {
-			var inMs = this.diff(Date.current(), 'milliseconds');
+			var inMs = this.getTime() - new Date().getTime();
 			context = context || this;
 			if (inMs <= 0) {
+console.log('immediate inMs=' + inMs, window.cnum);			
 				callback.call(context);
 				return this;
 			}
+			var ts = this.getTime();
 			var id = setTimeout(function() {
+console.log('setTimeout fired at ', new Date().getTime() - ts, inMs);				
+				//date.unschedule(callback);
 				callback.call(context);
 			}, inMs);
-			scheduled.push([callback, this.getTime(), id]);
+setTimeout(function() {
+console.log('setTimeout2 fired at ', new Date().getTime() - ts, inMs);				
+			}, inMs+1);			
+console.log('timeout inMs=' + inMs, window.cnum);			
+			scheduled.push([callback, ts, id]);
 			return this;
 		},
 		unschedule: function(callback) {
-			var i = 0;
+			var i = scheduled.length;
 			var time = this.getTime();
 			while (i--) {
 				// iterate backwards so that if we splice out an item,
 				// we don't have to worry about array indexes changing
 				if (scheduled[i][0] == callback && scheduled[i][1] == time) {
 					clearTimeout(scheduled[i][2]);
-					scheduled = scheduled.splice(i, 1);
+console.log('splicing out ', i);					
+					scheduled.splice(i, 1);
 				}
+else { console.log('not found at ' + i); }				
 			}
 			return this;
 		}
@@ -551,8 +561,10 @@
 					if (Object.prototype.toString.call(date) == '[object Number]') {
 						return new Date(date);
 					}
-					// trim the date before starting
+					// trim the date
 					date = String(date).replace(/^\s*(.*)\s*$/, '$1');
+					// normalize whitespace
+					date = date.replace(/\s{2,}/g, ' ');
 					if (date === '') {
 						return Date.current();
 					}
@@ -944,195 +956,268 @@
 	 *   March 15, 2010
 	 *   3/15/2010
 	 *   03/15/2010
-	 *
-	 *   pattern for year 1000 through 9999: ([1-9]\d{3})
-	 *   pattern for month number: (1[0-2]|0?[1-9])
-	 *   pattern for month name: (?:(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*)
-	 *   pattern for day of month: (3[01]|[12]\d|0?[1-9])
 	 */
+	var patterns = {
+		YEAR: "[1-9]\\d{3}",
+		MONTH: "1[0-2]|0?[1-9]",
+		MONTHNAME: "jan|january|feb|february|mar|march|apr|april|may|jun|june|jul|july|aug|august|sep|september|oct|october|nov|november|dec|december",
+		DAYNAME: "mon|monday|tue|tuesday|wed|wednesday|thu|thursday|fri|friday|sat|saturday|sun|sunday",
+		DAY: "3[01]|[12]\\d|0?[1-9]",
+		DAY2: "(3[01]|[12]\\d|0[1-9])",
+		TIMEZONE: "[+-][01]\\d\\:?[0-5]\\d",
+		H24: "[01]\\d|2[0-3]",
+		MIN: "[0-5]\\d",
+		SEC: "[0-5]\\d",
+		MS: "\\d{3,}",
+		H12: "0?[1-9]|1[012]",
+		UNIT: "year|month|week|day|hour|minute|second|millisecond"
+	};
+	
+	var makePattern = Date.create.makePattern = function(code) {
+		code = code.replace(/_([A-Z][A-Z0-9]+)_/g, function($0, $1) {
+			return patterns[$1];
+		});
+		return new RegExp(code, 'i');
+	};
+	
 	Date.create.patterns = [
 		// 2010-03-15
-		['iso_8601', /^([1-9]\d{3})\s*-\s*(1[0-2]|0?[1-9])\s*-\s*(3[01]|[12]\d|0?[1-9])$/, '$2/$3/$1'],
+		[
+			'iso_8601',
+			makePattern("^(_YEAR_)-(_MONTH_)-(_DAY_)$"), 
+			'$2/$3/$1'
+		],
 
 		// 3-15-2010
-		['us', /^(1[0-2]|0?[1-9])\s*[\/-]\s*(3[01]|[12]\d|0?[1-9])\s*[\/-]\s*([1-9]\d{3})$/, '$1/$2/$3'],
+		[
+			'us', 
+			makePattern("^(_MONTH_)([\\/-])(_DAY_)\\2(_YEAR_)$"), 
+			'$1/$3/$4'
+		],
 
 		// 15.03.2010
-		['world', /^(3[01]|[12]\d|0?[1-9])\s*([\.\/])s*(1[0-2]|0?[1-9])\s*\2\s*([1-9]\d{3})$/, '$3/$1/$4'],
+		[
+			'world', 
+			makePattern("^(_DAY_)([\\/\\.])(_MONTH_)\\2(_YEAR_)$"), 
+			'$3/$1/$4'
+		],
 
 		// 15-Mar-2010, 8 Dec 2011, "Thu, 8 Dec 2011"
-		['chicago', /^(?:(?:mon|tue|wed|thu|fri|sat|sun)[a-z]*,?\s+)?(3[01]|[0-2]\d|\d)\s*([ -])\s*(?:(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*)\s*\2\s*([1-9]\d{3})$/i, '$3 $1, $4'],
+		[
+			'chicago',
+			makePattern("^(?:(?:_DAYNAME_),? )?(_DAY_)([ -])(_MONTHNAME_)\\2(_YEAR_)$"),
+			'$3 $1, $4'
+		],
 
 		// "March 4, 2012", "Mar 4 2012", "Sun Mar 4 2012"
-		['conversational', /^(?:(?:mon|tue|wed|thu|fri|sat|sun)[a-z]*,?\s+)?(?:(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*)\s+(3[01]|[0-2]\d|\d),?\s*([1-9]\d{3})$/i, '$1 $2, $3'],
+		[
+			'conversational', 
+			makePattern("^(?:(?:_DAYNAME_),? )?(_MONTHNAME_) (_DAY_),? (_YEAR_)$"), 
+			'$1 $2, $3'
+		],
 
-		['unix',
-		/^@(-?\d+)$/,
-		function(match) {
-			return Date.create(match[1] * 1000);
-		}],
-		// 24-hour time (This will help catch Date objects that are casted to a string)
-		['24_hour',
-		/^(?:(.+?)(?:\s+|T))?([01]\d|2[0-3])(?:\s*\:\s*([0-5]\d))(?:\s*\:\s*([0-5]\d))?\s*(?:\.(\d+))?(\s*(?:GMT)?[+-](?:[01]\d|2[0-3])\:?[0-5]\d)?(?: \(.+?\))?$/i,
-		// ^opt. date        ^hour          ^minute              ^opt. second             ^opt. fraction           ^opt. offset hr.      ^opt. offset min  ^opt. timezone name
-		function(match) {
-			var d;
-			if (match[1]) {
-				d = Date.create(match[1]);
-				if (isNaN(d)) {
+		// Tue Jun 22 17:47:27 +0000 2010
+		[
+			'month_day_time_year', 
+			makePattern("^(?:_DAYNAME_) (_MONTHNAME_) (_DAY_) (_H24_)\\:(_MIN_)\\:(_SEC_) (_TIMEZONE_) (_YEAR_)$"), 
+			function(match) {
+				var ms = Date.parse(match[0]);
+				if (isNaN(ms)) {
 					return false;
 				}
-			} else {
-				d = Date.current();
-				d.setMilliseconds(0);
+				return new Date(ms);
 			}
-			d.setHours(parseFloat(match[2]), parseFloat(match[3]), parseFloat(match[4] || 0));
-			if (match[5]) {
-				d.setMilliseconds(+String(match[5]).slice(0,3));
+		],
+		
+		// @123456789
+		[
+			'unix', 
+			/^@(-?\d+)$/, 
+			function(match) {
+				return Date.create(parseInt(match[1], 10) * 1000);
 			}
-			if (match[6]) {
-				d.setUTCOffsetString(match[6]);
+		],
+	
+		// 24-hour time (This will help catch Date objects that are casted to a string)
+		[
+			'24_hour',
+			makePattern("^(?:(.+?)(?: |T))?(_H24_)\\:(_MIN_)(?:\\:(_SEC_)(?:\\.(_MS_))?)? ?(?:GMT)?(_TIMEZONE_)?(?: \\([A-Z]+\\))?$"), 
+			function(match) {
+				var d;
+				if (match[1]) {
+					d = Date.create(match[1]);
+					if (isNaN(d)) {
+						return false;
+					}
+				} else {
+					d = Date.current();
+					d.setMilliseconds(0);
+				}
+				d.setHours(parseFloat(match[2]), parseFloat(match[3]), parseFloat(match[4] || 0));
+				if (match[5]) {
+					d.setMilliseconds(+String(match[5]).slice(0,3));
+				}
+				if (match[6]) {
+					d.setUTCOffsetString(match[6]);
+				}
+				return d;
 			}
-			return d;
-		}],
+		],
 
 		// 12-hour time
-		['12_hour',
-		/^(?:(.+)\s+)?(0?[1-9]|1[012])(?:\s*\:\s*([0-5]\d))?(?:\s*\:\s*([0-5]\d))?\s*(am|pm)\s*$/i,
-		// ^opt. date  ^hour           ^optional minute      ^optional second         ^am or pm
-		function(match) {
-			var d;
-			if (match[1]) {
-				d = Date.create(match[1]);
-				if (isNaN(d)) {
-					return false;
+		[
+			'12_hour', 
+			makePattern("^(?:(.+) )?(_H12_)(?:\\:(_MIN_)(?:\\:(_SEC_))?)? ?(am|pm)$"),
+			function(match) {
+				var d;
+				if (match[1]) {
+					d = Date.create(match[1]);
+					if (isNaN(d)) {
+						return false;
+					}
+				} else {
+					d = Date.current();
+					d.setMilliseconds(0);
 				}
-			} else {
-				d = Date.current();
-				d.setMilliseconds(0);
+				var hour = parseFloat(match[2]);
+				hour = match[5].toLowerCase() == 'am' ? (hour == 12 ? 0 : hour) : (hour == 12 ? 12 : hour + 12);
+				d.setHours(hour, parseFloat(match[3] || 0), parseFloat(match[4] || 0));
+				return d;
 			}
-			var hour = parseFloat(match[2]);
-			hour = match[5].toLowerCase() == 'am' ? (hour == 12 ? 0 : hour) : (hour == 12 ? 12 : hour + 12);
-			d.setHours(hour, parseFloat(match[3] || 0), parseFloat(match[4] || 0));
-			return d;
-		}],
+		],
 
 		// 2 weeks after today, 3 months after 3-5-2008
-		['weeks_months_before_after',
-		/^(\d+)\s+(year|month|week|day|hour|minute|second|millisecond)s?\s+(before|from|after)\s+(.+)$/i,
-		function(match) {
-			var fromDate = Date.create(match[4]);
-			if (fromDate instanceof Date) {
-				return fromDate.add((match[3].toLowerCase() == 'before' ? -1 : 1) * match[1], match[2]);
+		[
+			'weeks_months_before_after',
+			makePattern("^(\\d+) (_UNIT_)s? (before|from|after) (.+)$"),
+			function(match) {
+				var fromDate = Date.create(match[4]);
+				if (fromDate instanceof Date) {
+					return fromDate.add((match[3].toLowerCase() == 'before' ? -1 : 1) * match[1], match[2]);
+				}
+				return false;
 			}
-			return false;
-		}],
+		],
 
 		// 5 months ago
-		['time_ago',
-		/^(\d+)\s+(year|month|week|day|hour|minute|second|millisecond)s?\s+ago$/i,
-		function(match) {
-			return Date.current().add(-1 * match[1], match[2]);
-		}],
+		[
+			'time_ago', 
+			makePattern("^(\\d+) (_UNIT_)s? ago$"), 
+			function(match) {
+				return Date.current().add(-1 * match[1], match[2]);
+			}
+		],
 
 		// in 2 hours/weeks/etc.
-		['in_time',
-		/^in\s+(\d+)\s+(year|month|week|day|hour|minute|second|millisecond)s?$/i,
-		function(match) {
-			return Date.current().add(match[1], match[2]);
-		}],
+		[
+			'in_time', 
+			makePattern("^in (\\d) (_UNIT_)s?$"), 
+			function(match) {
+				return Date.current().add(match[1], match[2]);
+			}
+		],
 	
 		// "+2 hours", "-3 years"
-		['plus_minus',
-		/^([+-])\s*(\d+)\s+(year|month|week|day|hour|minute|second|millisecond)s?$/i,
-		function(match) {
-			var mult = match[1] == '-' ? -1 : 1;
-			return Date.current().add(mult * match[2], match[3]);
-		}],
+		[
+			'plus_minus', 
+			makePattern("^([+-]) ?(\\d+) (_UNIT_)s?$"), function(match) {
+				var mult = match[1] == '-' ? -1 : 1;
+				return Date.current().add(mult * match[2], match[3]);
+			}
+		],
 	
 		// "/Date(1296824894000)/", "/Date(1296824894000-0700)/"
-		['asp_json',
-		/^\/Date\((\d+)([+-]\d{4})?\)\/$/i,
-		function(match) {
-			var d = new Date;
-			d.setTime(match[1]);
-			if (match[2]) {
-				d.setUTCOffsetString(match[2]);
+		[
+			'asp_json',
+			/^\/Date\((\d+)([+-]\d{4})?\)\/$/i,
+			function(match) {
+				var d = new Date;
+				d.setTime(match[1]);
+				if (match[2]) {
+					d.setUTCOffsetString(match[2]);
+				}
+				return d;
 			}
-			return d;
-		}],	
+		],	
 
 		// today, tomorrow, yesterday
-		['today_tomorrow',
-		/^(tod|now|tom|yes)/i,
-		function(match) {
-			var now = Date.current();
-			switch (match[1].toLowerCase()) {
-				case 'tod':
-				case 'now':
-					return now;
-				case 'tom':
-					return now.add(1, 'day');
-				case 'yes':
-					return now.add(-1, 'day');
+		[
+			'today_tomorrow',
+			/^(today|now|tomorrow|yesterday)/i,
+			function(match) {
+				var now = Date.current();
+				switch (match[1].toLowerCase()) {
+					case 'today':
+					case 'now':
+						return now;
+					case 'tomorrow':
+						return now.add(1, 'day');
+					case 'yesterday':
+						return now.add(-1, 'day');
+				}
 			}
-		}],
+		],
 
 		// this/next/last january, next thurs
-		['this_next_last',
-		/^(this|next|last)\s+(?:(year|month|week|day|hour|minute|second|millisecond)|(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)|(sun|mon|tue|wed|thu|fri|sat))/i,
-		function(match) {
-			// $1 = this/next/last
-			var multiplier = match[1].toLowerCase() == 'last' ? -1 : 1;
-			var now = Date.current();
-			var months = Date.ABBR_MONTHNAMES;
-			var i;
-			// $2 = interval name
-			if (match[2]) {
-				return now.add(multiplier, match[2]);
-			}
-			// $3 = month name
-			else if (match[3]) {
-				var month = match[3].toLowerCase(), diff;
-				for (i = 0; i < months.length; i++) {
-					if (month == months[i].toLowerCase()) {
-						diff = 12 - (now.getMonth() - i);
-						diff = diff > 12 ? diff - 12 : diff;
-						return now.add(multiplier * diff, 'month');
+		[
+			'this_next_last', 
+			makePattern("^(this|next|last) (?:(_UNIT_)s?|(_MONTHNAME_)|(_DAYNAME_))$"), 
+			function(match) {
+				// $1 = this/next/last
+				var multiplier = match[1].toLowerCase() == 'last' ? -1 : 1;
+				var now = Date.current();
+				var months = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct'];
+				var i;
+				// $2 = interval name
+				if (match[2]) {
+					return now.add(multiplier, match[2]);
+				}
+				// $3 = month name
+				else if (match[3]) {
+					var month = match[3].toLowerCase().slice(0,3), diff;
+					for (i = 0; i < months.length; i++) {
+						if (month == months[i].toLowerCase()) {
+							diff = 12 - (now.getMonth() - i);
+							diff = diff > 12 ? diff - 12 : diff;
+							return now.add(multiplier * diff, 'month');
+						}
 					}
 				}
-			}
-			// $4 = weekday name
-			else if (match[4]) {
-				var weekday = match[4].toLowerCase();
-				var days = Date.ABBR_DAYNAMES;
-				for (i = 0; i < days.length; i++) {
-					if (weekday == days[i].toLowerCase()) {
-						diff = now.getDay() - i + 7;
-						return now.add(multiplier * (diff == 0 ? 7 : diff), 'day');
+				// $4 = weekday name
+				else if (match[4]) {
+					var weekday = match[4].toLowerCase().slice(0,3);
+					var days = ['sun','mon','tue','wed','thu','fri','sat'];
+					for (i = 0; i < days.length; i++) {
+						if (weekday == days[i].toLowerCase()) {
+							diff = now.getDay() - i + 7;
+							return now.add(multiplier * (diff == 0 ? 7 : diff), 'day');
+						}
 					}
 				}
+				return false;
 			}
-			return false;
-		}],
+		],
 
 		// January 4th, July the 4th
-		['conversational_sans_year',
-		/^(?:(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\s+)(?:the\s+)?(\d+)(?:st|nd|rd|th)?$/i,
-		function(match) {
-			var d = Date.current();
-			if (match[1]) {
-				var i = Date.ABBR_MONTHNAMES.length;
-				while (i--) {
-					if (Date.ABBR_MONTHNAMES[i].toLowerCase() == match[1].toLowerCase()) {
-						d.setMonth(i);
-						break;
+		[
+			'conversational_sans_year', 
+			makePattern("^(_MONTHNAME_) (?:the )?(\\d+)(?:st|nd|rd|th)?$"), 
+			function(match) {
+				var d = Date.current();
+				if (match[1]) {
+					var months = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct'];
+					var i = 12;
+					while (i--) {
+						if (months[i] == match[1].toLowerCase().slice(0,3)) {
+							d.setMonth(i);
+							break;
+						}
 					}
 				}
+				d.setDate(match[2]);
+				return d;
 			}
-			d.setDate(match[2]);
-			return d;
-		}]
+		]
 	];
 
 	// add $D shortcut to window or module.exports

@@ -17,12 +17,11 @@
 	 * Add leading zeros
 	 */
 	function zeroPad(number, digits) {
-		number = number+'';
-		var cnt = digits - number.length;
-		if (cnt <= 0) {
-			return number;
+		switch (digits - String(number).length) {
+			case 2: return '00' + number;
+			case 1: return '0' + number;
 		}
-		return Array(cnt + 1).join('0') + number;
+		return number;
 	}
 	/**
 	 * Extend an object with the properties of another
@@ -614,6 +613,7 @@ else { console.log('not found at ' + i); }
 		 * @var {Array}  Names for the months of the year
 		 */			
 		MONTHNAMES      : 'January February March April May June July August September October November December'.split(' '),
+		MONTHNAMES_LOOKUP: {'jan':1, 'feb':2, 'mar':3, 'apr':4, 'may':5, 'jun':6, 'jul':7, 'aug':8, 'sep':9, 'oct':10, 'nov':11, 'dec':12},
 		/**
 		 * @var {Array}  Abbreviated names for the months of the year
 		 */	
@@ -622,6 +622,7 @@ else { console.log('not found at ' + i); }
 		 * @var {Array}  Names for the days of the week from Sunday to Saturday
 		 */			
 		DAYNAMES        : 'Sunday Monday Tuesday Wednesday Thursday Friday Saturday'.split(' '),
+		DAYNAMES_LOOKUP : {'sun':0, 'mon':1, 'tue':2, 'wed':3, 'thu':4, 'fri':5, 'sat':6},
 		/**
 		 * @var {Array}  Abbreviated names for the days of the week from Sunday to Saturday
 		 */		
@@ -653,6 +654,12 @@ else { console.log('not found at ' + i); }
 				return new Date(year, 1, 29).getDate() == 29 ? 29 : 28;
 			}
 			return [undefined,31,undefined,31,30,31,30,31,31,30,31,30,31][month];
+		},
+		getMonthByName: function(monthname) {
+			return Date.MONTHNAMES_LOOKUP[ String(monthname).slice(0,3).toLowerCase() ];
+		},
+		getWeekdayByName: function(dayname) {
+			return Date.DAYNAMES_LOOKUP[ String(dayname).slice(0,3).toLowerCase() ];			
 		},
 		/**
 		 * Set a form input to be automatically formatted to the given format. If not recognized, leave value alone
@@ -957,25 +964,27 @@ else { console.log('not found at ' + i); }
 	 *   3/15/2010
 	 *   03/15/2010
 	 */
-	var patterns = {
+	Date.create.regexes = {
 		YEAR: "[1-9]\\d{3}",
 		MONTH: "1[0-2]|0?[1-9]",
+		MONTH2: "1[0-2]|0[1-9]",
 		MONTHNAME: "jan|january|feb|february|mar|march|apr|april|may|jun|june|jul|july|aug|august|sep|september|oct|october|nov|november|dec|december",
 		DAYNAME: "mon|monday|tue|tuesday|wed|wednesday|thu|thursday|fri|friday|sat|saturday|sun|sunday",
 		DAY: "3[01]|[12]\\d|0?[1-9]",
-		DAY2: "(3[01]|[12]\\d|0[1-9])",
+		DAY2: "3[01]|[12]\\d|0[1-9]",
 		TIMEZONE: "[+-][01]\\d\\:?[0-5]\\d",
 		H24: "[01]\\d|2[0-3]",
 		MIN: "[0-5]\\d",
 		SEC: "[0-5]\\d",
 		MS: "\\d{3,}",
 		H12: "0?[1-9]|1[012]",
+		AMPM: "am|pm",
 		UNIT: "year|month|week|day|hour|minute|second|millisecond"
 	};
 	
 	var makePattern = Date.create.makePattern = function(code) {
 		code = code.replace(/_([A-Z][A-Z0-9]+)_/g, function($0, $1) {
-			return patterns[$1];
+			return Date.create.regexes[$1];
 		});
 		return new RegExp(code, 'i');
 	};
@@ -1019,13 +1028,15 @@ else { console.log('not found at ' + i); }
 		// Tue Jun 22 17:47:27 +0000 2010
 		[
 			'month_day_time_year', 
-			makePattern("^(?:_DAYNAME_) (_MONTHNAME_) (_DAY_) (_H24_)\\:(_MIN_)\\:(_SEC_) (_TIMEZONE_) (_YEAR_)$"), 
-			function(match) {
-				var ms = Date.parse(match[0]);
-				if (isNaN(ms)) {
+			makePattern("^(?:_DAYNAME_) (_MONTHNAME_) (_DAY_) ((?:_H24_)\\:(?:_MIN_)(?:\\:_SEC_)?) (_TIMEZONE_) (_YEAR_)$"),
+			function(m) {
+				var month = zeroPad( Date.getMonthByName(m[1]), 2 );
+				var day = zeroPad( m[2], 2 );
+				var date = Date.create(m[5] + '-' + month + '-' + day + 'T' + m[3] + m[4]);
+				if (isNaN(date)) {
 					return false;
 				}
-				return new Date(ms);
+				return date;
 			}
 		],
 		
@@ -1067,7 +1078,7 @@ else { console.log('not found at ' + i); }
 		// 12-hour time
 		[
 			'12_hour', 
-			makePattern("^(?:(.+) )?(_H12_)(?:\\:(_MIN_)(?:\\:(_SEC_))?)? ?(am|pm)$"),
+			makePattern("^(?:(.+) )?(_H12_)(?:\\:(_MIN_)(?:\\:(_SEC_))?)? ?(_AMPM_)$"),
 			function(match) {
 				var d;
 				if (match[1]) {
@@ -1166,33 +1177,26 @@ else { console.log('not found at ' + i); }
 				// $1 = this/next/last
 				var multiplier = match[1].toLowerCase() == 'last' ? -1 : 1;
 				var now = Date.current();
-				var months = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct'];
 				var i;
+				var diff;
+				var month;
+				var weekday;
 				// $2 = interval name
 				if (match[2]) {
 					return now.add(multiplier, match[2]);
 				}
 				// $3 = month name
 				else if (match[3]) {
-					var month = match[3].toLowerCase().slice(0,3), diff;
-					for (i = 0; i < months.length; i++) {
-						if (month == months[i].toLowerCase()) {
-							diff = 12 - (now.getMonth() - i);
-							diff = diff > 12 ? diff - 12 : diff;
-							return now.add(multiplier * diff, 'month');
-						}
-					}
+					month = Date.getMonthByName(match[3]) - 1;
+					diff = 12 - (now.getMonth() - month);
+					diff = diff > 12 ? diff - 12 : diff;
+					return now.add(multiplier * diff, 'month');
 				}
 				// $4 = weekday name
 				else if (match[4]) {
-					var weekday = match[4].toLowerCase().slice(0,3);
-					var days = ['sun','mon','tue','wed','thu','fri','sat'];
-					for (i = 0; i < days.length; i++) {
-						if (weekday == days[i].toLowerCase()) {
-							diff = now.getDay() - i + 7;
-							return now.add(multiplier * (diff == 0 ? 7 : diff), 'day');
-						}
-					}
+					weekday = Date.getWeekdayByName(match[4]);
+					diff = now.getDay() - weekday + 7;
+					return now.add(multiplier * (diff == 0 ? 7 : diff), 'day');
 				}
 				return false;
 			}
@@ -1205,14 +1209,7 @@ else { console.log('not found at ' + i); }
 			function(match) {
 				var d = Date.current();
 				if (match[1]) {
-					var months = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct'];
-					var i = 12;
-					while (i--) {
-						if (months[i] == match[1].toLowerCase().slice(0,3)) {
-							d.setMonth(i);
-							break;
-						}
-					}
+					d.setMonth( Date.getMonthByName(match[1]) - 1 );
 				}
 				d.setDate(match[2]);
 				return d;

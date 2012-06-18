@@ -1,5 +1,6 @@
 Date.prototype
 ===
+v3.4.1 Jun 2012
 
 Date.prototype provides JavaScript Date instance methods for parsing, formatting, and calculating dates. It uses a concise and configurable algorithm for interpreting format codes.
 
@@ -13,12 +14,14 @@ Features include:
 
 Examples:
 
- * $D('2006-09-20').strftime('%m/%d/%Y'); // "09/20/2006"
- * $D('Sep 20 2006').add(3).strftime('%Y-%m-%d'); // "2006-09-23"
- * $D('09/20/2006').add(4, 'years').strftime('%Y-%m-%d'); // "2010-09-20"
- * $D('09/20/2006 20:15:00').add(4, 'hours').format('%Y-%m-%d %H:%M:%S'); // "2006-09-21 00:15:00"
- * $D('2006-09-20').format('m/d/Y'); // "09/20/2006"
- * $D('2006.09.28').diff('20 Sep, 2006', 'days'); // 8
+```javascript
+$D('2006-09-20').strftime('%m/%d/%Y'); // "09/20/2006"
+$D('Sep 20 2006').add(3).strftime('%Y-%m-%d'); // "2006-09-23"
+$D('09/20/2006').add(4, 'years').strftime('%Y-%m-%d'); // "2010-09-20"
+$D('09/20/2006 20:15:00').add(4, 'hours').format('%Y-%m-%d %H:%M:%S'); // "2006-09-21 00:15:00"
+$D('2006-09-20').format('m/d/Y'); // "09/20/2006"
+$D('2006.09.28').diff('20 Sep, 2006', 'days'); // 8
+```
 
 See [reference.html](http://sandbox.kendsnyder.com/reference.html) for demo and complete guide
 [Unit Tests](http://sandbox.kendsnyder.com/unit-tests.html) for demo and complete guide

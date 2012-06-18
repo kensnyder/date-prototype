@@ -9,10 +9,6 @@
 	
 	"use strict";
 	
-	//
-	// pre-calculate the number of milliseconds in a day
-	//
-	var day = 24 * 60 * 60 * 1000;
 	/**
 	 * Add leading zeros
 	 */
@@ -45,8 +41,8 @@
 		second: 1000,
 		minute: 60 * 1000,
 		hour: 60 * 60 * 1000,
-		day: day,
-		week: 7 * day,
+		day: 24 * 60 * 60 * 1000,
+		week: 7 * 24 * 60 * 60 * 1000,
 		month: {
 			// add a number of months
 			add: function(d, number) {
@@ -116,7 +112,7 @@
 		 * @return {Date}  A new Date object
 		 */
 		succ: function(unit) {
-			return this.clone().add(1, unit);
+			return this.clone().add(1, unit || 'day');
 		},
 		/**
 		 * Add an arbitrary time frame
@@ -475,25 +471,20 @@
 		equals: function(date, units) {
 			return Math.round(this.diff(date, units || 'milliseconds', true), 0) == 0;
 		},
-		schedule: function(callback, context) {
-			var inMs = this.getTime() - new Date().getTime();
-			context = context || this;
+		schedule: function(callback) {
+			var inMs = this.getTime() - Date.current().getTime();
+			var clone = this.clone();
 			if (inMs <= 0) {
-console.log('immediate inMs=' + inMs, window.cnum);			
-				callback.call(context);
+				clone.unschedule(callback);
+				callback();
 				return this;
 			}
 			var ts = this.getTime();
 			var id = setTimeout(function() {
-console.log('setTimeout fired at ', new Date().getTime() - ts, inMs);				
-				//date.unschedule(callback);
-				callback.call(context);
+				clone.unschedule(callback);
+				callback();
 			}, inMs);
-setTimeout(function() {
-console.log('setTimeout2 fired at ', new Date().getTime() - ts, inMs);				
-			}, inMs+1);			
-console.log('timeout inMs=' + inMs, window.cnum);			
-			scheduled.push([callback, ts, id]);
+			scheduled.push({callback: callback, timestamp: ts, timeoutId: id});
 			return this;
 		},
 		unschedule: function(callback) {
@@ -502,14 +493,22 @@ console.log('timeout inMs=' + inMs, window.cnum);
 			while (i--) {
 				// iterate backwards so that if we splice out an item,
 				// we don't have to worry about array indexes changing
-				if (scheduled[i][0] == callback && scheduled[i][1] == time) {
-					clearTimeout(scheduled[i][2]);
-console.log('splicing out ', i);					
+				if (scheduled[i].callback == callback && scheduled[i].timestamp == time) {
+					clearTimeout(scheduled[i].timeoutId);
 					scheduled.splice(i, 1);
 				}
-else { console.log('not found at ' + i); }				
 			}
 			return this;
+		},
+		getSchedule: function() {
+			var toFire = [];
+			var time = this.getTime();
+			for (var i = 0, len = scheduled.length; i < len; i++) {
+				if (scheduled[i].timestamp == time) {
+					toFire.push(scheduled[i]);
+				}
+			}
+			return toFire;
 		}
 	};
 	extend(Date.prototype, instanceMethods);
@@ -764,6 +763,75 @@ else { console.log('not found at ' + i); }
 			return Date.current().setUTCOffset(0).getTime();
 		};
 	}
+	
+	var cloneTrigger = {};
+
+	Date.Timer = function(isClone) {
+		if (isClone === cloneTrigger) {
+			return this;
+		}
+		return this.initialize.apply(this, Array.prototype.slice.call(arguments));
+	};
+
+	Date.Timer.prototype.initialize = function() {
+		return this;
+	};
+
+	if (window.performance && window.performance.now) {
+		Date.Timer._now = function() {
+			return window.performance.now();
+		};
+	}
+	else if (window.performance && window.performance.webkitNow) {
+		Date.Timer._now = function() {
+			return window.performance.webkitNow();
+		};
+	}
+	else {
+		Date.Timer._now = function() {
+			return new Date().getTime() * 1000;
+		};
+	}
+
+	Date.Timer.prototype.start = Date.Timer.restart = function() {
+		this._startSnapshot = Date.Timer._now();
+		this.startDate = new Date();
+		return this;
+	};
+
+	Date.Timer.prototype.clone = function() {
+		var clone = new Date.time(cloneTrigger);
+		clone._startSnapshot = this._startSnapshot;
+		clone.startDate = this.startDate;
+		return clone;
+	};
+
+	Date.Timer.prototype.stop = function(unit, template) {
+		if (template) {
+			var result = this.stop(unit);
+			return template.replace('%s', result).replace(/%?\.(\d+)f/i, function(m) {
+				return retult.toFixed(+m[1]);
+			});
+		}
+		this._stopSnapshot = Date.Timer._now();
+		this.stopDate = new Date();
+		var usec = this._stopSnapshot - this._startSnapshot;
+		switch (String(unit).toLowerCase()) {
+			case 'microseconds':
+			case 'microsecond': return usec;
+			case 'milliseconds':
+			case 'millisecond':
+			default: return usec / 1000;
+			case 'seconds':
+			case 'second': return usec / 1000000;
+			case 'minutes':
+			case 'minute': return usec / 60000000;
+			case 'hours':
+			case 'hour': return usec / 3600000000;
+			case 'days':
+			case 'day': return usec / (24 * 3600000000);
+		}
+	};	
 
 	//
 	// format codes for strftime
@@ -982,7 +1050,7 @@ else { console.log('not found at ' + i); }
 		UNIT: "year|month|week|day|hour|minute|second|millisecond"
 	};
 	
-	var makePattern = Date.create.makePattern = function(code) {
+	Date.create.makePattern = function(code) {
 		code = code.replace(/_([A-Z][A-Z0-9]+)_/g, function($0, $1) {
 			return Date.create.regexes[$1];
 		});
@@ -993,42 +1061,42 @@ else { console.log('not found at ' + i); }
 		// 2010-03-15
 		[
 			'iso_8601',
-			makePattern("^(_YEAR_)-(_MONTH_)-(_DAY_)$"), 
+			Date.create.makePattern("^(_YEAR_)-(_MONTH_)-(_DAY_)$"), 
 			'$2/$3/$1'
 		],
 
 		// 3-15-2010
 		[
 			'us', 
-			makePattern("^(_MONTH_)([\\/-])(_DAY_)\\2(_YEAR_)$"), 
+			Date.create.makePattern("^(_MONTH_)([\\/-])(_DAY_)\\2(_YEAR_)$"), 
 			'$1/$3/$4'
 		],
 
 		// 15.03.2010
 		[
 			'world', 
-			makePattern("^(_DAY_)([\\/\\.])(_MONTH_)\\2(_YEAR_)$"), 
+			Date.create.makePattern("^(_DAY_)([\\/\\.])(_MONTH_)\\2(_YEAR_)$"), 
 			'$3/$1/$4'
 		],
 
 		// 15-Mar-2010, 8 Dec 2011, "Thu, 8 Dec 2011"
 		[
 			'chicago',
-			makePattern("^(?:(?:_DAYNAME_),? )?(_DAY_)([ -])(_MONTHNAME_)\\2(_YEAR_)$"),
+			Date.create.makePattern("^(?:(?:_DAYNAME_),? )?(_DAY_)([ -])(_MONTHNAME_)\\2(_YEAR_)$"),
 			'$3 $1, $4'
 		],
 
 		// "March 4, 2012", "Mar 4 2012", "Sun Mar 4 2012"
 		[
 			'conversational', 
-			makePattern("^(?:(?:_DAYNAME_),? )?(_MONTHNAME_) (_DAY_),? (_YEAR_)$"), 
+			Date.create.makePattern("^(?:(?:_DAYNAME_),? )?(_MONTHNAME_) (_DAY_),? (_YEAR_)$"), 
 			'$1 $2, $3'
 		],
 
 		// Tue Jun 22 17:47:27 +0000 2010
 		[
 			'month_day_time_year', 
-			makePattern("^(?:_DAYNAME_) (_MONTHNAME_) (_DAY_) ((?:_H24_)\\:(?:_MIN_)(?:\\:_SEC_)?) (_TIMEZONE_) (_YEAR_)$"),
+			Date.create.makePattern("^(?:_DAYNAME_) (_MONTHNAME_) (_DAY_) ((?:_H24_)\\:(?:_MIN_)(?:\\:_SEC_)?) (_TIMEZONE_) (_YEAR_)$"),
 			function(m) {
 				var month = zeroPad( Date.getMonthByName(m[1]), 2 );
 				var day = zeroPad( m[2], 2 );
@@ -1052,7 +1120,7 @@ else { console.log('not found at ' + i); }
 		// 24-hour time (This will help catch Date objects that are casted to a string)
 		[
 			'24_hour',
-			makePattern("^(?:(.+?)(?: |T))?(_H24_)\\:(_MIN_)(?:\\:(_SEC_)(?:\\.(_MS_))?)? ?(?:GMT)?(_TIMEZONE_)?(?: \\([A-Z]+\\))?$"), 
+			Date.create.makePattern("^(?:(.+?)(?: |T))?(_H24_)\\:(_MIN_)(?:\\:(_SEC_)(?:\\.(_MS_))?)? ?(?:GMT)?(_TIMEZONE_)?(?: \\([A-Z]+\\))?$"), 
 			function(match) {
 				var d;
 				if (match[1]) {
@@ -1078,7 +1146,7 @@ else { console.log('not found at ' + i); }
 		// 12-hour time
 		[
 			'12_hour', 
-			makePattern("^(?:(.+) )?(_H12_)(?:\\:(_MIN_)(?:\\:(_SEC_))?)? ?(_AMPM_)$"),
+			Date.create.makePattern("^(?:(.+) )?(_H12_)(?:\\:(_MIN_)(?:\\:(_SEC_))?)? ?(_AMPM_)$"),
 			function(match) {
 				var d;
 				if (match[1]) {
@@ -1100,7 +1168,7 @@ else { console.log('not found at ' + i); }
 		// 2 weeks after today, 3 months after 3-5-2008
 		[
 			'weeks_months_before_after',
-			makePattern("^(\\d+) (_UNIT_)s? (before|from|after) (.+)$"),
+			Date.create.makePattern("^(\\d+) (_UNIT_)s? (before|from|after) (.+)$"),
 			function(match) {
 				var fromDate = Date.create(match[4]);
 				if (fromDate instanceof Date) {
@@ -1113,7 +1181,7 @@ else { console.log('not found at ' + i); }
 		// 5 months ago
 		[
 			'time_ago', 
-			makePattern("^(\\d+) (_UNIT_)s? ago$"), 
+			Date.create.makePattern("^(\\d+) (_UNIT_)s? ago$"), 
 			function(match) {
 				return Date.current().add(-1 * match[1], match[2]);
 			}
@@ -1122,7 +1190,7 @@ else { console.log('not found at ' + i); }
 		// in 2 hours/weeks/etc.
 		[
 			'in_time', 
-			makePattern("^in (\\d) (_UNIT_)s?$"), 
+			Date.create.makePattern("^in (\\d) (_UNIT_)s?$"), 
 			function(match) {
 				return Date.current().add(match[1], match[2]);
 			}
@@ -1131,7 +1199,7 @@ else { console.log('not found at ' + i); }
 		// "+2 hours", "-3 years"
 		[
 			'plus_minus', 
-			makePattern("^([+-]) ?(\\d+) (_UNIT_)s?$"), function(match) {
+			Date.create.makePattern("^([+-]) ?(\\d+) (_UNIT_)s?$"), function(match) {
 				var mult = match[1] == '-' ? -1 : 1;
 				return Date.current().add(mult * match[2], match[3]);
 			}
@@ -1172,7 +1240,7 @@ else { console.log('not found at ' + i); }
 		// this/next/last january, next thurs
 		[
 			'this_next_last', 
-			makePattern("^(this|next|last) (?:(_UNIT_)s?|(_MONTHNAME_)|(_DAYNAME_))$"), 
+			Date.create.makePattern("^(this|next|last) (?:(_UNIT_)s?|(_MONTHNAME_)|(_DAYNAME_))$"), 
 			function(match) {
 				// $1 = this/next/last
 				var multiplier = match[1].toLowerCase() == 'last' ? -1 : 1;
@@ -1205,7 +1273,7 @@ else { console.log('not found at ' + i); }
 		// January 4th, July the 4th
 		[
 			'conversational_sans_year', 
-			makePattern("^(_MONTHNAME_) (?:the )?(\\d+)(?:st|nd|rd|th)?$"), 
+			Date.create.makePattern("^(_MONTHNAME_) (?:the )?(\\d+)(?:st|nd|rd|th)?$"), 
 			function(match) {
 				var d = Date.current();
 				if (match[1]) {

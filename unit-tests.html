@@ -439,42 +439,46 @@
 			equal(Date.create.patterns[0]+'', us+'', 'us pattern added to beginning');
 		});
 		
-		test('schedule', 1, function() {
-			var d, callback1;
-			stop(3000);
-			callback1 = function() {
-				var diff = new Date() - d;
+		test('schedule', 3, function() {
+			stop(350);
+			var d = $D('+250 milliseconds');
+			var ms = new Date().getTime();
+			var callback1 = function() {
+				var diff = new Date().getTime() - ms;
 				// expect 250 ms, but give it a bit of wiggle room
-				equal(diff > 249 && diff < 299, true, 'scheduled for 250 milliseconds in the future (actually fired at ' + diff + 'ms)');
-				start();
+				equal(diff > 200 && diff < 299, true, 'scheduled for 250 milliseconds in the future (actually fired at ' + diff + 'ms)');
 			};
-window.cnum = 'callback1';			
-			d = $D('+2 seconds');
-//console.log('about to schedule', d - new Date());
 			d.schedule(callback1);
+			equal(d.getSchedule().length, 1, 'schedule has one item');
+			setTimeout(function() {
+				equal(d.getSchedule().length, 0, 'schedule is empty again');
+				start();
+			}, 300);
 		});
-//		
-//		test('schedule in past', 1, function() {
-//			var callback2 = function() {
-//				var diff = new Date() - d;
-//				equal(diff < 50, true, 'called immediately if scheduled in past (actually fired at ' + diff + 'ms)');
-//			};
-//window.cnum = 'callback2';			
-//			var d = $D('-250 milliseconds');
-//			d.schedule(callback2);
-//		});
-//		
-//		test('unschedule', 0, function() {
-//			stop(400);
-//			var callback3 = function() {
-//				ok(false, 'oops. it was called even after unscheduling.');
-//			};
-//window.cnum = 'callback3';			
-//			var d = $D('+250 milliseconds');
-//			d.schedule(callback3);
-//			d.unschedule(callback3);
-//			setTimeout(start, 350);
-//		});
+		
+		test('schedule in past', 1, function() {
+			var d = $D('-250 milliseconds');
+			var ms = new Date().getTime();
+			var callback2 = function() {
+				var diff = new Date().getTime() - ms;
+				equal(diff < 50, true, 'called immediately if scheduled in past (actually fired at ' + diff + 'ms)');
+			};
+			d.schedule(callback2);
+		});
+		
+		test('unschedule', 1, function() {
+			stop(500);
+			var callback3 = function() {
+				ok(false, 'oops. it was called even after unscheduling.');
+			};
+			var d = $D('+250 milliseconds');
+			d.schedule(callback3);
+			d.unschedule(callback3);
+			setTimeout(function() {
+				equal(d.getSchedule().length, 0, 'schedule is empty');
+				start();
+			}, 400);
+		});
 
 	}
 </script>

@@ -1,3 +1,4 @@
+module("Math");
 test('Date#add()', function() {
 	// be careful not to cross daylight savings time changeovers
 	equal($D('Oct 27, 2007').add(4, 'year')+'', $D(Date.parse('Oct 27, 2011'))+'', 'adding "years"');

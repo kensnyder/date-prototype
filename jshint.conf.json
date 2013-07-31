@@ -5,7 +5,13 @@
   "undef": true,
   "unused": false,
   "laxbreak": true,
+  "smarttabs": true,
   "globals": {
-    "define": true
+    "define": true,
+	"document": true,
+	"window": true,
+	"module": true,
+	"setTimeout": true,
+	"clearTimeout": true
   }
 }

@@ -1,3 +1,5 @@
+module('Date parsing');
+
 test('Date.create() - numeric arguments', function() {
 	var d, pd;
 	// 0 arguments
@@ -196,6 +198,10 @@ test('Date.create() - invalid strings return NaN', function() {
 	equal($D('2006-13-01')+'', NaN+'', 'month 13');
 	equal($D('2006-00-01')+'', NaN+'', 'month 00');
 	equal($D('2006-08-32')+'', NaN+'', 'day 32');
+});
+
+test("Date.createUTC", function() {
+	strictEqual(Date.createUTC('2006-08-01 20:15:59')+'', new Date(2006, 7, 1, 20, 15, 59).setUTCOffset(0)+'', 'parsing `2006-08-01 20:15:59` as UTC');
 	/*
 	equal($D('2006-08-01 20:15')+'', new Date(2006, 7, 1, 20, 15)+'', 'parsing `2006-08-01 20:15`');
 	equal($D('2006-08-01 20:15:59')+'', new Date(2006, 7, 1, 20, 15, 59)+'', 'parsing `2006-08-01 20:15:59`');

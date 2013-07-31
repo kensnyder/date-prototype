@@ -20,17 +20,6 @@
 			}
 		}
 	}
-	
-	var utcOffsetMs = (function() {
-		var match = new Date().toString().match(/GMT([+-])(\d\d)(\d\d)/);
-		if (!match) {
-			return 0;
-		}
-		var sign = match[1] == '+' ? 1 : -1;
-		var hours = parseInt(match[2], 10);
-		var min = parseInt(match[3], 10);
-		return ((sign * hours * 60) + min) * 1000;
-	})();
 
 	//
 	//
@@ -283,7 +272,7 @@
 		 */
 		getHours12: function() {
 			var hours = this.getHours();
-			return hours > 12 ? hours - 12 : (hours == 0 ? 12 : hours);
+			return hours > 12 ? hours - 12 : (hours === 0 ? 12 : hours);
 		},
 		/**
 		 * Get the am or pm (uppercase)
@@ -310,8 +299,17 @@
 			return Math.round(this.getTime() / 1000, 0);
 		},
 		/**
-		 * Get the GMT offset in hours and minutes (e.g. +06:30)
-		 *
+		 * Get the system GMT offset in hours and minutes (e.g. +06:30) for that date
+		 * NOTE: JavaScript Date objects do not have a concept of timezone.
+		 * Dates are always in the timezone of the system and only vary by daylight savings changes.
+		 * @method getUTCOffset
+		 * @example
+
+	// convert from UTC to local timezone
+	Date.createUTC(utcdate).getTime();
+	// convert local date to UTC
+	Date.create(localdate).setUTCOffset(0).getTime();
+
 		 * @return {String}
 		 */
 		getUTCOffset: function() {
@@ -331,9 +329,7 @@
 		 * @return {Date}
 		 */
 		setUTCOffset: function(seconds) {
-			var curr = this.getTimezoneOffset() * -1;
-			var utcNow = this.getTime() + (curr * 60000);
-			this.setTime(utcNow - (seconds * 60000));
+			this.setTime(this.getTime() + (seconds * 60000));
 			return this;
 		},
 		/**
@@ -343,7 +339,7 @@
 		 * @return {Date}
 		 */		
 		setUTCOffsetString: function(str) {
-			var hoursMin = str.match(/([+-]?)([01]\d|2[0-3])\:?([0-5]\d)/);
+			var hoursMin = str.match(/([+\-]?)([01]\d|2[0-3])\:?([0-5]\d)/);
 			if (hoursMin) {
 				var seconds = parseFloat(hoursMin[2]) * 60;
 				seconds += parseFloat(hoursMin[3]);
@@ -370,7 +366,7 @@
 		 */
 		getTimezoneName: function() {
 			var match = /(?:\((.+)\)$| ([A-Z]{3}) )/.exec(this.toString());
-			return match[1] || match[2] || 'GMT' + this.getUTCOffset();
+			return match ? (match[1] || match[2]) : 'GMT' + this.getUTCOffset();
 		},
 		/**
 		 * Convert this date to an 8-digit integer (%Y%m%d)
@@ -406,12 +402,12 @@
 
 			} else if (diff < 3600) {
 				// 2 to 59 minutes ago
-				rawText = floor(diff / 60) + " minutes";
+				rawText = Math.floor(diff / 60) + " minutes";
 
 			} else if (diff < 86400) {
 				// less than 24 hours ago
-				var hours = floor(diff / 3600);
-				var s = hour == 1 ? '' : 's';
+				var hours = Math.floor(diff / 3600);
+				var s = hours == 1 ? '' : 's';
 				rawText = hours + " hour" + s + " ago";
 
 			} else if (diff < 172800) {
@@ -420,7 +416,7 @@
 
 			} else if (diff < 604800) {
 				// 2 to 6 days ago
-				rawText = floor(diff / 86400) + " days";
+				rawText = Math.floor(diff / 86400) + " days";
 
 			} else if (diff < 1209600) {
 				// within 14 days
@@ -428,7 +424,7 @@
 
 			} else if (diff < 2419200) {
 				// within 28 days
-				rawText = floor(diff / 604800) + " weeks";
+				rawText = Math.floor(diff / 604800) + " weeks";
 
 			} else if (diff < 5184000) {
 				// within 60 days
@@ -436,7 +432,7 @@
 
 			}	else if (diff < 31536000) {
 				// within 365 days
-				rawText = floor(diff / 2592000) + " months";
+				rawText = Math.floor(diff / 2592000) + " months";
 
 			} else if (diff < 63072000) {
 				// within 730 days
@@ -444,7 +440,7 @@
 
 			} else {
 				// years ago
-				rawText = floor(diff / 31536000) + " years";
+				rawText = Math.floor(diff / 31536000) + " years";
 
 			}
 			return (seconds > 0 ? 'in ' + rawText : rawText + ' ago');
@@ -472,7 +468,7 @@
 			return Math.round(this.diff(date, units || 'milliseconds', true), 0) > 0;
 		},
 		equals: function(date, units) {
-			return Math.round(this.diff(date, units || 'milliseconds', true), 0) == 0;
+			return Math.round(this.diff(date, units || 'milliseconds', true), 0) === 0;
 		},
 		schedule: function(callback) {
 			var inMs = this.getTime() - Date.current().getTime();
@@ -607,12 +603,10 @@
 				default:return new Date(a[0], a[1], a[2], a[3], a[4], a[5], a[6]);
 			}
 		},
-		createUtc: function() {
+		createUTC: function() {
 			var args = [].slice.call(arguments);
 			var date = Date.create.apply(null, args);
-			if (utcOffsetMs > 0) {
-				date.setTime(date.getTime() + utcOffsetMs);
-			}
+			date.setUTCOffset(0);
 			return date;
 		},
 		//
@@ -685,7 +679,7 @@
 				if (date) {
 					input.value = date.format(formatStr);
 				}
-			}
+			};
 			if (typeof input.attachEvent == 'function') {
 				input.attachEvent('onblur', correct);
 			}
@@ -760,14 +754,14 @@
 		 */
 		current: function() {
 			return new Date();
-		}
+		}		
 	};
 	extend(Date, staticMethods);
 	Date.create.version = '%VERSION%';
 	// ES5 Shim
 	if (!('now' in Date)) {
 		/**
-		 * Return the current date in milliseconds past epoch
+		 * Return the current date in milliseconds past epoch (UTC time)
 		 * 
 		 * @return {Date}
 		 */
@@ -789,20 +783,23 @@
 		return this;
 	};
 
-	if (window.performance && window.performance.now) {
-		Date.Timer._now = function() {
-			return window.performance.now();
-		};
-	}
-	else if (window.performance && window.performance.webkitNow) {
-		Date.Timer._now = function() {
-			return window.performance.webkitNow();
-		};
-	}
-	else {
-		Date.Timer._now = function() {
-			return new Date().getTime() * 1000;
-		};
+	Date.Timer._now = function() {
+		return new Date().getTime() * 1000;
+	};
+	
+	if (typeof window != 'undefined' && window.performance && window.performance.timing && window.performance.timing.navigationStart) {		
+		// Firefox, IE10
+		if (window.performance.now) {
+			Date.Timer._now = function() {
+				return window.performance.timing.navigationStart + window.performance.now();
+			};
+		}
+		// Chrome
+		else if (window.performance.webkitNow) {
+			Date.Timer._now = function() {
+				return window.performance.timing.navigationStart + window.performance.webkitNow();
+			};
+		}
 	}
 
 	Date.Timer.prototype.start = Date.Timer.restart = function() {
@@ -822,27 +819,29 @@
 		if (template) {
 			var result = this.stop(unit);
 			return template.replace('%s', result).replace(/%?\.(\d+)f/i, function(m) {
-				return retult.toFixed(+m[1]);
+				return result.toFixed(+m[1]);
 			});
 		}
 		this._stopSnapshot = Date.Timer._now();
 		this.stopDate = new Date();
 		var usec = this._stopSnapshot - this._startSnapshot;
-		switch (String(unit).toLowerCase()) {
-			case 'microseconds':
-			case 'microsecond': return usec;
-			case 'milliseconds':
-			case 'millisecond':
-			default: return usec / 1000;
-			case 'seconds':
-			case 'second': return usec / 1000000;
-			case 'minutes':
-			case 'minute': return usec / 60000000;
-			case 'hours':
-			case 'hour': return usec / 3600000000;
-			case 'days':
-			case 'day': return usec / (24 * 3600000000);
+		unit = String(unit).toLowerCase();
+		if (unit.match(/^microseconds?$/)) {
+			return usec;
 		}
+		if (unit.match(/^seconds?$/)) {
+			return usec / 1e6;
+		}
+		if (unit.match(/^minutes?$/)) {
+			return usec / 6e7;
+		}
+		if (unit.match(/^hours?$/)) {
+			return usec / 3.6e9;
+		}
+		if (unit.match(/^days?$/)) {
+			return usec / 8.64e10;
+		}
+		return usec / 1e3;
 	};	
 
 	//
@@ -1220,9 +1219,9 @@
 		// "/Date(1296824894000)/", "/Date(1296824894000-0700)/"
 		[
 			'asp_json',
-			/^\/Date\((\d+)([+-]\d{4})?\)\/$/i,
+			/^\/Date\((\d+)([+\-]\d{4})?\)\/$/i,
 			function(match) {
-				var d = new Date;
+				var d = new Date();
 				d.setTime(match[1]);
 				if (match[2]) {
 					d.setUTCOffsetString(match[2]);
@@ -1276,7 +1275,7 @@
 				else if (match[4]) {
 					weekday = Date.getWeekdayByName(match[4]);
 					diff = now.getDay() - weekday + 7;
-					return now.add(multiplier * (diff == 0 ? 7 : diff), 'day');
+					return now.add(multiplier * (diff === 0 ? 7 : diff), 'day');
 				}
 				return false;
 			}

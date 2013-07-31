@@ -1,3 +1,4 @@
+module("Format");
 test('Date#strftime()', function() {
 	equal($D(2006,8,9).strftime('%Y'), '2006', 'Format code "%Y" returns 4-digit year');
 	equal($D(2006,8,9).strftime('%y'), '06', 'Format code "%y" returns 2-digit year');

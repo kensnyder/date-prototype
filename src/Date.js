@@ -1,15 +1,6 @@
-/**
- * JavaScript Date instance methods
- *
- * @copyright 2012 Ken Snyder (kendsnyder at gmail dot com)
- * @version 3.4.1, June 2012 (http://sandbox.kendsnyder.com/date)
- * @license MIT http://www.opensource.org/licenses/MIT
- */
-;(function() {
+(function() { "use strict";
 	
-	"use strict";
-	
-	/**
+	/*
 	 * Add leading zeros
 	 */
 	function zeroPad(number, digits) {
@@ -19,7 +10,7 @@
 		}
 		return number;
 	}
-	/**
+	/*
 	 * Extend an object with the properties of another
 	 */
 	function extend(d, s) {
@@ -29,6 +20,18 @@
 			}
 		}
 	}
+	
+	var utcOffsetMs = (function() {
+		var match = new Date().toString().match(/GMT([+-])(\d\d)(\d\d)/);
+		if (!match) {
+			return 0;
+		}
+		var sign = match[1] == '+' ? 1 : -1;
+		var hours = parseInt(match[2], 10);
+		var min = parseInt(match[3], 10);
+		return ((sign * hours * 60) + min) * 1000;
+	})();
+
 	//
 	//
 	//
@@ -604,6 +607,14 @@
 				default:return new Date(a[0], a[1], a[2], a[3], a[4], a[5], a[6]);
 			}
 		},
+		createUtc: function() {
+			var args = [].slice.call(arguments);
+			var date = Date.create.apply(null, args);
+			if (utcOffsetMs > 0) {
+				date.setTime(date.getTime() + utcOffsetMs);
+			}
+			return date;
+		},
 		//
 		// constants representing month names, day names, and ordinal names to allow i18n
 		// (same names as Ruby Date constants)
@@ -752,6 +763,7 @@
 		}
 	};
 	extend(Date, staticMethods);
+	Date.create.version = '%VERSION%';
 	// ES5 Shim
 	if (!('now' in Date)) {
 		/**

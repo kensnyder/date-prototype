@@ -1,0 +1,11 @@
+{
+  "curly": true,
+  "eqnull": true,
+  "eqeqeq": false,
+  "undef": true,
+  "unused": false,
+  "laxbreak": true,
+  "globals": {
+    "define": true
+  }
+}

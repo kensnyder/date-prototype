@@ -1288,8 +1288,12 @@
 	// add $D shortcut to window or module.exports
 	if (typeof module != 'undefined' && module.exports) {
 		module.exports = Date.create;
+	}else if(typeof define === 'function'){
+		define(function(){
+			return Date.create;
+		})
 	}
-	else if (typeof window != 'undefined') {
+	if (typeof window != 'undefined') {
 		window.$D = Date.create;
 	}
 

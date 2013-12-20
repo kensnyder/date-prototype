@@ -1,3 +1,5 @@
+/*! Date Prototype methods - v3.5.0-pre - Jul 2013
+* Copyright (c) 2013 Ken Snyder; Licensed MIT */
 (function() { "use strict";
 	
 	/*
@@ -99,8 +101,8 @@
 	var instanceMethods = {
 		/**
 		 * Return a date one day ahead (or any other unit)
-		 * @method succ
-		 * @param {String} [unit=day]  The unit name (e.g. years, seconds)
+		 *
+		 * @param {String} [unit="day"]  The unit name (e.g. years, seconds)
 		 * @return {Date}  A new Date object
 		 */
 		succ: function(unit) {
@@ -108,10 +110,10 @@
 		},
 		/**
 		 * Add an arbitrary time frame
-		 * @method add
+		 *
 		 * @param {Number} number  The amount to add
-		 * @param {String} [unit=day]  The unit name (e.g. years, seconds)
-		 * @return {Date}
+		 * @param {String} unit  The unit name (e.g. years, seconds)
+		 * @return {this}
 		 */
 		add: function(number, unit) {
 			var factor = multipliers[unit] || multipliers.day;
@@ -124,9 +126,9 @@
 		},
 		/**
 		 * Find the difference between this date and another date. Positive means more recent
-		 * @method diff
+		 *
 		 * @param {String|Date|Number} dateObj
-		 * @param {String} [unit=day]  The unit name (e.g. years, seconds)
+		 * @param {String} unit  The unit name (e.g. years, seconds)
 		 * @param {Boolean} [allowDecimal=false]  If true, return a decimal, otherwise round toward zero
 		 * @return {Number|NaN}  If the other date is not recognized, return NaN
 		 */
@@ -151,11 +153,10 @@
 		},
 		/**
 		 * Our gsub function that applies the format string using the given formatting scheme
-		 * @method _applyFormat
-		 * @private
+		 * 
 		 * @param {String} formatStr  The format string such as "%Y-%m-%d"
 		 * @param {Object} formatting  The formatting scheme set in Date.addFormat()
-		 * @return {String}  Return the string representation of the date
+		 * @return {String}  Return the string representation of the date\
 		 */
 		_applyFormat: function(formatStr, formatting) {
 			// default the format string to year-month-day
@@ -166,18 +167,15 @@
 					result += source.slice(0, match.index);
 					result += (match[1] || '') + this._applyFormatChar(match[2], formatting);
 					source = source.slice(match.index + match[0].length);
-				} 
-				else {
-					result += source;
-					source = '';
+				} else {
+					result += source, source = '';
 				}
 			}
 			return result;
 		},
 		/**
 		 * Apply the format of a single character code using the given formatting scheme
-		 * @method _applyFormatChar
-		 * @private
+		 * 
 		 * @param {String} code  The code such as "Y"
 		 * @param {Object} formatting  The formatting scheme set in Date.addFormat()
 		 * @return {String}  Return the string representation of the date or the code literal if not recognized
@@ -202,8 +200,8 @@
 		},
 		/**
 		 * Format the string using strftime or formatPhp depending on if % is present
-		 * @method format
-		 * @param {String} [formatStr=Date.formatting.strftime.defaultFormat]  The format
+		 * 
+		 * @param {String} [formatStr]  The format. defaults to Date.formatting.strftime.defaultFormat
 		 * @return {String}
 		 */
 		format: function(formatStr) {
@@ -215,7 +213,7 @@
 		},
 		/**
 		 * Return a two-digit year
-		 * @method getShortYear
+		 *
 		 * @return {Number}
 		 */
 		getShortYear: function() {
@@ -223,7 +221,7 @@
 		},
 		/**
 		 * Get the number of the month, 1-12
-		 * @method getMonthNumber
+		 *
 		 * @return {Number}
 		 */
 		getMonthNumber: function() {
@@ -231,7 +229,7 @@
 		},
 		/**
 		 * Get the name of the month
-		 * @method getMonthName
+		 *
 		 * @return {String}
 		 */
 		getMonthName: function() {
@@ -239,7 +237,7 @@
 		},
 		/**
 		 * Get the abbreviated name of the month
-		 * @method getAbbrMonthName
+		 *
 		 * @return {String}
 		 */
 		getAbbrMonthName: function() {
@@ -247,7 +245,7 @@
 		},
 		/**
 		 * Get the name of the week day (Sunday through Saturday)
-		 * @method getDayName
+		 *
 		 * @return {String}
 		 */
 		getDayName: function() {
@@ -255,7 +253,7 @@
 		},
 		/**
 		 * Get the abbreviated name of the week day (Sunday through Saturday)
-		 * @method getAbbrDayName
+		 *
 		 * @return {String}
 		 */
 		getAbbrDayName: function() {
@@ -263,7 +261,7 @@
 		},
 		/**
 		 * Get the ordinal string associated with the day of the month (i.e. st, nd, rd, th)
-		 * @method getDayOrdinal
+		 *
 		 * @return {String}
 		 */
 		getDayOrdinal: function() {
@@ -271,7 +269,7 @@
 		},
 		/**
 		 * Get the hour on a 12-hour scheme
-		 * @method getHours12
+		 *
 		 * @return {Number}
 		 */
 		getHours12: function() {
@@ -280,7 +278,7 @@
 		},
 		/**
 		 * Get the am or pm (uppercase)
-		 * @method getAmPm
+		 *
 		 * @return {String}
 		 */
 		getAmPm: function() {
@@ -288,7 +286,7 @@
 		},
 		/**
 		 * Get the am or pm (lowercase)
-		 * @method getAmPmLower
+		 *
 		 * @return {String}
 		 */
 		getAmPmLower: function() {
@@ -296,7 +294,7 @@
 		},
 		/**
 		 * Get the date as a Unix timestamp
-		 * @method getUnix
+		 *
 		 * @return {Number}
 		 */
 		getUnix: function() {
@@ -328,7 +326,7 @@
 		},
 		/**
 		 * Set the offset in minutes by converting date to UTC then adding or subtracting given number of seconds
-		 * @method setUTCOffset 
+		 * 
 		 * @param {Number} seconds  The number of seconds before or past UTC time
 		 * @return {Date}
 		 */
@@ -338,7 +336,7 @@
 		},
 		/**
 		 * Set the time zone offset in minutes and seconds in the form "+0200" or "+02:00"
-		 * @method setUTCOffsetString 
+		 * 
 		 * @param {String} str  The GMT Offset
 		 * @return {Date}
 		 */		
@@ -356,7 +354,7 @@
 		},
 		/**
 		 * Get the GMT offset in hours and minutes without the colon (e.g. +0630)
-		 * @method getUTCOffsetNumber
+		 *
 		 * @return {String}
 		 */
 		getUTCOffsetNumber: function() {
@@ -365,7 +363,7 @@
 		/**
 		 * Get the browser-reported name for the timezone (e.g. MDT, Mountain Daylight Time)
 		 * Varies across browsers and languages
-		 * @method getTimezoneName
+		 *
 		 * @return {String}
 		 */
 		getTimezoneName: function() {
@@ -375,7 +373,7 @@
 		/**
 		 * Convert this date to an 8-digit integer (%Y%m%d)
 		 * Good for quickly comparing dates
-		 * @method toYmdInt
+		 *
 		 * @return {Number}
 		 */
 		toYmdInt: function() {
@@ -383,7 +381,7 @@
 		},
 		/**
 		 * Create a copy of this date object
-		 * @method clone
+		 *
 		 * @return {Date}
 		 */
 		clone: function() {
@@ -392,7 +390,7 @@
 		/**
 		 * Get a textual representation of the difference between this date and now (or the given date)
 		 * e.g. "3 minutes ago"
-		 * @method diffText
+		 * 
 		 * @param {String|Date|Number} compare  A string date, object or ms past epoch to compare to. Defaults to current date
 		 * @return {String}
 		 */
@@ -451,7 +449,7 @@
 		},
 		/**
 		 * Get the number of days in the month
-		 * @method daysInMonth 
+		 * 
 		 * @return {Number}
 		 */
 		daysInMonth: function() {
@@ -459,47 +457,21 @@
 		},
 		/**
 		 * Return true if the year is a leap year
-		 * @method isLeapYear 
+		 * 
 		 * @return {Boolean}
 		 */
 		isLeapYear: function() {
 			return Date.daysInMonth(this.getFullYear(), 1) == 29 ? 1 : 0;
 		},
-		/**
-		 * Return true if the date is before the given date
-		 * @method isBefore
-		 * @param {String|Date|Number} date  The date to which to compare
-		 * @param {String} [units=milliseconds]  The unit to round to when comparing
-		 * @return {Boolean}
-		 */
 		isBefore: function(date, units) {
 			return Math.round(this.diff(date, units || 'milliseconds', true), 0) < 0;
 		},
-		/**
-		 * Return true if the date is after the given date
-		 * @method isAfter
-		 * @param {String|Date|Number} date  The date to which to compare
-		 * @param {String} [units=milliseconds]  The unit to round to when comparing
-		 * @return {Boolean}
-		 */		
 		isAfter: function(date, units) {
 			return Math.round(this.diff(date, units || 'milliseconds', true), 0) > 0;
 		},
-		/**
-		 * Return true if the date is equal to the given date rounded to the given unit
-		 * @method equals
-		 * @param {String|Date|Number} date  The date to which to compare
-		 * @param {String} [units=milliseconds]  The unit to round to when comparing
-		 * @return {Boolean}
-		 */				
 		equals: function(date, units) {
 			return Math.round(this.diff(date, units || 'milliseconds', true), 0) === 0;
 		},
-		/**
-		 * @method schedule
-		 * @param {Function} callback
-		 * @return {Date}
-		 */	
 		schedule: function(callback) {
 			var inMs = this.getTime() - Date.current().getTime();
 			var clone = this.clone();
@@ -516,11 +488,6 @@
 			scheduled.push({callback: callback, timestamp: ts, timeoutId: id});
 			return this;
 		},
-		/**
-		 * @method unschedule
-		 * @param {Function} callback
-		 * @return {Date}
-		 */
 		unschedule: function(callback) {
 			var i = scheduled.length;
 			var time = this.getTime();
@@ -534,11 +501,6 @@
 			}
 			return this;
 		},
-		/**
-		 * @method getSchedule
-		 * @param {Function} callback
-		 * @return {Date}
-		 */		
 		getSchedule: function() {
 			var toFire = [];
 			var time = this.getTime();
@@ -553,12 +515,12 @@
 	extend(Date.prototype, instanceMethods);
 	/**
 	 * ES5 Shim for converting to full ISO String
-	 * @method toISOString
+	 * 
 	 * @return {String}
 	 */
 	if (!Date.prototype.toISOString) {
 		Date.prototype.toISOString = function() {
-			return this.setUTCOffset(0).strftime('%Y-%m-%dT%H:%M:%S.%NZ');
+			return this.setUTCOffset(0).strftime(Date.ISO);
 		};
 	}
 	//
@@ -566,69 +528,22 @@
 	//
 	var staticMethods = {
 		/**
-		 * (Signature 1 of 5) Return a new Date object that is represented by the given date
-		 * @method create [1]
-		 * @static
-		 * @param {String} date  A machine-readable date string
-		 * @return {Date|NaN}  The date object or NaN if the date is not recognized
-		 * @example
- 
-	Date.create('Dec 19, 2013');
-	Date.create('2013-12-19');
-	Date.create('12/19/2013');
-	Date.create('12/19/2013 8am');
-	Date.create('2 hours ago');
-
+		 * The heart of the date functionality: returns a date object if given a convertable value, returns NaN if not convertable
+		 * A robust and configurable version of Date.parse with the abilities of the Date constructor as well
+		 *
+		 * @param {String|Date|Number} [date]
+		 * If date is not passed or is undefined, return the current date
+		 * If date is an instance of Date, return it
+		 * With one Number argument, interpret as milliseconds past epoch
+		 * With one String argument, look through Date.create.patterns to try to convert it to a date
+		 * Interpret 2 arguments as Year, Month (January = 0) at 1st day of month
+		 * Interpret 3 arguments as Year, Month, Day
+		 * Interpret 4 arguments as Year, Month, Day, Hour
+		 * Interpret 5 arguments as Year, Month, Day, Hour, Minutes
+		 * Interpret 6 arguments as Year, Month, Day, Hour, Minutes, Seconds
+		 * Interpret 7 or more arguments as Year, Month, Day, Hour, Minutes, Seconds, Milliseconds
+		 * @return {Date|NaN}  If the date is not recognized, return NaN
 		 */
-		/**
-		 * (Signature 2 of 5) Return a new Date object that is represented by the given number
-		 * @method create [2]
-		 * @static
-		 * @param {Number} millisecondsPastEpoch  The number of milliseconds past (or before) 1970-01-01 00:00:00
-		 * @return {Date}
-		 * @example
- 
-	Date.create(1387518450578);
-
-		 */
-		/**
-		 * (Signature 3 of 5) Return a new Date object with the given date part values
-		 * @method create [3]
-		 * @static
-		 * @param {Number} year  Four-digit year
-		 * @param {Number} month  Month number where 0=January
-		 * @param {Number} [day=1]  The day number, 1-31
-		 * @param {Number} [hours=0]  The hour number, 0-23
-		 * @param {Number} [minutes=0]  The minutes value, 0-59
-		 * @param {Number} [seconds=0]  The seconds value, 0-59
-		 * @param {Number} [milliseconds=0]  The milliseconds value, 0-999
-		 * @return {Date}
-		 * @example
- 
-	Date.create(2013, 11, 19);
-
-		 */
-		/**
-		 * (Signature 4 of 5) Return a new Date object with the current date
-		 * @method create [4]
-		 * @static
-		 * @return {Date}
-		 * @example
- 
-	Date.create();
-
-		 */		
-		/**
-		 * (Signature 5 of 5) Return the given date object
-		 * @method create [5]
-		 * @static
-		 * @param {Date} date
-		 * @return {Date}
-		 * @example
- 
-	Date.create(new Date(2013, 11, 19));
-
-		 */		
 		create: function(date) {
 			// 0 arguments or date is undefined
 			if (typeof date == 'undefined') {
@@ -690,12 +605,6 @@
 				default:return new Date(a[0], a[1], a[2], a[3], a[4], a[5], a[6]);
 			}
 		},
-		/**
-		 * Return a date assuming input string (or parameters) is a UTC date
-		 * @method createUTC
-		 * @static
-		 * @return {Date}
-		 */
 		createUTC: function() {
 			var args = [].slice.call(arguments);
 			var date = Date.create.apply(null, args);
@@ -707,86 +616,42 @@
 		// (same names as Ruby Date constants)
 		//
 		/**
-		 * Names for the months of the year
-		 * @var MONTHNAMES
-		 * @static
-		 * @type {Array}
+		 * @var {Array}  Names for the months of the year
 		 */			
-		MONTHNAMES: 'January February March April May June July August September October November December'.split(' '),
+		MONTHNAMES      : 'January February March April May June July August September October November December'.split(' '),
+		MONTHNAMES_LOOKUP: {'jan':1, 'feb':2, 'mar':3, 'apr':4, 'may':5, 'jun':6, 'jul':7, 'aug':8, 'sep':9, 'oct':10, 'nov':11, 'dec':12},
 		/**
-		 * Lookup of month number by month abbreviation (1=January, 12=December)
-		 * @property MONTHNAMES_LOOKUP
-		 * @static
-		 * @type {Object}
-		 */
-		MONTHNAMES_LOOKUP: {jan:1, feb:2, mar:3, apr:4, may:5, jun:6, jul:7, aug:8, sep:9, oct:10, nov:11, dec:12},
-		/**
-		 * Abbreviated names for the months of the year
-		 * @property ABBR_MONTHNAMES
-		 * @static
-		 * @type {Array}
+		 * @var {Array}  Abbreviated names for the months of the year
 		 */	
-		ABBR_MONTHNAMES: 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' '),
+		ABBR_MONTHNAMES : 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' '),
 		/**
-		 * Names for the days of the week from Sunday to Saturday
-		 * @property DAYNAMES
-		 * @static
-		 * @type {Array}
+		 * @var {Array}  Names for the days of the week from Sunday to Saturday
 		 */			
-		DAYNAMES: 'Sunday Monday Tuesday Wednesday Thursday Friday Saturday'.split(' '),
+		DAYNAMES        : 'Sunday Monday Tuesday Wednesday Thursday Friday Saturday'.split(' '),
+		DAYNAMES_LOOKUP : {'sun':0, 'mon':1, 'tue':2, 'wed':3, 'thu':4, 'fri':5, 'sat':6},
 		/**
-		 * Lookup of day number by day abbreviation
-		 * @property DAYNAMES_LOOKUP
-		 * @static
-		 * @type {Object}
-		 */
-		DAYNAMES_LOOKUP: {sun:0, mon:1, tue:2, wed:3, thu:4, fri:5, sat:6},
-		/**
-		 * Abbreviated names for the days of the week from Sunday to Saturday
-		 * @property ABBR_DAYNAMES
-		 * @static
-		 * @type {Array}
+		 * @var {Array}  Abbreviated names for the days of the week from Sunday to Saturday
 		 */		
-		ABBR_DAYNAMES: 'Sun Mon Tue Wed Thu Fri Sat'.split(' '),
+		ABBR_DAYNAMES   : 'Sun Mon Tue Wed Thu Fri Sat'.split(' '),
 		/**
-		 * The ordinal text (e.g. st, nd, rd, th) for digits 1 to 9
-		 * @property ORDINALNAMES
-		 * @static
-		 * @type {Array}
+		 * @var {Array}  The ordinal text (e.g. st, nd, rd, th) for digits 1 to 9
 		 */
-		ORDINALNAMES: 'th st nd rd th th th th th th'.split(' '),
+		ORDINALNAMES    : 'th st nd rd th th th th th th'.split(' '),
 		/**
-		 * Pattern for full ISO-8601 date conversion
-		 * @property ISO
-		 * @static
-		 * @type {String}
+		 * @var {String}  Pattern for full ISO-8601 date conversion
 		 */
 		ISO: '%Y-%m-%dT%H:%M:%S.%N%G',
 		/**
-		 * Pattern for SQL-type formatting
-		 * @property SQL
-		 * @static
-		 * @type {String}
+		 * @var {String}  Pattern for SQL-type formatting
 		 */
 		SQL: '%Y-%m-%d %H:%M:%S',
 		/**
-		 * The format code for producing RFC822 formatted dates
-		 * @property RFC822
-		 * @static
-		 * @type {String}
-		 */
-		RFC822: '%a, %d %e %Y %H:%M:%S %#G',
-		/**
-		 * The date of the script load
-		 * @property SCRIPT_LOAD
-		 * @static
-		 * @type {Date}
+		 * @var {Date}  The date of the script load
 		 */
 		SCRIPT_LOAD: new Date(),
 		/**
 		 * Return the number of days in the given year and month. January = 1
-		 * @method daysInMonth
-		 * @static
+		 *
 		 * @param {Number} year
 		 * @param {Number} month
 		 */
@@ -796,30 +661,15 @@
 			}
 			return [undefined,31,undefined,31,30,31,30,31,31,30,31,30,31][month];
 		},
-		/**
-		 * Given a month name or abbreviation, return the month number where January = 0
-		 * @method getMonthByName
-		 * @static
-		 * @param {String} monthname
-		 * @return {Number}
-		 */
 		getMonthByName: function(monthname) {
 			return Date.MONTHNAMES_LOOKUP[ String(monthname).slice(0,3).toLowerCase() ];
 		},
-		/**
-		 * Given a day name or abbreviation, return the day number where Sunday = 0
-		 * @method getWeekdayByName
-		 * @static
-		 * @param {String} monthname
-		 * @return {Number}
-		 */		
 		getWeekdayByName: function(dayname) {
 			return Date.DAYNAMES_LOOKUP[ String(dayname).slice(0,3).toLowerCase() ];			
 		},
 		/**
 		 * Set a form input to be automatically formatted to the given format. If not recognized, leave value alone
-		 * @method autoFormat
-		 * @static
+		 * 
 		 * @param {HTMLElement|String} input  An HTML element or ID to which to attach the onblur event
 		 * @param {String} [formatStr="Y-%m-%d %H:%M:%s"]  The pattern with which to format the date
 		 * @return {HTMLElement}
@@ -845,8 +695,7 @@
 		},
 		/**
 		 * Add a new set of format rules
-		 * @method addFormat
-		 * @staic
+		 * 
 		 * @param {String} name  The name of the method
 		 * @param {Object} rules  A definition with keys matcher, defaultFormat, codes and shortcuts. See source code for examples.
 		 * @return {this}
@@ -859,16 +708,13 @@
 		},
 		/**
 		 * Add a new pattern for recognizing dates
-		 * @method addPattern
-		 * @static
+		 * Examples:
+		 * Date.addPattern(['month-year', /^(\d{1,2})-(\d{4})$/, '$1/01/$2']);
+		 * Date.addPattern(['hoy', /^hoy$/i, function(match) { return new Date(); }], 'iso_8601');
+		 * 
 		 * @param {Array} spec  An array containing 3 items: [name, regex, function or replace pattern]
 		 * @param {String} [afterName]  The named pattern after which to add this pattern. When not given, place pattern at beginning
 		 * @return {Object} 
-		 * @example
-
-	Date.addPattern(['month-year', /^(\d{1,2})-(\d{4})$/, '$1/01/$2']);
-	Date.addPattern(['hoy', /^hoy$/i, function(match) { return new Date(); }], 'iso_8601');
-
 		 */
 		addPattern: function(spec, afterName) {
 			if (afterName) {
@@ -886,14 +732,12 @@
 		},
 		/**
 		 * Remove a pattern by name
-		 * @method removePattern
+		 * Examples:
+		 * Date.removePattern('us'); // us-style m/d/Y dates no longer recognized
+		 * var us = Date.removePattern('us'); Date.addPattern(us, 'world'); // prefer world-style d/m/Y dates over us-style dates
+		 * 
 		 * @param {String} name  The name of the pattern to remove
 		 * @return {Array|Boolean}  Returns the removed pattern or false if pattern not found
-		 * @example
-
-	Date.removePattern('us'); // us-style m/d/Y dates no longer recognized
-	var us = Date.removePattern('us'); Date.addPattern(us, 'world'); // prefer world-style d/m/Y dates over us-style dates
-				
 		 */
 		removePattern: function(name) {
 			var i = 0, pattern;
@@ -906,9 +750,8 @@
 			return false;
 		},
 		/**
-		 * Instantiate Date object representing the current date (allows unit testing and mocks)
-		 * @method current
-		 * @static
+		 * Instantiate current date (allows unit testing and mocks)
+		 * 
 		 * @return {Date}
 		 */
 		current: function() {
@@ -916,20 +759,12 @@
 		}		
 	};
 	extend(Date, staticMethods);
-	/**
-	 * The version of this library
-	 * @property create.version
-	 * @static
-	 * @type {String}
-	 */
-	Date.create.version = '%VERSION%';
-	
+	Date.create.version = '3.5.0-pre';
 	// ES5 Shim
-	if (!Date.now) {
+	if (!('now' in Date)) {
 		/**
-		 * Return the current date in milliseconds past epoch relative to UTC time
-		 * @method now
-		 * @static
+		 * Return the current date in milliseconds past epoch (UTC time)
+		 * 
 		 * @return {Date}
 		 */
 		Date.now = function() {
@@ -1063,8 +898,7 @@
 			// timezone
 			O: 'TimezoneOffset',
 			Z: 'TimezoneName',
-			G: 'UTCOffset',
-		 '#G': 'getUTCOffsetNumber'
+			G: 'UTCOffset'
 		},
 		//
 		// shortcuts that will be translated into their longer version
@@ -1464,206 +1298,12 @@
 		]
 	];
 
+	// add $D shortcut to window or module.exports
+	if (typeof module != 'undefined' && module.exports) {
+		module.exports = Date.create;
+	}
+	else if (typeof window != 'undefined') {
+		window.$D = Date.create;
+	}
+
 })();
-
-// add $D shortcut to window or send Date.create to module.exports using UMD pattern
-// see https://github.com/umdjs/umd/blob/master/returnExports.js
-(function(root, factory) {
-	if (typeof define == 'function' && define.amd) {
-		// AMD. Register as an anonymous module.
-		define(factory);
-	}
-	else if (typeof exports == 'object') {
-		// Node. Does not work with strict CommonJS, but
-		// only CommonJS-like enviroments that support module.exports,
-		// like Node.
-		module.exports = factory();
-	}
-	else if (root) {
-		// Browser globals (root is window)
-		root.$D = factory();
-	}
-}(this, function() {
-	return Date.create;
-}));
-
-
-// Docs for YUIDoc to pick up on native Date methods
-/**
- * @class Date
- */
-/**
- * @constructor
- * 
- */
-/**
- * Get the day of the month (1-31)
- * @method getDate
- * @return {Number}
- */
-/**
- * Get the day of the week (0=Sunday, 6=Saturday)
- * @method getDay
- * @return {Number}
- */
-/**
- * Get the month number (0=January, 11=December)
- * @method getMonth
- * @return {Number}
- */
-/**
- * Get the four-digit year
- * @method getFullYear
- * @return {Number}
- */
-/**
- * Get the number of years since 1900 (such that a 2013 date returns 113)
- * @method getYear
- * @return {Number}
- */
-/**
- * Get the hour (0-23)
- * @method getHours
- * @return {Number}
- */
-/**
- * Get minutes (0-59)
- * @method getMinutes
- * @return {Number}
- */
-/**
- * Get seconds (0-59)
- * @method getSeconds
- * @return {Number}
- */
-/**
- * Get milliseconds (0-999)
- * @method getMilliseconds
- * @return {Number}
- */
-/**
- * Get the number of milliseconds since 1970-01-01 00:00:00
- * @method getTime
- * @return {Number}
- */
-/**
- * Get the number of minutes between the local timezone and UTC time.
- * Note that the offset is the same for all Date objects
- * @method getTimezoneOffset
- * @return {Number}
- */
-/**
- * Convert to UTC then get the day of the month (1-31)
- * @method getUTCDate
- * @return {Number}
- */
-/**
- * Convert to UTC then get the day of the week (0=Sunday, 6=Saturday)
- * @method getUTCDay
- * @return {Number}
- */
-/**
- * Convert to UTC then get the month number (0=January, 11=December)
- * @method getUTCMonth
- * @return {Number}
- */
-/**
- * Convert to UTC then get the four-digit year
- * @method getUTCFullYear
- * @return {Number}
- */
-/**
- * Convert to UTC then get the hour (0-23)
- * @method getUTCHours
- * @return {Number}
- */
-/**
- * Convert to UTC then get minutes (0-59)
- * @method getUTCMinutes
- * @return {Number}
- */
-/**
- * Convert to UTC then get seconds (0-59)
- * @method getUTCSeconds
- * @return {Number}
- */
-/**
- * Convert to UTC then get milliseconds (0-999)
- * @method getUTCMilliseconds
- * @return {Number}
- */
-/**
- * Set the day of the month (1-31)
- * @method setDate
- * @param {Number} day
- * @return {Number}  The number of milliseconds since 1970-01-01 00:00:00 
- */
-/**
- * Set the month number (0=January, 11=December)
- * @method setMonth
- * @param {Number} month
- * @return {Number}  The number of milliseconds since 1970-01-01 00:00:00 
- */
-/**
- * Set the four-digit year
- * @method setFullYear
- * @param {Number} year
- * @return {Number}  The number of milliseconds since 1970-01-01 00:00:00 
- */
-/**
- * Set the number of years since 1900 (such that a 113 produces a date in 2013)
- * @method setYear
- * @param {Number} yearsSince1900
- * @return {Number}  The number of milliseconds since 1970-01-01 00:00:00 
- */
-/**
- * Set the hour (0-23) and optionally minutes, seconds, and milliseconds
- * @method setHours
- * @param {Number} hours
- * @param {Number} [minutes]
- * @param {Number} [seconds]
- * @param {Number} [milliseconds]
- * @return {Number}  The number of milliseconds since 1970-01-01 00:00:00 
- */
-/**
- * Set minutes (0-59) and optionally seconds and milliseconds
- * @method setMinutes
- * @param {Number} minutes
- * @param {Number} [seconds]
- * @param {Number} [milliseconds]
- * @return {Number}  The number of milliseconds since 1970-01-01 00:00:00 
- */
-/**
- * Set seconds (0-59) and optionally milliseconds
- * @method setSeconds
- * @param {Number} seconds
- * @param {Number} [milliseconds]
- * @return {Number}  The number of milliseconds since 1970-01-01 00:00:00 
- */
-/**
- * Set milliseconds (0-999)
- * @method setMilliseconds
- * @param {Number} milliseconds
- * @return {Number}  The number of milliseconds since 1970-01-01 00:00:00 
- */
-/**
- * Set the number of milliseconds past 1970-01-01 00:00:00
- * @method setTime
- * @param {Number} milliseconds
- * @return {Number}  The number of milliseconds since 1970-01-01 00:00:00
- */
-/**
- * Convert the date to a string in the format "2013-12-20T04:34:43.284Z"
- * @method toISOString
- * @return {String}
- */
-/**
- * Get the number of milliseconds since 1970-01-01 00:00:00
- * @method valueOf
- * @return {Number}
- */
-/**
- * Get a string representation of the date in 
- * @method toString
- * @return {Number}
- */

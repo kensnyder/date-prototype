@@ -1,6 +1,6 @@
 {
   "name": "date-prototype",
-  "version": "3.5.0-pre",
+  "version": "3.5.1",
   "title":"Date Prototype methods",
   "description":"Date instance methods for parsing, formatting, and calculating dates",
   "author": {

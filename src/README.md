@@ -34,7 +34,7 @@ Features include:
 * Two
 * Unit tested
 * Works on IE8+, FF, Chrome, Safari
-* Compatible with AMD
+* Compatible with Node, AMD
 
 
 How to Use

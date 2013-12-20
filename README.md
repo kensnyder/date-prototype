@@ -1,84 +1,187 @@
-Date.prototype
-===
-v3.4.1 Jun 2012
+Date Prototype methods
+=
 
-Date.prototype provides JavaScript Date instance methods for parsing, formatting, and calculating dates. It uses a concise and configurable algorithm for interpreting format codes.
+Version 3.5.0-pre, Jul 2013, MIT License
+
+Date instance methods for parsing, formatting, and calculating dates
+
+[Download](/Date-3.5.0-pre-Download.zip?raw=true), [Demos](#), [Unit tests](#)
+
+Table of Contents
+-
+
+<ul>
+	<li><a href="#introduction">Introduction</a></li>
+	<li><a href="#how-to-use">How to Use</a></li>
+	<li><a href="#options">Options</a></li>
+	<li><a href="#events">Events</a></li>
+	<li><a href="#instance-properties">Instance Properties</a></li>
+	<li><a href="#instance-methods">Instance Methods</a></li>
+	<li><a href="#static-members">Static Members</a></li>
+	<li><a href="#more-examples">More Examples</a></li>
+	<li><a href="#changelog">Changelog</a></li>
+	<li><a href="#contributing">Contributing</a></li>
+	<li><a href="#reporting-bugs">Reporting Bugs</a></li>
+	<li><a href="#license">License</a></li>
+</ul>
+
+Introduction
+-
 
 Features include:
 
- * Parses almost any format with ability to register custom format parsing.
- * Supports formatting codes for sprintf, php, and SQL with the ability to register custom formating.
- * Adds and subtracts years, months, days, hours, minutes or seconds.
- * Calculates differences between dates in a given unit.
- * Methods are available on all Date Objects.
+* One
+* Two
+* Unit tested
+* Works on IE8+, FF, Chrome, Safari
+* Compatible with AMD
 
-Examples:
 
-```javascript
-$D('2006-09-20').strftime('%m/%d/%Y'); // "09/20/2006"
-$D('Sep 20 2006').add(3).strftime('%Y-%m-%d'); // "2006-09-23"
-$D('09/20/2006').add(4, 'years').strftime('%Y-%m-%d'); // "2010-09-20"
-$D('09/20/2006 20:15:00').add(4, 'hours').format('%Y-%m-%d %H:%M:%S'); // "2006-09-21 00:15:00"
-$D('2006-09-20').format('m/d/Y'); // "09/20/2006"
-$D('2006.09.28').diff('20 Sep, 2006', 'days'); // 8
+How to Use
+-
+
+Hi
+
+```html
+<link  href="/js/Date.min.css" rel="stylesheet" />
+<script src="/js/Date.min.js"></script>
 ```
 
-See [reference.html](http://sandbox.kendsnyder.com/reference.html) for demo and complete guide
-[Unit Tests](http://sandbox.kendsnyder.com/unit-tests.html) for demo and complete guide
+Then somewhere in your code, call:
 
-ChangeLog
-===
+```javascript
+var instance = new $.Date(selector, options);
+// OR
+$(selector).(options);
+```
 
-v3.5 Jun 2012
+See the documentation below for a full list of options.
 
-* Add Date#equals, Date#isBefore, Date#isAfter
-* Add Date#schedule, Date#unschedule, Date#getSchedule
-* Add Date.Timer class
-* Centralize Date parse patterns
+Options
+-
 
-v3.4 Apr 2012
+<table>
+	<tr>
+		<th>Type</th>
+		<th>Option Name</th>
+		<th>Default</th>
+		<th>Description</th>
+	<tr>
+	
+</table>
 
-* Fix UTC Offset handling
-* Recognize Chicago dates that are missing a comma
-* Recognize Conversational dates that have leading weekday name
-* Recognize 24-hour time that contains "GMT" and/or timezone name (e.g. native JS toString() format)
-* Recognize date expressions with millisecond units (e.g. "in 250 milliseconds", "250 milliseconds ago")
-* Recognize + and - date expressions (e.g. "+2 hours", "-3 years")
-* Recognize ASP JSON format (e.g. "/Date(1296824894700)/", "/Date(1296824894700-0700)/") 
-* Use strict mode
+Also note that default options can be overwritten by altering `$.Date.defaultOptions`.
 
-v3.3 Dec 2011
+Events
+-
 
-* Fixed documentation of Date#setUTCOffsetString
-* Ability to parse ISO-8601 dates containing timezone
-* Ability to parse RFC 2822 dates
+Events can be passed as options to the constructor, or can be added later using jQuery event methods `.on()`, `.off()`, `.bind()` `.one()`, `.unbind()` and `.trigger()`
 
-v3.2 Jul 2011
+For example:
 
-* Add ability to easily add and remove parse patterns
-* Update inline documentation to work with JSDoc
-* Update 12-hour regex to allow leading 0s
+```javascript
+// Register events in initial options
+$(input).({
+	option1: value1,
+	onEVENT: doStuff
+});
+// Register events later
+$(input).({
+	option1: value1
+}).('bind', 'EVENT', doStuff);
+```
 
-v3.1 Feb 2011
+How is data passed to event callbacks?
 
-* Update month addition/subtraction behavior: When new month has fewer days than original, go to last day of month instead of wrapping to next month.
-* Remove use of named function expressions
+* Each event callback receives one argument: `event`
+* `event` is a jQuery event object
+* `event` also contains useful information related to the event. See the [Events](#events) section below for more information.
+* When an event has a default action that can be prevented, `event` will have property `cancelable` set to true and `event.isCancelable()` will return true
+* To prevent a default action, call `event.preventDefault()`
+* To cancel the firing of other attached callbacks, call `event.stopImmediatePropagation()`
+* In some case, altering information on the `event` object will change the behavior of the default action
+* The callback will be fired in the scope of the Date instance. In other words, using `this` in the callback will refer to the Date instance. See the [Instance Properties](#instance-properties) and [Instance Methods](#instance-methods) sections below for more information.
 
-v3.0 Oct 2010
+The following is a description of each event.
 
-* Initial push to Github
-* Unit tests using QUnit
-* Add support for PHP format codes L, t and e
+<table>
+	<tr>
+		<th>Event</th>
+		<th>Data available on <code>event</code></th>
+		<th>Effect of `event.preventDefault()`</th>
+	</tr>
+	
+</table>
+			
+Instance Properties
+-
 
-v2.0 Sep 2008
+<table>
+	<tr>
+		<th>Type</th>
+		<th>Name</th>
+		<th>Description</th>
+	<tr>
+	
+</table>
 
-* Initial public release
-* Add unit tests
-* Create reference.html
+Instance Methods
+-
 
-v1.0 Dec 2005
+Instance methods may be called using an Object Oriented style or with the classic jQuery style:
 
-* Initial private release
+```javascript
+// Object Oriented Style
+var  = new $.Date(input, options);
+.methodName(arg1, arg2, argN);
+
+// jQuery Style
+$(input).(options);
+$(input).('methodName', arg1, arg2, argN);
+
+// jQuery Style followed by Object Oriented Style
+$(input).(options);
+var instance = $(input).('getInstance');
+instance.methodName(arg1, arg2, argN);
+```
+
+<table>
+
+</table>
+
+More examples
+-
+
+Stuff
+
+```javascript
+
+```
+
+Changelog
+-
+
+**Version 0.1.0, July 2013**
+* initial version
 
 
-[Full Github History](https://github.com/kensnyder/date-prototype/commits/master/)
+Contributing
+-
+
+After using git to clone the repo, you'll need nodejs, npm, and grunt-cli installed. See [gruntjs.com](http://gruntjs.com/getting-started) for more information. Then inside the cloned directory run `npm install` and then `grunt`
+
+Make updates only to the files in the `./src` directory. Then run `grunt` to automatically generate documentation and other files. You may also make changes to the demos by editing `./demos/*` files or improve the build process by editing `./Gruntfile.js`. Then make a pull request.
+
+
+Reporting Bugs
+-
+
+To report bugs, add an issue to the [GitHub issue tracker]().
+
+
+License
+-
+
+Copyright 2012-2013, Ken Snyder
+
+[MIT License](http://www.opensource.org/licenses/mit-license.php)

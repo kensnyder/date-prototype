@@ -22,10 +22,6 @@
 	}
 
 	//
-	//
-	//
-	var scheduled = [];
-	//
 	// set up integers and functions for adding to a date or subtracting two dates
 	//
 	var multipliers = {
@@ -451,7 +447,7 @@
 		},
 		/**
 		 * Get the number of days in the month
-		 * @method daysInMonth 
+		 * @static
 		 * @return {Number}
 		 */
 		daysInMonth: function() {
@@ -459,7 +455,7 @@
 		},
 		/**
 		 * Return true if the year is a leap year
-		 * @method isLeapYear 
+		 * @method isLeapYear
 		 * @return {Boolean}
 		 */
 		isLeapYear: function() {
@@ -496,63 +492,26 @@
 			return Math.round(this.diff(date, units || 'milliseconds', true), 0) === 0;
 		},
 		/**
-		 * @method schedule
-		 * @param {Function} callback
-		 * @return {Date}
+		 * Schedule a function to be run at this date. If the date is in the past, don't run
+		 * @method setTimeout
+		 * @param {Function} callback  The function to run
+		 * @return {Number}  The id of the setTimeout that can be used to clearTimeout
+		 * @example
+		 
+	$D('+15 minutes').setTimeout(refresh);
+		  
 		 */	
-		schedule: function(callback) {
+		setTimeout: function(callback) {
 			var inMs = this.getTime() - Date.current().getTime();
-			var clone = this.clone();
-			if (inMs <= 0) {
-				clone.unschedule(callback);
-				callback();
-				return this;
+			if (inMs < 0) {
+				return undefined;
 			}
-			var ts = this.getTime();
-			var id = setTimeout(function() {
-				clone.unschedule(callback);
-				callback();
-			}, inMs);
-			scheduled.push({callback: callback, timestamp: ts, timeoutId: id});
-			return this;
-		},
-		/**
-		 * @method unschedule
-		 * @param {Function} callback
-		 * @return {Date}
-		 */
-		unschedule: function(callback) {
-			var i = scheduled.length;
-			var time = this.getTime();
-			while (i--) {
-				// iterate backwards so that if we splice out an item,
-				// we don't have to worry about array indexes changing
-				if (scheduled[i].callback == callback && scheduled[i].timestamp == time) {
-					clearTimeout(scheduled[i].timeoutId);
-					scheduled.splice(i, 1);
-				}
-			}
-			return this;
-		},
-		/**
-		 * @method getSchedule
-		 * @param {Function} callback
-		 * @return {Date}
-		 */		
-		getSchedule: function() {
-			var toFire = [];
-			var time = this.getTime();
-			for (var i = 0, len = scheduled.length; i < len; i++) {
-				if (scheduled[i].timestamp == time) {
-					toFire.push(scheduled[i]);
-				}
-			}
-			return toFire;
+			return setTimeout(callback, inMs);
 		}
 	};
 	extend(Date.prototype, instanceMethods);
 	/**
-	 * ES5 Shim for converting to full ISO String
+	 * ES5 Shim for converting to full ISO String in format 2013-12-19T00:00:00Z
 	 * @method toISOString
 	 * @return {String}
 	 */
@@ -691,7 +650,8 @@
 			}
 		},
 		/**
-		 * Return a date assuming input string (or parameters) is a UTC date
+		 * Return a date assuming input string (or parameters) is a UTC date.
+		 * Same 5 signatures as create
 		 * @method createUTC
 		 * @static
 		 * @return {Date}
@@ -749,33 +709,33 @@
 		 */		
 		ABBR_DAYNAMES: 'Sun Mon Tue Wed Thu Fri Sat'.split(' '),
 		/**
-		 * The ordinal text (e.g. st, nd, rd, th) for digits 1 to 9
+		 * The ordinal text (st, nd, rd, th) for digits 0 to 9
 		 * @property ORDINALNAMES
 		 * @static
 		 * @type {Array}
 		 */
 		ORDINALNAMES: 'th st nd rd th th th th th th'.split(' '),
 		/**
-		 * Pattern for full ISO-8601 date conversion
+		 * Pattern for full ISO-8601 date conversion - 2013-12-19T22:15:42.388-0600
 		 * @property ISO
 		 * @static
 		 * @type {String}
 		 */
 		ISO: '%Y-%m-%dT%H:%M:%S.%N%G',
 		/**
-		 * Pattern for SQL-type formatting
+		 * Pattern for SQL-type formatting - 2013-12-19 22:15:42
 		 * @property SQL
 		 * @static
 		 * @type {String}
 		 */
 		SQL: '%Y-%m-%d %H:%M:%S',
 		/**
-		 * The format code for producing RFC822 formatted dates
+		 * The format code for producing RFC822 formatted dates - Thu, 19 Dec 2013 22:15:42 -0600
 		 * @property RFC822
 		 * @static
 		 * @type {String}
 		 */
-		RFC822: '%a, %d %e %Y %H:%M:%S %#G',
+		RFC822: '%a, %d %b %Y %H:%M:%S %#G',
 		/**
 		 * The date of the script load
 		 * @property SCRIPT_LOAD
@@ -789,6 +749,11 @@
 		 * @static
 		 * @param {Number} year
 		 * @param {Number} month
+		 * @return {Number}
+		 * @example
+		  
+	Date.daysInMonth(2013,  
+		 
 		 */
 		daysInMonth: function(year, month) {
 			if (month == 2) {
@@ -846,7 +811,7 @@
 		/**
 		 * Add a new set of format rules
 		 * @method addFormat
-		 * @staic
+		 * @static
 		 * @param {String} name  The name of the method
 		 * @param {Object} rules  A definition with keys matcher, defaultFormat, codes and shortcuts. See source code for examples.
 		 * @return {this}
@@ -937,80 +902,6 @@
 		};
 	}
 	
-	var cloneTrigger = {};
-
-	Date.Timer = function(isClone) {
-		if (isClone === cloneTrigger) {
-			return this;
-		}
-		return this.initialize.apply(this, Array.prototype.slice.call(arguments));
-	};
-
-	Date.Timer.prototype.initialize = function() {
-		return this;
-	};
-
-	Date.Timer._now = function() {
-		return new Date().getTime() * 1000;
-	};
-	
-	if (typeof window != 'undefined' && window.performance && window.performance.timing && window.performance.timing.navigationStart) {		
-		// Firefox, IE10
-		if (window.performance.now) {
-			Date.Timer._now = function() {
-				return window.performance.timing.navigationStart + window.performance.now();
-			};
-		}
-		// Chrome
-		else if (window.performance.webkitNow) {
-			Date.Timer._now = function() {
-				return window.performance.timing.navigationStart + window.performance.webkitNow();
-			};
-		}
-	}
-
-	Date.Timer.prototype.start = Date.Timer.restart = function() {
-		this._startSnapshot = Date.Timer._now();
-		this.startDate = new Date();
-		return this;
-	};
-
-	Date.Timer.prototype.clone = function() {
-		var clone = new Date.time(cloneTrigger);
-		clone._startSnapshot = this._startSnapshot;
-		clone.startDate = this.startDate;
-		return clone;
-	};
-
-	Date.Timer.prototype.stop = function(unit, template) {
-		if (template) {
-			var result = this.stop(unit);
-			return template.replace('%s', result).replace(/%?\.(\d+)f/i, function(m) {
-				return result.toFixed(+m[1]);
-			});
-		}
-		this._stopSnapshot = Date.Timer._now();
-		this.stopDate = new Date();
-		var usec = this._stopSnapshot - this._startSnapshot;
-		unit = String(unit).toLowerCase();
-		if (unit.match(/^microseconds?$/)) {
-			return usec;
-		}
-		if (unit.match(/^seconds?$/)) {
-			return usec / 1e6;
-		}
-		if (unit.match(/^minutes?$/)) {
-			return usec / 6e7;
-		}
-		if (unit.match(/^hours?$/)) {
-			return usec / 3.6e9;
-		}
-		if (unit.match(/^days?$/)) {
-			return usec / 8.64e10;
-		}
-		return usec / 1e3;
-	};	
-
 	//
 	// format codes for strftime
 	//
@@ -1202,14 +1093,9 @@
 	Date.addFormat('formatSql', formatSql);
 
 	/**
-	 * A list of conversion patterns (array arguments sent directly to our gsub function)
-	 * Use Date.addFormat() or Date.removeFormat() to customize date parsing ability
-	 *
-	 * formats that all browsers seem to safely handle:
-	 *   Mar 15, 2010
-	 *   March 15, 2010
-	 *   3/15/2010
-	 *   03/15/2010
+	 * A list of conversion patterns used in regexes
+	 * @property create.regexes
+	 * @static
 	 */
 	Date.create.regexes = {
 		YEAR: "[1-9]\\d{3}",
@@ -1229,6 +1115,15 @@
 		UNIT: "year|month|week|day|hour|minute|second|millisecond"
 	};
 	
+	/**
+	 * Make a regex given a string containing patterns in Date.create.regexes
+	 * @param {type} code
+	 * @return {RegExp}
+	 * @example
+	 
+	 Date.create.makePattern("^(_YEAR_)-(_MONTH_)-(_DAY_)$"); // RegExp
+	  
+	 */
 	Date.create.makePattern = function(code) {
 		code = code.replace(/_([A-Z][A-Z0-9]+)_/g, function($0, $1) {
 			return Date.create.regexes[$1];
@@ -1236,6 +1131,11 @@
 		return new RegExp(code, 'i');
 	};
 	
+	/**
+	 * An array of all the patterns used to parse dates
+	 * @property create.patterns
+	 * @static
+	 */
 	Date.create.patterns = [
 		// 2010-03-15
 		[
@@ -1494,7 +1394,7 @@
  */
 /**
  * @constructor
- * 
+ * @param {Number} milliseconds
  */
 /**
  * Get the day of the month (1-31)
@@ -1665,5 +1565,12 @@
 /**
  * Get a string representation of the date in 
  * @method toString
+ * @return {Number}
+ */
+/**
+ * Parse a string representation into a number of milliseconds since 1970-01-01 00:00:00.
+ * Parsing capability varies by browser
+ * @method parse
+ * @param {String} date
  * @return {Number}
  */

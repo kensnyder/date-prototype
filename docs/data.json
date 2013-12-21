@@ -27,13 +27,13 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/Date.js",
-            "line": 1490
+            "line": 1392
         }
     },
     "classitems": [
         {
             "file": "src/Date.js",
-            "line": 100,
+            "line": 96,
             "description": "Return a date one day ahead (or any other unit)",
             "itemtype": "method",
             "name": "succ",
@@ -54,7 +54,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 109,
+            "line": 105,
             "description": "Add an arbitrary time frame",
             "itemtype": "method",
             "name": "add",
@@ -80,7 +80,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 125,
+            "line": 121,
             "description": "Find the difference between this date and another date. Positive means more recent",
             "itemtype": "method",
             "name": "diff",
@@ -113,7 +113,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 152,
+            "line": 148,
             "description": "Our gsub function that applies the format string using the given formatting scheme",
             "itemtype": "method",
             "name": "_applyFormat",
@@ -139,7 +139,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 177,
+            "line": 173,
             "description": "Apply the format of a single character code using the given formatting scheme",
             "itemtype": "method",
             "name": "_applyFormatChar",
@@ -165,7 +165,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 203,
+            "line": 199,
             "description": "Format the string using strftime or formatPhp depending on if % is present",
             "itemtype": "method",
             "name": "format",
@@ -186,7 +186,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 216,
+            "line": 212,
             "description": "Return a two-digit year",
             "itemtype": "method",
             "name": "getShortYear",
@@ -198,7 +198,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 224,
+            "line": 220,
             "description": "Get the number of the month, 1-12",
             "itemtype": "method",
             "name": "getMonthNumber",
@@ -210,7 +210,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 232,
+            "line": 228,
             "description": "Get the name of the month",
             "itemtype": "method",
             "name": "getMonthName",
@@ -222,7 +222,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 240,
+            "line": 236,
             "description": "Get the abbreviated name of the month",
             "itemtype": "method",
             "name": "getAbbrMonthName",
@@ -234,7 +234,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 248,
+            "line": 244,
             "description": "Get the name of the week day (Sunday through Saturday)",
             "itemtype": "method",
             "name": "getDayName",
@@ -246,7 +246,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 256,
+            "line": 252,
             "description": "Get the abbreviated name of the week day (Sunday through Saturday)",
             "itemtype": "method",
             "name": "getAbbrDayName",
@@ -258,7 +258,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 264,
+            "line": 260,
             "description": "Get the ordinal string associated with the day of the month (i.e. st, nd, rd, th)",
             "itemtype": "method",
             "name": "getDayOrdinal",
@@ -270,7 +270,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 272,
+            "line": 268,
             "description": "Get the hour on a 12-hour scheme",
             "itemtype": "method",
             "name": "getHours12",
@@ -282,7 +282,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 281,
+            "line": 277,
             "description": "Get the am or pm (uppercase)",
             "itemtype": "method",
             "name": "getAmPm",
@@ -294,7 +294,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 289,
+            "line": 285,
             "description": "Get the am or pm (lowercase)",
             "itemtype": "method",
             "name": "getAmPmLower",
@@ -306,7 +306,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 297,
+            "line": 293,
             "description": "Get the date as a Unix timestamp",
             "itemtype": "method",
             "name": "getUnix",
@@ -318,7 +318,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 305,
+            "line": 301,
             "description": "Get the system GMT offset in hours and minutes (e.g. +06:30) for that date\nNOTE: JavaScript Date objects do not have a concept of timezone.\nDates are always in the timezone of the system and only vary by daylight savings changes.",
             "itemtype": "method",
             "name": "getUTCOffset",
@@ -333,7 +333,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 329,
+            "line": 325,
             "description": "Set the offset in minutes by converting date to UTC then adding or subtracting given number of seconds",
             "itemtype": "method",
             "name": "setUTCOffset",
@@ -352,7 +352,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 339,
+            "line": 335,
             "description": "Set the time zone offset in minutes and seconds in the form \"+0200\" or \"+02:00\"",
             "itemtype": "method",
             "name": "setUTCOffsetString",
@@ -371,7 +371,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 357,
+            "line": 353,
             "description": "Get the GMT offset in hours and minutes without the colon (e.g. +0630)",
             "itemtype": "method",
             "name": "getUTCOffsetNumber",
@@ -383,7 +383,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 365,
+            "line": 361,
             "description": "Get the browser-reported name for the timezone (e.g. MDT, Mountain Daylight Time)\nVaries across browsers and languages",
             "itemtype": "method",
             "name": "getTimezoneName",
@@ -395,7 +395,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 375,
+            "line": 371,
             "description": "Convert this date to an 8-digit integer (%Y%m%d)\nGood for quickly comparing dates",
             "itemtype": "method",
             "name": "toYmdInt",
@@ -407,7 +407,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 384,
+            "line": 380,
             "description": "Create a copy of this date object",
             "itemtype": "method",
             "name": "clone",
@@ -419,7 +419,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 392,
+            "line": 388,
             "description": "Get a textual representation of the difference between this date and now (or the given date)\ne.g. \"3 minutes ago\"",
             "itemtype": "method",
             "name": "diffText",
@@ -438,10 +438,9 @@
         },
         {
             "file": "src/Date.js",
-            "line": 452,
+            "line": 448,
             "description": "Get the number of days in the month",
-            "itemtype": "method",
-            "name": "daysInMonth",
+            "static": 1,
             "return": {
                 "description": "",
                 "type": "Number"
@@ -450,7 +449,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 460,
+            "line": 456,
             "description": "Return true if the year is a leap year",
             "itemtype": "method",
             "name": "isLeapYear",
@@ -462,7 +461,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 468,
+            "line": 464,
             "description": "Return true if the date is before the given date",
             "itemtype": "method",
             "name": "isBefore",
@@ -488,7 +487,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 478,
+            "line": 474,
             "description": "Return true if the date is after the given date",
             "itemtype": "method",
             "name": "isAfter",
@@ -514,7 +513,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 488,
+            "line": 484,
             "description": "Return true if the date is equal to the given date rounded to the given unit",
             "itemtype": "method",
             "name": "equals",
@@ -540,62 +539,30 @@
         },
         {
             "file": "src/Date.js",
-            "line": 498,
+            "line": 494,
+            "description": "Schedule a function to be run at this date. If the date is in the past, don't run",
             "itemtype": "method",
-            "name": "schedule",
+            "name": "setTimeout",
             "params": [
                 {
                     "name": "callback",
-                    "description": "",
+                    "description": "The function to run",
                     "type": "Function"
                 }
             ],
             "return": {
-                "description": "",
-                "type": "Date"
+                "description": "The id of the setTimeout that can be used to clearTimeout",
+                "type": "Number"
             },
-            "class": "Date"
-        },
-        {
-            "file": "src/Date.js",
-            "line": 519,
-            "itemtype": "method",
-            "name": "unschedule",
-            "params": [
-                {
-                    "name": "callback",
-                    "description": "",
-                    "type": "Function"
-                }
+            "example": [
+                "\n\t\t \n\t$D('+15 minutes').setTimeout(refresh);\n\t\t  "
             ],
-            "return": {
-                "description": "",
-                "type": "Date"
-            },
             "class": "Date"
         },
         {
             "file": "src/Date.js",
-            "line": 537,
-            "itemtype": "method",
-            "name": "getSchedule",
-            "params": [
-                {
-                    "name": "callback",
-                    "description": "",
-                    "type": "Function"
-                }
-            ],
-            "return": {
-                "description": "",
-                "type": "Date"
-            },
-            "class": "Date"
-        },
-        {
-            "file": "src/Date.js",
-            "line": 554,
-            "description": "ES5 Shim for converting to full ISO String",
+            "line": 513,
+            "description": "ES5 Shim for converting to full ISO String in format 2013-12-19T00:00:00Z",
             "itemtype": "method",
             "name": "toISOString",
             "return": {
@@ -606,7 +573,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 568,
+            "line": 527,
             "description": "(Signature 1 of 5) Return a new Date object that is represented by the given date",
             "itemtype": "method",
             "name": "create [1]",
@@ -623,13 +590,13 @@
                 "type": "Date|NaN"
             },
             "example": [
-                "\n\n\tDate.create('Dec 19, 2013');\n\tDate.create('2013-12-19');\n\tDate.create('12/19/2013');\n\tDate.create('12/19/2013 8am');\n"
+                "\n\n\tDate.create('Dec 19, 2013');\n\tDate.create('2013-12-19');\n\tDate.create('12/19/2013');\n\tDate.create('12/19/2013 8am');\n\tDate.create('2 hours ago');\n"
             ],
             "class": "Date"
         },
         {
             "file": "src/Date.js",
-            "line": 582,
+            "line": 542,
             "description": "(Signature 2 of 5) Return a new Date object that is represented by the given number",
             "itemtype": "method",
             "name": "create [2]",
@@ -642,8 +609,8 @@
                 }
             ],
             "return": {
-                "description": "The date object or NaN if the date is not recognized",
-                "type": "Date|NaN"
+                "description": "",
+                "type": "Date"
             },
             "example": [
                 "\n\n\tDate.create(1387518450578);\n"
@@ -652,7 +619,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 593,
+            "line": 553,
             "description": "(Signature 3 of 5) Return a new Date object with the given date part values",
             "itemtype": "method",
             "name": "create [3]",
@@ -705,14 +672,17 @@
                 }
             ],
             "return": {
-                "description": "@example\n\n\tDate.create(2013, 11, 19);",
+                "description": "",
                 "type": "Date"
             },
+            "example": [
+                "\n\n\tDate.create(2013, 11, 19);\n"
+            ],
             "class": "Date"
         },
         {
             "file": "src/Date.js",
-            "line": 609,
+            "line": 570,
             "description": "(Signature 4 of 5) Return a new Date object with the current date",
             "itemtype": "method",
             "name": "create [4]",
@@ -728,7 +698,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 619,
+            "line": 580,
             "description": "(Signature 5 of 5) Return the given date object",
             "itemtype": "method",
             "name": "create [5]",
@@ -751,8 +721,8 @@
         },
         {
             "file": "src/Date.js",
-            "line": 691,
-            "description": "Return a date assuming input string (or parameters) is a UTC date",
+            "line": 652,
+            "description": "Return a date assuming input string (or parameters) is a UTC date.\nSame 5 signatures as create",
             "itemtype": "method",
             "name": "createUTC",
             "static": 1,
@@ -764,7 +734,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 707,
+            "line": 669,
             "description": "Names for the months of the year",
             "var": "MONTHNAMES",
             "static": 1,
@@ -773,7 +743,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 714,
+            "line": 676,
             "description": "Lookup of month number by month abbreviation (1=January, 12=December)",
             "itemtype": "property",
             "name": "MONTHNAMES_LOOKUP",
@@ -783,7 +753,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 721,
+            "line": 683,
             "description": "Abbreviated names for the months of the year",
             "itemtype": "property",
             "name": "ABBR_MONTHNAMES",
@@ -793,7 +763,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 728,
+            "line": 690,
             "description": "Names for the days of the week from Sunday to Saturday",
             "itemtype": "property",
             "name": "DAYNAMES",
@@ -803,7 +773,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 735,
+            "line": 697,
             "description": "Lookup of day number by day abbreviation",
             "itemtype": "property",
             "name": "DAYNAMES_LOOKUP",
@@ -813,7 +783,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 742,
+            "line": 704,
             "description": "Abbreviated names for the days of the week from Sunday to Saturday",
             "itemtype": "property",
             "name": "ABBR_DAYNAMES",
@@ -823,8 +793,8 @@
         },
         {
             "file": "src/Date.js",
-            "line": 749,
-            "description": "The ordinal text (e.g. st, nd, rd, th) for digits 1 to 9",
+            "line": 711,
+            "description": "The ordinal text (st, nd, rd, th) for digits 0 to 9",
             "itemtype": "property",
             "name": "ORDINALNAMES",
             "static": 1,
@@ -833,8 +803,8 @@
         },
         {
             "file": "src/Date.js",
-            "line": 756,
-            "description": "Pattern for full ISO-8601 date conversion",
+            "line": 718,
+            "description": "Pattern for full ISO-8601 date conversion - 2013-12-19T22:15:42.388-0600",
             "itemtype": "property",
             "name": "ISO",
             "static": 1,
@@ -843,8 +813,8 @@
         },
         {
             "file": "src/Date.js",
-            "line": 763,
-            "description": "Pattern for SQL-type formatting",
+            "line": 725,
+            "description": "Pattern for SQL-type formatting - 2013-12-19 22:15:42",
             "itemtype": "property",
             "name": "SQL",
             "static": 1,
@@ -853,8 +823,8 @@
         },
         {
             "file": "src/Date.js",
-            "line": 770,
-            "description": "The format code for producing RFC822 formatted dates",
+            "line": 732,
+            "description": "The format code for producing RFC822 formatted dates - Thu, 19 Dec 2013 22:15:42 -0600",
             "itemtype": "property",
             "name": "RFC822",
             "static": 1,
@@ -863,7 +833,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 777,
+            "line": 739,
             "description": "The date of the script load",
             "itemtype": "property",
             "name": "SCRIPT_LOAD",
@@ -873,7 +843,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 784,
+            "line": 746,
             "description": "Return the number of days in the given year and month. January = 1",
             "itemtype": "method",
             "name": "daysInMonth",
@@ -890,11 +860,18 @@
                     "type": "Number"
                 }
             ],
+            "return": {
+                "description": "",
+                "type": "Number"
+            },
+            "example": [
+                "\n\t\t  \n\tDate.daysInMonth(2013,  \n\t\t "
+            ],
             "class": "Date"
         },
         {
             "file": "src/Date.js",
-            "line": 797,
+            "line": 764,
             "description": "Given a month name or abbreviation, return the month number where January = 0",
             "itemtype": "method",
             "name": "getMonthByName",
@@ -914,7 +891,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 807,
+            "line": 774,
             "description": "Given a day name or abbreviation, return the day number where Sunday = 0",
             "itemtype": "method",
             "name": "getWeekdayByName",
@@ -934,7 +911,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 817,
+            "line": 784,
             "description": "Set a form input to be automatically formatted to the given format. If not recognized, leave value alone",
             "itemtype": "method",
             "name": "autoFormat",
@@ -959,11 +936,11 @@
         },
         {
             "file": "src/Date.js",
-            "line": 844,
+            "line": 811,
             "description": "Add a new set of format rules",
             "itemtype": "method",
             "name": "addFormat",
-            "staic": "",
+            "static": 1,
             "params": [
                 {
                     "name": "name",
@@ -984,7 +961,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 858,
+            "line": 825,
             "description": "Add a new pattern for recognizing dates",
             "itemtype": "method",
             "name": "addPattern",
@@ -1013,7 +990,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 885,
+            "line": 852,
             "description": "Remove a pattern by name",
             "itemtype": "method",
             "name": "removePattern",
@@ -1035,7 +1012,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 906,
+            "line": 873,
             "description": "Instantiate Date object representing the current date (allows unit testing and mocks)",
             "itemtype": "method",
             "name": "current",
@@ -1048,7 +1025,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 917,
+            "line": 884,
             "description": "The version of this library",
             "itemtype": "property",
             "name": "create.version",
@@ -1058,7 +1035,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 927,
+            "line": 894,
             "description": "Return the current date in milliseconds past epoch relative to UTC time",
             "itemtype": "method",
             "name": "now",
@@ -1071,19 +1048,58 @@
         },
         {
             "file": "src/Date.js",
-            "line": 1202,
-            "description": "A list of conversion patterns (array arguments sent directly to our gsub function)\nUse Date.addFormat() or Date.removeFormat() to customize date parsing ability\n\nformats that all browsers seem to safely handle:\n  Mar 15, 2010\n  March 15, 2010\n  3/15/2010\n  03/15/2010",
+            "line": 1095,
+            "description": "A list of conversion patterns used in regexes",
+            "itemtype": "property",
+            "name": "create.regexes",
+            "static": 1,
             "class": "Date"
         },
         {
             "file": "src/Date.js",
-            "line": 1493,
+            "line": 1118,
+            "description": "Make a regex given a string containing patterns in Date.create.regexes",
+            "params": [
+                {
+                    "name": "code",
+                    "description": "",
+                    "type": "Type"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "RegExp"
+            },
+            "example": [
+                "\n\t \n\t Date.create.makePattern(\"^(_YEAR_)-(_MONTH_)-(_DAY_)$\"); // RegExp\n\t  "
+            ],
+            "class": "Date"
+        },
+        {
+            "file": "src/Date.js",
+            "line": 1134,
+            "description": "An array of all the patterns used to parse dates",
+            "itemtype": "property",
+            "name": "create.patterns",
+            "static": 1,
+            "class": "Date"
+        },
+        {
+            "file": "src/Date.js",
+            "line": 1395,
             "is_constructor": 1,
+            "params": [
+                {
+                    "name": "milliseconds",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
             "class": "Date"
         },
         {
             "file": "src/Date.js",
-            "line": 1497,
+            "line": 1399,
             "description": "Get the day of the month (1-31)",
             "itemtype": "method",
             "name": "getDate",
@@ -1095,7 +1111,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 1502,
+            "line": 1404,
             "description": "Get the day of the week (0=Sunday, 6=Saturday)",
             "itemtype": "method",
             "name": "getDay",
@@ -1107,7 +1123,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 1507,
+            "line": 1409,
             "description": "Get the month number (0=January, 11=December)",
             "itemtype": "method",
             "name": "getMonth",
@@ -1119,7 +1135,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 1512,
+            "line": 1414,
             "description": "Get the four-digit year",
             "itemtype": "method",
             "name": "getFullYear",
@@ -1131,7 +1147,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 1517,
+            "line": 1419,
             "description": "Get the number of years since 1900 (such that a 2013 date returns 113)",
             "itemtype": "method",
             "name": "getYear",
@@ -1143,7 +1159,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 1522,
+            "line": 1424,
             "description": "Get the hour (0-23)",
             "itemtype": "method",
             "name": "getHours",
@@ -1155,7 +1171,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 1527,
+            "line": 1429,
             "description": "Get minutes (0-59)",
             "itemtype": "method",
             "name": "getMinutes",
@@ -1167,7 +1183,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 1532,
+            "line": 1434,
             "description": "Get seconds (0-59)",
             "itemtype": "method",
             "name": "getSeconds",
@@ -1179,7 +1195,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 1537,
+            "line": 1439,
             "description": "Get milliseconds (0-999)",
             "itemtype": "method",
             "name": "getMilliseconds",
@@ -1191,7 +1207,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 1542,
+            "line": 1444,
             "description": "Get the number of milliseconds since 1970-01-01 00:00:00",
             "itemtype": "method",
             "name": "getTime",
@@ -1203,7 +1219,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 1547,
+            "line": 1449,
             "description": "Get the number of minutes between the local timezone and UTC time.\nNote that the offset is the same for all Date objects",
             "itemtype": "method",
             "name": "getTimezoneOffset",
@@ -1215,7 +1231,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 1553,
+            "line": 1455,
             "description": "Convert to UTC then get the day of the month (1-31)",
             "itemtype": "method",
             "name": "getUTCDate",
@@ -1227,7 +1243,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 1558,
+            "line": 1460,
             "description": "Convert to UTC then get the day of the week (0=Sunday, 6=Saturday)",
             "itemtype": "method",
             "name": "getUTCDay",
@@ -1239,7 +1255,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 1563,
+            "line": 1465,
             "description": "Convert to UTC then get the month number (0=January, 11=December)",
             "itemtype": "method",
             "name": "getUTCMonth",
@@ -1251,7 +1267,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 1568,
+            "line": 1470,
             "description": "Convert to UTC then get the four-digit year",
             "itemtype": "method",
             "name": "getUTCFullYear",
@@ -1263,7 +1279,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 1573,
+            "line": 1475,
             "description": "Convert to UTC then get the hour (0-23)",
             "itemtype": "method",
             "name": "getUTCHours",
@@ -1275,7 +1291,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 1578,
+            "line": 1480,
             "description": "Convert to UTC then get minutes (0-59)",
             "itemtype": "method",
             "name": "getUTCMinutes",
@@ -1287,7 +1303,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 1583,
+            "line": 1485,
             "description": "Convert to UTC then get seconds (0-59)",
             "itemtype": "method",
             "name": "getUTCSeconds",
@@ -1299,7 +1315,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 1588,
+            "line": 1490,
             "description": "Convert to UTC then get milliseconds (0-999)",
             "itemtype": "method",
             "name": "getUTCMilliseconds",
@@ -1311,7 +1327,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 1593,
+            "line": 1495,
             "description": "Set the day of the month (1-31)",
             "itemtype": "method",
             "name": "setDate",
@@ -1330,7 +1346,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 1599,
+            "line": 1501,
             "description": "Set the month number (0=January, 11=December)",
             "itemtype": "method",
             "name": "setMonth",
@@ -1349,7 +1365,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 1605,
+            "line": 1507,
             "description": "Set the four-digit year",
             "itemtype": "method",
             "name": "setFullYear",
@@ -1368,7 +1384,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 1611,
+            "line": 1513,
             "description": "Set the number of years since 1900 (such that a 113 produces a date in 2013)",
             "itemtype": "method",
             "name": "setYear",
@@ -1387,7 +1403,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 1617,
+            "line": 1519,
             "description": "Set the hour (0-23) and optionally minutes, seconds, and milliseconds",
             "itemtype": "method",
             "name": "setHours",
@@ -1424,7 +1440,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 1626,
+            "line": 1528,
             "description": "Set minutes (0-59) and optionally seconds and milliseconds",
             "itemtype": "method",
             "name": "setMinutes",
@@ -1455,10 +1471,10 @@
         },
         {
             "file": "src/Date.js",
-            "line": 1634,
-            "description": "Set seconds (0-59)",
+            "line": 1536,
+            "description": "Set seconds (0-59) and optionally milliseconds",
             "itemtype": "method",
-            "name": "setSeconds and optionally milliseconds",
+            "name": "setSeconds",
             "params": [
                 {
                     "name": "seconds",
@@ -1480,7 +1496,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 1641,
+            "line": 1543,
             "description": "Set milliseconds (0-999)",
             "itemtype": "method",
             "name": "setMilliseconds",
@@ -1499,7 +1515,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 1647,
+            "line": 1549,
             "description": "Set the number of milliseconds past 1970-01-01 00:00:00",
             "itemtype": "method",
             "name": "setTime",
@@ -1518,7 +1534,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 1653,
+            "line": 1555,
             "description": "Convert the date to a string in the format \"2013-12-20T04:34:43.284Z\"",
             "itemtype": "method",
             "name": "toISOString",
@@ -1530,7 +1546,7 @@
         },
         {
             "file": "src/Date.js",
-            "line": 1658,
+            "line": 1560,
             "description": "Get the number of milliseconds since 1970-01-01 00:00:00",
             "itemtype": "method",
             "name": "valueOf",
@@ -1542,10 +1558,29 @@
         },
         {
             "file": "src/Date.js",
-            "line": 1663,
+            "line": 1565,
             "description": "Get a string representation of the date in",
             "itemtype": "method",
             "name": "toString",
+            "return": {
+                "description": "",
+                "type": "Number"
+            },
+            "class": "Date"
+        },
+        {
+            "file": "src/Date.js",
+            "line": 1570,
+            "description": "Parse a string representation into a number of milliseconds since 1970-01-01 00:00:00.\nParsing capability varies by year",
+            "itemtype": "method",
+            "name": "parse",
+            "params": [
+                {
+                    "name": "date",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
             "return": {
                 "description": "",
                 "type": "Number"
@@ -1556,23 +1591,23 @@
     "warnings": [
         {
             "message": "unknown tag: var",
-            "line": " src/Date.js:707"
+            "line": " src/Date.js:669"
         },
         {
-            "message": "unknown tag: staic",
-            "line": " src/Date.js:844"
+            "message": "Missing item type\nGet the number of days in the month",
+            "line": " src/Date.js:448"
         },
         {
             "message": "Missing item type\nNames for the months of the year",
-            "line": " src/Date.js:707"
+            "line": " src/Date.js:669"
         },
         {
-            "message": "Missing item type\nA list of conversion patterns (array arguments sent directly to our gsub function)\nUse Date.addFormat() or Date.removeFormat() to customize date parsing ability\n\nformats that all browsers seem to safely handle:\n  Mar 15, 2010\n  March 15, 2010\n  3/15/2010\n  03/15/2010",
-            "line": " src/Date.js:1202"
+            "message": "Missing item type\nMake a regex given a string containing patterns in Date.create.regexes",
+            "line": " src/Date.js:1118"
         },
         {
             "message": "Missing item type",
-            "line": " src/Date.js:1493"
+            "line": " src/Date.js:1395"
         }
     ]
 }

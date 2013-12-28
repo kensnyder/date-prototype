@@ -15,7 +15,7 @@
 	 */
 	function extend(d, s) {
 		for (var p in s) {
-			if (Object.prototype.hasOwnProperty.call(s, p)) {
+			if (s.hasOwnProperty(p)) {
 				d[p] = s[p];
 			}
 		}
@@ -92,7 +92,7 @@
 	//
 	// Add methods to Date instances
 	//
-	var instanceMethods = {
+	extend(Date.prototype, {
 		/**
 		 * Return a date one day ahead (or any other unit)
 		 * @method succ
@@ -467,6 +467,12 @@
 		 * @param {String|Date|Number} date  The date to which to compare
 		 * @param {String} [units=milliseconds]  The unit to round to when comparing
 		 * @return {Boolean}
+		 * @example
+		 
+	$D('2013-09-13').isBefore('2013-12-21'); // true
+	$D('2013-09-13').isBefore('2013-09-13'); // false
+	$D('2013-09-13').isBefore('2013-09-13 10:00:00'); // true
+		 
 		 */
 		isBefore: function(date, units) {
 			return Math.round(this.diff(date, units || 'milliseconds', true), 0) < 0;
@@ -477,6 +483,12 @@
 		 * @param {String|Date|Number} date  The date to which to compare
 		 * @param {String} [units=milliseconds]  The unit to round to when comparing
 		 * @return {Boolean}
+		 * @example
+		 
+	$D('2013-09-13').isAfter('2013-12-21'); // false
+	$D('2013-09-13').isAfter('2013-09-13'); // false
+	$D('2013-09-13').isAfter('2013-09-12'); // true
+		 
 		 */		
 		isAfter: function(date, units) {
 			return Math.round(this.diff(date, units || 'milliseconds', true), 0) > 0;
@@ -487,6 +499,12 @@
 		 * @param {String|Date|Number} date  The date to which to compare
 		 * @param {String} [units=milliseconds]  The unit to round to when comparing
 		 * @return {Boolean}
+		 * @example
+	
+	$D('2013-09-13').equals('2013-09-13'); // true
+	$D('2013-09-13').equals('2013-09-13 11am', 'day'); // true
+	$D('2013-09-13').equals('2013-09-13 11pm', 'day'); // false
+	
 		 */				
 		equals: function(date, units) {
 			return Math.round(this.diff(date, units || 'milliseconds', true), 0) === 0;
@@ -498,7 +516,7 @@
 		 * @return {Number}  The id of the setTimeout that can be used to clearTimeout
 		 * @example
 		 
-	$D('+15 minutes').setTimeout(refresh);
+	$D('+15 minutes').setTimeout(refreshPage);
 		  
 		 */	
 		setTimeout: function(callback) {
@@ -508,8 +526,7 @@
 			}
 			return setTimeout(callback, inMs);
 		}
-	};
-	extend(Date.prototype, instanceMethods);
+	});
 	/**
 	 * ES5 Shim for converting to full ISO String in format 2013-12-19T00:00:00Z
 	 * @method toISOString
@@ -521,33 +538,35 @@
 		};
 	}
 	//
-	// Add static methods to Date
+	// Add static methods and property to Date
 	//
-	var staticMethods = {
+	extend(Date, {
 		/**
-		 * (Signature 1 of 5) Return a new Date object that is represented by the given date
+		 * (Signature 1 of 5) There are 5 different ways to create a date with Date.create (aliased as $D).
+		 * The first and most useful is to return a new Date object that is represented by the given date string.
+		 * Other ways are listed below.
 		 * @method create [1]
 		 * @static
 		 * @param {String} date  A machine-readable date string
 		 * @return {Date|NaN}  The date object or NaN if the date is not recognized
 		 * @example
  
-	Date.create('Dec 19, 2013');
-	Date.create('2013-12-19');
-	Date.create('12/19/2013');
-	Date.create('12/19/2013 8am');
-	Date.create('2 hours ago');
+	$D('Dec 19, 2013');
+	$D('2013-12-19');
+	$D('12/19/2013');
+	$D('12/19/2013 8am');
+	$D('2 hours ago');
 
 		 */
 		/**
-		 * (Signature 2 of 5) Return a new Date object that is represented by the given number
+		 * (Signature 2 of 5) Return a new Date object that is represented by the given number of milliseconds
 		 * @method create [2]
 		 * @static
 		 * @param {Number} millisecondsPastEpoch  The number of milliseconds past (or before) 1970-01-01 00:00:00
 		 * @return {Date}
 		 * @example
  
-	Date.create(1387518450578);
+	$D(1387518450578);
 
 		 */
 		/**
@@ -564,7 +583,7 @@
 		 * @return {Date}
 		 * @example
  
-	Date.create(2013, 11, 19);
+	$D(2013, 11, 19);
 
 		 */
 		/**
@@ -574,7 +593,7 @@
 		 * @return {Date}
 		 * @example
  
-	Date.create();
+	$D();
 
 		 */		
 		/**
@@ -585,7 +604,7 @@
 		 * @return {Date}
 		 * @example
  
-	Date.create(new Date(2013, 11, 19));
+	$D(new Date(2013, 11, 19));
 
 		 */		
 		create: function(date) {
@@ -662,10 +681,6 @@
 			date.setUTCOffset(0);
 			return date;
 		},
-		//
-		// constants representing month names, day names, and ordinal names to allow i18n
-		// (same names as Ruby Date constants)
-		//
 		/**
 		 * Names for the months of the year
 		 * @var MONTHNAMES
@@ -879,15 +894,7 @@
 		current: function() {
 			return new Date();
 		}		
-	};
-	extend(Date, staticMethods);
-	/**
-	 * The version of this library
-	 * @property create.version
-	 * @static
-	 * @type {String}
-	 */
-	Date.create.version = '%VERSION%';
+	});
 	
 	// ES5 Shim
 	if (!Date.now) {
@@ -1121,7 +1128,7 @@
 	 * @return {RegExp}
 	 * @example
 	 
-	 Date.create.makePattern("^(_YEAR_)-(_MONTH_)-(_DAY_)$"); // RegExp
+	Date.create.makePattern("^(_YEAR_)-(_MONTH_)-(_DAY_)$"); // RegExp
 	  
 	 */
 	Date.create.makePattern = function(code) {
@@ -1363,6 +1370,14 @@
 			}
 		]
 	];
+
+	/**
+	 * The version of this library
+	 * @property create.version
+	 * @static
+	 * @type {String}
+	 */
+	Date.create.version = '%VERSION%';
 
 })();
 

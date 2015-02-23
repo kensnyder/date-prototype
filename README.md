@@ -1,6 +1,6 @@
 Date.prototype
 ===
-v3.4.1 Jun 2012
+v3.5.0 Jun 2012
 
 Date.prototype provides JavaScript Date instance methods for parsing, formatting, and calculating dates. It uses a concise and configurable algorithm for interpreting format codes.
 
